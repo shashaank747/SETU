@@ -1,0 +1,882 @@
+/* ==========================================================================
+   AppTechno CampusOS - Dynamic Robot Login Page Styles
+   ========================================================================== */
+
+body.login-page-body {
+  background-color: #030712;
+  color: #f8fafc;
+  height: 100vh;
+  max-height: 100vh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  font-family: var(--font-ui);
+}
+
+/* Fullscreen Matrix Code Canvas */
+#matrix-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+/* Background Radial Glow */
+.login-ambient-glow {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.25) 0%, rgba(0, 210, 255, 0.1) 40%, transparent 70%);
+  z-index: 2;
+  pointer-events: none;
+  filter: blur(40px);
+}
+
+/* Top Navigation Link */
+.login-top-nav {
+  position: absolute;
+  top: 20px;
+  left: 28px;
+  right: 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+}
+
+.back-home-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #94a3b8;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-pill);
+  backdrop-filter: blur(8px);
+  transition: all var(--transition-fast);
+}
+
+.back-home-link:hover {
+  color: #ffffff;
+  border-color: rgba(56, 189, 248, 0.5);
+  background: rgba(15, 23, 42, 0.9);
+  transform: translateX(-3px);
+}
+
+.login-brand-logo-img {
+  height: 38px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+  transition: transform var(--transition-fast);
+}
+
+.login-brand-logo-img:hover {
+  transform: scale(1.04);
+}
+
+/* Main Container - Perfectly Centered, Fit to Screen */
+.login-container {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 440px;
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --------------------------------------------------------------------------
+   Interactive 3D Cyber Robot Mascot
+   -------------------------------------------------------------------------- */
+.robot-stage {
+  position: relative;
+  width: 190px;
+  height: 165px;
+  margin-bottom: -18px;
+  z-index: 20;
+  perspective: 900px;
+}
+
+.robot-body-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform-style: preserve-3d;
+  transition: transform 0.18s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+/* 3D Ambient Occlusion Shadow */
+.robot-ground-shadow {
+  position: absolute;
+  bottom: 2px;
+  width: 140px;
+  height: 18px;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.3) 50%, transparent 75%);
+  border-radius: 50%;
+  filter: blur(4px);
+  z-index: 5;
+  transform: translateZ(-20px);
+  transition: transform 0.2s ease-out;
+}
+
+/* 3D Antenna Assembly */
+.robot-antenna-assembly {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 15;
+  transform: translateZ(10px);
+}
+
+.robot-antenna-base {
+  width: 16px;
+  height: 6px;
+  background: linear-gradient(180deg, #94a3b8 0%, #334155 50%, #0f172a 100%);
+  border-radius: 4px 4px 0 0;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.4);
+}
+
+.robot-antenna-stalk {
+  width: 5px;
+  height: 22px;
+  background: linear-gradient(90deg, #334155 0%, #f1f5f9 45%, #94a3b8 70%, #0f172a 100%);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+  border-radius: 2px;
+}
+
+.robot-antenna-orb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  position: relative;
+  margin-bottom: -2px;
+  background: radial-gradient(circle at 35% 30%, #ffffff 0%, #38bdf8 35%, #0284c7 70%, #0369a1 100%);
+  box-shadow: 
+    0 0 16px #00d2ff, 
+    0 0 32px rgba(0, 210, 255, 0.8),
+    inset -2px -2px 6px rgba(0, 0, 0, 0.6),
+    inset 2px 2px 4px rgba(255, 255, 255, 0.8);
+  animation: antenna-float 2.5s infinite ease-in-out;
+}
+
+@keyframes antenna-float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-3px) scale(1.08); filter: brightness(1.25); }
+}
+
+.antenna-glass-shine {
+  position: absolute;
+  top: 3px;
+  left: 4px;
+  width: 5px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  transform: rotate(-30deg);
+}
+
+/* 3D Cylindrical Ear Nodes */
+.robot-ear {
+  position: absolute;
+  top: 50px;
+  width: 14px;
+  height: 32px;
+  background: linear-gradient(180deg, #64748b 0%, #1e293b 35%, #0f172a 75%, #334155 100%);
+  border-radius: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 
+    0 8px 16px rgba(0, 0, 0, 0.8),
+    inset 0 2px 3px rgba(255, 255, 255, 0.3),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.robot-ear.left {
+  left: 0px;
+  transform: rotateY(-15deg) translateZ(-5px);
+}
+
+.robot-ear.right {
+  right: 0px;
+  transform: rotateY(15deg) translateZ(-5px);
+}
+
+.ear-core-light {
+  width: 3px;
+  height: 14px;
+  background: #00d2ff;
+  border-radius: 2px;
+  box-shadow: 0 0 8px #00d2ff, 0 0 14px rgba(0, 210, 255, 0.9);
+}
+
+/* 3D Sculpted Robot Head */
+.robot-head {
+  width: 160px;
+  height: 118px;
+  background: radial-gradient(circle at 35% 20%, #475569 0%, #1e293b 40%, #0f172a 75%, #020617 100%);
+  border: 3px solid #38bdf8;
+  border-radius: 36px;
+  box-shadow: 
+    0 25px 45px -5px rgba(0, 0, 0, 0.85),
+    0 0 35px rgba(56, 189, 248, 0.35),
+    inset 0 4px 8px rgba(255, 255, 255, 0.45),
+    inset 0 -8px 18px rgba(0, 0, 0, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.22s cubic-bezier(0.165, 0.84, 0.44, 1);
+  z-index: 12;
+}
+
+/* Top Specular Glint */
+.head-specular-sheen {
+  position: absolute;
+  top: 4px;
+  left: 20px;
+  right: 20px;
+  height: 16px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 100%);
+  border-radius: 30px 30px 60px 60px;
+  pointer-events: none;
+}
+
+.head-rim-highlight {
+  position: absolute;
+  bottom: 4px;
+  left: 25px;
+  right: 25px;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.5), transparent);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* 3D Visor Recessed Frame */
+.robot-visor-frame {
+  width: 130px;
+  height: 70px;
+  background: linear-gradient(180deg, #090e17 0%, #1e293b 50%, #334155 100%);
+  border-radius: 24px;
+  padding: 3px;
+  box-shadow: 
+    inset 0 4px 8px rgba(0, 0, 0, 0.95),
+    0 2px 4px rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateZ(12px);
+}
+
+/* Visor Bubble Glass */
+.robot-visor {
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse at 50% 30%, #0f1c38 0%, #030712 85%);
+  border-radius: 21px;
+  border: 1px solid rgba(0, 210, 255, 0.35);
+  box-shadow: 
+    inset 0 0 20px rgba(0, 0, 0, 0.95),
+    0 0 12px rgba(0, 210, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Curved Helmet Glass Reflection Glare */
+.visor-curved-glare {
+  position: absolute;
+  top: 2px;
+  left: 8px;
+  right: 8px;
+  height: 26px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.04) 75%, transparent 100%);
+  border-radius: 18px 18px 50px 50px;
+  pointer-events: none;
+  z-index: 8;
+}
+
+/* 3D Spherical Robot Eyes */
+.robot-eye {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #020617;
+  border: 2px solid rgba(56, 189, 248, 0.5);
+  box-shadow: 
+    inset 0 3px 8px rgba(0, 0, 0, 0.95),
+    0 0 15px rgba(0, 210, 255, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.15s ease-out;
+  overflow: hidden;
+  z-index: 6;
+}
+
+.robot-pupil {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #ffffff 0%, #38bdf8 30%, #0284c7 65%, #0369a1 100%);
+  box-shadow: 
+    0 0 14px #00d2ff, 
+    0 0 26px rgba(0, 210, 255, 0.95),
+    inset 0 0 4px rgba(255, 255, 255, 0.8);
+  position: relative;
+  transition: transform 0.08s ease-out;
+}
+
+.pupil-glint-main {
+  position: absolute;
+  top: 3px;
+  left: 4px;
+  width: 5px;
+  height: 5px;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 4px #ffffff;
+}
+
+.pupil-glint-sub {
+  position: absolute;
+  bottom: 3px;
+  right: 4px;
+  width: 2.5px;
+  height: 2.5px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 50%;
+}
+
+/* Eyelids for natural blink or closed state */
+.robot-eyelid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 0%;
+  background: linear-gradient(180deg, #0f172a 0%, #020617 100%);
+  border-bottom: 2px solid #38bdf8;
+  transition: height 0.1s ease;
+  z-index: 10;
+}
+
+/* --------------------------------------------------------------------------
+   Holographic Speech Bubble ("Hi! 👋")
+   -------------------------------------------------------------------------- */
+.robot-speech-bubble {
+  position: absolute;
+  top: -30px;
+  right: -24px;
+  background: rgba(15, 23, 42, 0.96);
+  border: 1.5px solid #00d2ff;
+  border-radius: 12px;
+  padding: 6px 14px;
+  box-shadow: 
+    0 0 20px rgba(0, 210, 255, 0.5),
+    0 8px 24px rgba(0, 0, 0, 0.8);
+  z-index: 100;
+  opacity: 0;
+  transform: scale(0.5) translateY(10px);
+  pointer-events: none;
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.speech-text {
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: #00d2ff;
+  text-shadow: 0 0 10px rgba(0, 210, 255, 0.7);
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+.speech-arrow {
+  position: absolute;
+  bottom: -6px;
+  left: 18px;
+  width: 10px;
+  height: 6px;
+  background: #00d2ff;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+.robot-stage.saying-hi .robot-speech-bubble {
+  opacity: 1 !important;
+  transform: scale(1) translateY(0) !important;
+}
+
+/* --------------------------------------------------------------------------
+   3D Robotic Gauntlets with 4 Articulated Fingers
+   -------------------------------------------------------------------------- */
+.robot-hand {
+  position: absolute;
+  width: 50px;
+  height: 44px;
+  background: linear-gradient(145deg, #475569 0%, #1e293b 50%, #0f172a 100%);
+  border: 2px solid #38bdf8;
+  border-radius: 14px;
+  box-shadow: 
+    0 12px 24px rgba(0, 0, 0, 0.8),
+    inset 0 3px 5px rgba(255, 255, 255, 0.4),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.8),
+    0 0 16px rgba(56, 189, 248, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 3px 6px 3px;
+  bottom: 4px;
+  z-index: 25;
+  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  pointer-events: none;
+  transform-style: preserve-3d;
+}
+
+.hand-knuckle-plate {
+  width: 28px;
+  height: 4px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.1), rgba(255,255,255,0.7), rgba(255,255,255,0.1));
+  border-radius: 2px;
+}
+
+/* 4 Distinct Mechanical Fingers */
+.hand-fingers-grid {
+  display: flex;
+  gap: 3px;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+}
+
+.robot-finger {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background: linear-gradient(180deg, #64748b 0%, #334155 50%, #0f172a 100%);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  border-radius: 3px;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.3);
+  transition: height 0.2s ease, transform 0.2s ease;
+}
+
+/* Finger Length Proportions (Pinky, Ring, Middle, Index) */
+.robot-finger:nth-child(1) { width: 7px; height: 13px; } /* Index */
+.robot-finger:nth-child(2) { width: 7px; height: 16px; } /* Middle */
+.robot-finger:nth-child(3) { width: 7px; height: 14px; } /* Ring */
+.robot-finger:nth-child(4) { width: 6.5px; height: 11px; } /* Pinky */
+
+.finger-glow-tip {
+  width: 100%;
+  height: 3px;
+  background: #00d2ff;
+  border-radius: 2px 2px 0 0;
+  box-shadow: 0 0 6px #00d2ff, 0 0 10px rgba(0, 210, 255, 0.9);
+}
+
+.robot-hand.left {
+  left: -12px;
+  transform: translateY(22px) rotate(-18deg) translateZ(15px);
+  opacity: 0.6;
+}
+
+.robot-hand.right {
+  right: -12px;
+  transform: translateY(22px) rotate(18deg) translateZ(15px);
+  opacity: 0.6;
+}
+
+/* --------------------------------------------------------------------------
+   Robot Dynamic States
+   -------------------------------------------------------------------------- */
+
+/* State: Saying Hi (Face Hover Shake + Hand Wave) */
+.robot-stage.saying-hi .robot-head {
+  animation: robot-wiggle-shake 0.55s ease-in-out forwards !important;
+  border-color: #00d2ff !important;
+  box-shadow: 
+    0 25px 45px -5px rgba(0, 0, 0, 0.85),
+    0 0 45px rgba(0, 210, 255, 0.6),
+    inset 0 4px 8px rgba(255, 255, 255, 0.6) !important;
+}
+
+@keyframes robot-wiggle-shake {
+  0% { transform: rotateX(0deg) rotateY(0deg) rotate(0deg) translateZ(10px); }
+  20% { transform: rotateX(-6deg) rotateY(-12deg) rotate(-8deg) translateZ(16px); }
+  40% { transform: rotateX(6deg) rotateY(12deg) rotate(8deg) translateZ(16px); }
+  60% { transform: rotateX(-4deg) rotateY(-8deg) rotate(-4deg) translateZ(14px); }
+  80% { transform: rotateX(4deg) rotateY(5deg) rotate(3deg) translateZ(14px); }
+  100% { transform: rotateX(0deg) rotateY(0deg) rotate(0deg) translateZ(10px); }
+}
+
+.robot-stage.saying-hi .robot-hand.right {
+  opacity: 1 !important;
+  animation: robot-wave-hand 0.38s ease-in-out infinite alternate !important;
+}
+
+@keyframes robot-wave-hand {
+  0% { transform: translate(12px, -48px) rotate(42deg) translateZ(30px); }
+  100% { transform: translate(20px, -55px) rotate(16deg) translateZ(30px); }
+}
+
+.robot-stage.saying-hi .robot-hand.right .robot-finger:nth-child(1) { transform: rotate(-8deg); }
+.robot-stage.saying-hi .robot-hand.right .robot-finger:nth-child(2) { transform: translateY(-2px); }
+.robot-stage.saying-hi .robot-hand.right .robot-finger:nth-child(4) { transform: rotate(8deg); }
+
+.robot-stage.saying-hi .robot-pupil {
+  transform: scale(1.2) !important;
+}
+
+.robot-stage.saying-hi .robot-antenna-orb {
+  animation: antenna-float 1s infinite ease-in-out alternate !important;
+  filter: brightness(1.4) !important;
+}
+
+/* State: Watching Email */
+.robot-head.watching-email {
+  transform: translateY(8px) rotateX(16deg) !important;
+  border-color: #00d2ff;
+}
+
+.robot-head.watching-email .robot-pupil {
+  transform: translateY(4px) scale(0.95);
+}
+
+/* State: Covering Eyes (Password Entry) */
+.robot-stage.covering-eyes .robot-head {
+  transform: translateY(-4px) rotateX(-5deg) translateZ(10px);
+}
+
+.robot-stage.covering-eyes .robot-hand.left {
+  transform: translate(50px, -40px) rotate(24deg) scale(1.15) translateZ(28px);
+  opacity: 1;
+}
+
+.robot-stage.covering-eyes .robot-hand.right {
+  transform: translate(-50px, -40px) rotate(-24deg) scale(1.15) translateZ(28px);
+  opacity: 1;
+}
+
+.robot-stage.covering-eyes .robot-eyelid {
+  height: 100%;
+}
+
+.robot-stage.covering-eyes .robot-antenna-orb {
+  background: radial-gradient(circle at 35% 30%, #ffffff 0%, #fb7185 35%, #f43f5e 70%, #be123c 100%);
+  box-shadow: 0 0 18px #f43f5e, 0 0 32px rgba(244, 63, 94, 0.8);
+}
+
+/* State: Peeking Eyes (Show Password) */
+.robot-stage.peeking-eyes .robot-hand.left {
+  transform: translate(50px, -40px) rotate(24deg) scale(1.15) translateZ(28px);
+  opacity: 1;
+}
+
+.robot-stage.peeking-eyes .robot-hand.right {
+  transform: translate(-34px, -22px) rotate(-42deg) scale(1.05) translateZ(28px);
+  opacity: 1;
+}
+
+.robot-stage.peeking-eyes .robot-eye.right .robot-eyelid {
+  height: 0%; /* One eye open! */
+}
+
+.robot-stage.peeking-eyes .robot-eye.left .robot-eyelid {
+  height: 100%; /* Left eye still shut */
+}
+
+.robot-stage.peeking-eyes .robot-eye.right .robot-pupil {
+  transform: scale(1.2) translate(-3px, 2px);
+}
+
+/* State: Celebration / Happy (Successful Login) */
+.robot-stage.happy-login .robot-head {
+  animation: robot-bounce 0.6s ease infinite alternate;
+  border-color: #10b981;
+}
+
+@keyframes robot-bounce {
+  0% { transform: translateY(0) scale(1) translateZ(10px); }
+  100% { transform: translateY(-12px) scale(1.05) translateZ(18px); }
+}
+
+.robot-stage.happy-login .robot-antenna-orb {
+  background: radial-gradient(circle at 35% 30%, #ffffff 0%, #34d399 35%, #10b981 70%, #047857 100%);
+  box-shadow: 0 0 20px #10b981, 0 0 36px rgba(16, 185, 129, 0.8);
+}
+
+.robot-stage.happy-login .robot-hand.left {
+  transform: translate(-14px, -52px) rotate(-40deg) scale(1.1) translateZ(25px);
+  opacity: 1;
+}
+
+.robot-stage.happy-login .robot-hand.right {
+  transform: translate(14px, -52px) rotate(40deg) scale(1.1) translateZ(25px);
+  opacity: 1;
+}
+
+.robot-stage.happy-login .robot-pupil {
+  width: 20px;
+  height: 10px;
+  border-radius: 10px 10px 0 0;
+  background: #10b981;
+  box-shadow: 0 0 15px #10b981;
+}
+
+/* --------------------------------------------------------------------------
+
+/* --------------------------------------------------------------------------
+   Login Card
+   -------------------------------------------------------------------------- */
+.login-card {
+  width: 100%;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  padding: 22px 28px 18px 28px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.7),
+    0 0 35px rgba(37, 99, 235, 0.2);
+  position: relative;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.login-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #2563eb, #00d2ff, #2563eb);
+}
+
+.login-card-header {
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.login-card-title {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 2px;
+}
+
+.login-card-title span {
+  background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.login-card-subtitle {
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+/* Form Styles */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.input-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.input-label-row label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #cbd5e1;
+}
+
+.forgot-password-link {
+  font-size: 0.75rem;
+  color: #38bdf8;
+  transition: color var(--transition-fast);
+}
+
+.forgot-password-link:hover {
+  color: #00d2ff;
+  text-decoration: underline;
+}
+
+.input-field-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon-left {
+  position: absolute;
+  left: 12px;
+  color: #64748b;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+}
+
+.login-input {
+  width: 100%;
+  background: rgba(2, 6, 23, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 10px 14px 10px 38px;
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  outline: none;
+  transition: all var(--transition-fast);
+}
+
+.login-input:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 3px rgba(0, 210, 255, 0.2), 0 0 16px rgba(0, 210, 255, 0.15);
+  background: rgba(2, 6, 23, 0.95);
+}
+
+.input-toggle-right {
+  position: absolute;
+  right: 10px;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 6px;
+  transition: color var(--transition-fast);
+}
+
+.input-toggle-right:hover {
+  color: #38bdf8;
+}
+
+/* Remember Me Checkbox */
+.remember-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.remember-row input[type="checkbox"] {
+  accent-color: var(--blue-primary);
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+}
+
+/* Submit Button */
+.btn-submit-login {
+  background: linear-gradient(135deg, #2563eb 0%, #00d2ff 100%);
+  color: #ffffff;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  padding: 11px;
+  border-radius: var(--radius-pill);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+  transition: all var(--transition-fast);
+  margin-top: 2px;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-submit-login:hover {
+  box-shadow: 0 8px 25px rgba(0, 210, 255, 0.45);
+  transform: translateY(-2px);
+}
+
+.btn-submit-login:active {
+  transform: translateY(0);
+}
+
+.btn-submit-login.loading {
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+/* Card Footer */
+.login-card-footer {
+  margin-top: 14px;
+  text-align: center;
+  font-size: 0.78rem;
+  color: #94a3b8;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 12px;
+}
+
+.login-card-footer a {
+  color: #38bdf8;
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+.login-card-footer a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 520px) {
+  .login-card {
+    padding: 28px 20px;
+  }
+
+  .login-top-nav {
+    left: 16px;
+    right: 16px;
+  }
+}
+
+
