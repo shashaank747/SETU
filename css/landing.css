@@ -305,6 +305,13 @@
   max-width: 520px;
 }
 
+.hero-subtitle strong,
+.hero-highlight-bold {
+  color: #ffffff;
+  font-weight: 700;
+  text-shadow: 0 0 16px rgba(56, 189, 248, 0.35);
+}
+
 .hero-features-list {
   display: flex;
   flex-wrap: wrap;

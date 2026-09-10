@@ -132,15 +132,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Robot celebrates!
         window.RobotMascot?.celebrate();
-        showLoginToast('Welcome back! Session established.', 'success');
+        showLoginToast('Welcome back! Redirecting to Dashboard...', 'success');
 
-        // Reset after a moment
+        // Check if role was passed in query params
+        const urlParams = new URLSearchParams(window.location.search);
+        const role = urlParams.get('role');
+        const targetUrl = role ? `dashboard.html?role=${encodeURIComponent(role)}` : 'dashboard.html';
+
+        // Smooth quick redirect to dashboard
         setTimeout(() => {
-          submitBtn.innerHTML = originalBtnHtml;
-          submitBtn.style.background = '';
-          window.RobotMascot?.setIdle();
-        }, 4000);
-      }, 1200);
+          window.location.replace(targetUrl);
+        }, 700);
+      }, 600);
     });
   }
 

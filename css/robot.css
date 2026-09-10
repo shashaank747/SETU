@@ -1,0 +1,1106 @@
+/* ==========================================================================
+   AppTechno CampusOS - CyberBot 3D Robot Mascot & Intelligent Chatbot System
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   3D Robot Mascot Foundation & Perspective
+   -------------------------------------------------------------------------- */
+.robot-stage {
+  position: relative;
+  width: 190px;
+  height: 165px;
+  margin-bottom: -18px;
+  z-index: 20;
+  perspective: 900px;
+}
+
+.robot-body-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform-style: preserve-3d;
+  transition: transform 0.18s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+/* 3D Ambient Occlusion Shadow */
+.robot-ground-shadow {
+  position: absolute;
+  bottom: 2px;
+  width: 140px;
+  height: 18px;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.3) 50%, transparent 75%);
+  border-radius: 50%;
+  filter: blur(4px);
+  z-index: 5;
+  transform: translateZ(-20px);
+  transition: transform 0.2s ease-out;
+}
+
+/* 3D Antenna Assembly */
+.robot-antenna-assembly {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 15;
+  transform: translateZ(10px);
+}
+
+.robot-antenna-base {
+  width: 16px;
+  height: 6px;
+  background: linear-gradient(180deg, #94a3b8 0%, #334155 50%, #0f172a 100%);
+  border-radius: 4px 4px 0 0;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.4);
+}
+
+.robot-antenna-stalk {
+  width: 5px;
+  height: 22px;
+  background: linear-gradient(90deg, #334155 0%, #f1f5f9 45%, #94a3b8 70%, #0f172a 100%);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+  border-radius: 2px;
+}
+
+.robot-antenna-orb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  position: relative;
+  margin-bottom: -2px;
+  background: radial-gradient(circle at 35% 30%, #ffffff 0%, #38bdf8 35%, #0284c7 70%, #0369a1 100%);
+  box-shadow: 
+    0 0 16px #00d2ff, 
+    0 0 32px rgba(0, 210, 255, 0.8),
+    inset -2px -2px 6px rgba(0, 0, 0, 0.6),
+    inset 2px 2px 4px rgba(255, 255, 255, 0.8);
+  animation: antenna-float 2.5s infinite ease-in-out;
+}
+
+@keyframes antenna-float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-3px) scale(1.08); filter: brightness(1.25); }
+}
+
+.antenna-glass-shine {
+  position: absolute;
+  top: 3px;
+  left: 4px;
+  width: 5px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  transform: rotate(-30deg);
+}
+
+/* 3D Cylindrical Ear Nodes */
+.robot-ear {
+  position: absolute;
+  top: 50px;
+  width: 14px;
+  height: 32px;
+  background: linear-gradient(180deg, #64748b 0%, #1e293b 35%, #0f172a 75%, #334155 100%);
+  border-radius: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 
+    0 8px 16px rgba(0, 0, 0, 0.8),
+    inset 0 2px 3px rgba(255, 255, 255, 0.3),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.robot-ear.left {
+  left: 0px;
+  transform: rotateY(-15deg) translateZ(-5px);
+}
+
+.robot-ear.right {
+  right: 0px;
+  transform: rotateY(15deg) translateZ(-5px);
+}
+
+.ear-core-light {
+  width: 3px;
+  height: 14px;
+  background: #00d2ff;
+  border-radius: 2px;
+  box-shadow: 0 0 8px #00d2ff, 0 0 14px rgba(0, 210, 255, 0.9);
+}
+
+/* 3D Sculpted Robot Head */
+.robot-head {
+  width: 160px;
+  height: 118px;
+  background: radial-gradient(circle at 35% 20%, #475569 0%, #1e293b 40%, #0f172a 75%, #020617 100%);
+  border: 3px solid #38bdf8;
+  border-radius: 36px;
+  box-shadow: 
+    0 25px 45px -5px rgba(0, 0, 0, 0.85),
+    0 0 35px rgba(56, 189, 248, 0.35),
+    inset 0 4px 8px rgba(255, 255, 255, 0.45),
+    inset 0 -8px 18px rgba(0, 0, 0, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.22s cubic-bezier(0.165, 0.84, 0.44, 1);
+  z-index: 12;
+}
+
+.head-specular-sheen {
+  position: absolute;
+  top: 4px;
+  left: 20px;
+  right: 20px;
+  height: 16px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 100%);
+  border-radius: 30px 30px 60px 60px;
+  pointer-events: none;
+}
+
+.head-rim-highlight {
+  position: absolute;
+  bottom: 4px;
+  left: 25px;
+  right: 25px;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.5), transparent);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* 3D Visor Recessed Frame */
+.robot-visor-frame {
+  width: 130px;
+  height: 70px;
+  background: linear-gradient(180deg, #090e17 0%, #1e293b 50%, #334155 100%);
+  border-radius: 24px;
+  padding: 3px;
+  box-shadow: 
+    inset 0 4px 8px rgba(0, 0, 0, 0.95),
+    0 2px 4px rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateZ(12px);
+}
+
+.robot-visor {
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse at 50% 30%, #0f1c38 0%, #030712 85%);
+  border-radius: 21px;
+  border: 1px solid rgba(0, 210, 255, 0.35);
+  box-shadow: 
+    inset 0 0 20px rgba(0, 0, 0, 0.95),
+    0 0 12px rgba(0, 210, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  position: relative;
+  overflow: hidden;
+}
+
+.visor-curved-glare {
+  position: absolute;
+  top: 2px;
+  left: 8px;
+  right: 8px;
+  height: 26px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.04) 75%, transparent 100%);
+  border-radius: 18px 18px 50px 50px;
+  pointer-events: none;
+  z-index: 8;
+}
+
+/* 3D Spherical Robot Eyes */
+.robot-eye {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #020617;
+  border: 2px solid rgba(56, 189, 248, 0.5);
+  box-shadow: 
+    inset 0 3px 8px rgba(0, 0, 0, 0.95),
+    0 0 15px rgba(0, 210, 255, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.15s ease-out;
+  overflow: hidden;
+  z-index: 6;
+}
+
+.robot-pupil {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #ffffff 0%, #38bdf8 30%, #0284c7 65%, #0369a1 100%);
+  box-shadow: 
+    0 0 14px #00d2ff, 
+    0 0 26px rgba(0, 210, 255, 0.95),
+    inset 0 0 4px rgba(255, 255, 255, 0.8);
+  position: relative;
+  transition: transform 0.08s ease-out;
+}
+
+.pupil-glint-main {
+  position: absolute;
+  top: 3px;
+  left: 4px;
+  width: 5px;
+  height: 5px;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 4px #ffffff;
+}
+
+.pupil-glint-sub {
+  position: absolute;
+  bottom: 3px;
+  right: 4px;
+  width: 2.5px;
+  height: 2.5px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 50%;
+}
+
+.robot-eyelid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 0%;
+  background: linear-gradient(180deg, #0f172a 0%, #020617 100%);
+  border-bottom: 2px solid #38bdf8;
+  transition: height 0.1s ease;
+  z-index: 10;
+}
+
+/* Holographic Speech Bubble */
+.robot-speech-bubble {
+  position: absolute;
+  top: -30px;
+  right: -24px;
+  background: rgba(15, 23, 42, 0.96);
+  border: 1.5px solid #00d2ff;
+  border-radius: 12px;
+  padding: 6px 14px;
+  box-shadow: 
+    0 0 20px rgba(0, 210, 255, 0.5),
+    0 8px 24px rgba(0, 0, 0, 0.8);
+  z-index: 100;
+  opacity: 0;
+  transform: scale(0.5) translateY(10px);
+  pointer-events: none;
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.speech-text {
+  font-family: var(--font-heading, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto);
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #00d2ff;
+  text-shadow: 0 0 10px rgba(0, 210, 255, 0.7);
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+.speech-arrow {
+  position: absolute;
+  bottom: -6px;
+  left: 18px;
+  width: 10px;
+  height: 6px;
+  background: #00d2ff;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+.robot-stage.saying-hi .robot-speech-bubble {
+  opacity: 1 !important;
+  transform: scale(1) translateY(0) !important;
+}
+
+/* 3D Robotic Gauntlets with 4 Articulated Fingers */
+.robot-hand {
+  position: absolute;
+  width: 50px;
+  height: 44px;
+  background: linear-gradient(145deg, #475569 0%, #1e293b 50%, #0f172a 100%);
+  border: 2px solid #38bdf8;
+  border-radius: 14px;
+  box-shadow: 
+    0 12px 24px rgba(0, 0, 0, 0.8),
+    inset 0 3px 5px rgba(255, 255, 255, 0.4),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.8),
+    0 0 16px rgba(56, 189, 248, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 3px 6px 3px;
+  bottom: 4px;
+  z-index: 25;
+  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  pointer-events: none;
+  transform-style: preserve-3d;
+}
+
+.hand-knuckle-plate {
+  width: 28px;
+  height: 4px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.1), rgba(255,255,255,0.7), rgba(255,255,255,0.1));
+  border-radius: 2px;
+}
+
+.hand-fingers-grid {
+  display: flex;
+  gap: 3px;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+}
+
+.robot-finger {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background: linear-gradient(180deg, #64748b 0%, #334155 50%, #0f172a 100%);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  border-radius: 3px;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.3);
+  transition: height 0.2s ease, transform 0.2s ease;
+}
+
+.robot-finger:nth-child(1) { width: 7px; height: 13px; }
+.robot-finger:nth-child(2) { width: 7px; height: 16px; }
+.robot-finger:nth-child(3) { width: 7px; height: 14px; }
+.robot-finger:nth-child(4) { width: 6.5px; height: 11px; }
+
+.finger-glow-tip {
+  width: 100%;
+  height: 3px;
+  background: #00d2ff;
+  border-radius: 2px 2px 0 0;
+  box-shadow: 0 0 6px #00d2ff, 0 0 10px rgba(0, 210, 255, 0.9);
+}
+
+.robot-hand.left {
+  left: -12px;
+  transform: translateY(22px) rotate(-18deg) translateZ(15px);
+  opacity: 0.6;
+}
+
+.robot-hand.right {
+  right: -12px;
+  transform: translateY(22px) rotate(18deg) translateZ(15px);
+  opacity: 0.6;
+}
+
+/* Wiggle Shake & Hand Wave */
+.robot-stage.saying-hi .robot-head {
+  animation: robot-wiggle-shake 0.55s ease-in-out forwards !important;
+  border-color: #00d2ff !important;
+  box-shadow: 
+    0 25px 45px -5px rgba(0, 0, 0, 0.85),
+    0 0 45px rgba(0, 210, 255, 0.6),
+    inset 0 4px 8px rgba(255, 255, 255, 0.6) !important;
+}
+
+@keyframes robot-wiggle-shake {
+  0% { transform: rotateX(0deg) rotateY(0deg) rotate(0deg) translateZ(10px); }
+  20% { transform: rotateX(-6deg) rotateY(-12deg) rotate(-8deg) translateZ(16px); }
+  40% { transform: rotateX(6deg) rotateY(12deg) rotate(8deg) translateZ(16px); }
+  60% { transform: rotateX(-4deg) rotateY(-8deg) rotate(-4deg) translateZ(14px); }
+  80% { transform: rotateX(4deg) rotateY(5deg) rotate(3deg) translateZ(14px); }
+  100% { transform: rotateX(0deg) rotateY(0deg) rotate(0deg) translateZ(10px); }
+}
+
+.robot-stage.saying-hi .robot-hand.right {
+  opacity: 1 !important;
+  animation: robot-wave-hand 0.38s ease-in-out infinite alternate !important;
+}
+
+@keyframes robot-wave-hand {
+  0% { transform: translate(12px, -48px) rotate(42deg) translateZ(30px); }
+  100% { transform: translate(20px, -55px) rotate(16deg) translateZ(30px); }
+}
+
+.robot-stage.saying-hi .robot-hand.right .robot-finger:nth-child(1) { transform: rotate(-8deg); }
+.robot-stage.saying-hi .robot-hand.right .robot-finger:nth-child(2) { transform: translateY(-2px); }
+.robot-stage.saying-hi .robot-hand.right .robot-finger:nth-child(4) { transform: rotate(8deg); }
+
+.robot-stage.saying-hi .robot-pupil {
+  transform: scale(1.2) !important;
+}
+
+.robot-stage.saying-hi .robot-antenna-orb {
+  animation: antenna-float 1s infinite ease-in-out alternate !important;
+  filter: brightness(1.4) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Small Navbar Miniature Hovering Robot Button
+   -------------------------------------------------------------------------- */
+.nav-robot-btn-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.85) 100%);
+  border: 1.5px solid rgba(56, 189, 248, 0.35);
+  border-radius: 9999px;
+  padding: 3px 14px 3px 6px;
+  cursor: pointer;
+  transition: all 0.28s cubic-bezier(0.165, 0.84, 0.44, 1);
+  box-shadow: 0 4px 14px rgba(0, 210, 255, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  height: 42px;
+  user-select: none;
+  position: relative;
+  overflow: visible;
+}
+
+.nav-robot-btn-wrapper:hover {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(2, 132, 199, 0.25) 100%);
+  border-color: #00d2ff;
+  box-shadow: 0 6px 22px rgba(0, 210, 255, 0.35), 0 0 12px rgba(56, 189, 248, 0.3);
+  transform: translateY(-2px);
+}
+
+.nav-robot-btn-wrapper:active {
+  transform: translateY(0);
+}
+
+/* Scaled Small Robot Stage inside Navbar */
+.robot-stage.robot-mini {
+  width: 58px;
+  height: 44px;
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: scale(0.33);
+  transform-origin: center center;
+  filter: drop-shadow(0 4px 12px rgba(0, 210, 255, 0.4));
+  animation: robot-nav-hover-float 3.2s ease-in-out infinite;
+}
+
+@keyframes robot-nav-hover-float {
+  0%, 100% {
+    transform: scale(0.33) translateY(0);
+  }
+  50% {
+    transform: scale(0.33) translateY(-5px);
+  }
+}
+
+.nav-robot-btn-wrapper:hover .robot-stage.robot-mini {
+  animation-duration: 1.5s;
+}
+
+.nav-robot-btn-wrapper .robot-speech-bubble {
+  top: -38px;
+  right: -55px;
+  padding: 4px 10px;
+  border-radius: 8px;
+}
+
+.nav-robot-btn-wrapper .speech-text {
+  font-size: 0.72rem;
+}
+
+/* Info Labels next to mini robot */
+.nav-robot-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-robot-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-heading, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  letter-spacing: 0.02em;
+}
+
+.robot-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981, 0 0 16px rgba(16, 185, 129, 0.8);
+  animation: robot-dot-pulse 2s infinite;
+}
+
+@keyframes robot-dot-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.nav-robot-kbd {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 6px;
+  padding: 2px 7px;
+  font-family: var(--font-heading, monospace);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #94a3b8;
+  letter-spacing: 0.04em;
+}
+
+.nav-robot-btn-wrapper:hover .nav-robot-kbd {
+  color: #00d2ff;
+  border-color: rgba(0, 210, 255, 0.4);
+}
+
+/* --------------------------------------------------------------------------
+   Floating Bottom-Right CyberBot AI Widget Dock
+   -------------------------------------------------------------------------- */
+.floating-cyberbot-dock {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 99990;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.94) 0%, rgba(30, 41, 59, 0.92) 100%);
+  border: 1.5px solid rgba(0, 210, 255, 0.5);
+  border-radius: 9999px;
+  padding: 4px 16px 4px 6px;
+  cursor: pointer;
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.65), 
+    0 0 24px rgba(0, 210, 255, 0.25),
+    inset 0 1px 2px rgba(255, 255, 255, 0.25);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.floating-cyberbot-dock:hover {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(2, 132, 199, 0.35) 100%);
+  border-color: #00d2ff;
+  box-shadow: 
+    0 16px 40px rgba(0, 0, 0, 0.8), 
+    0 0 35px rgba(0, 210, 255, 0.55),
+    inset 0 1px 3px rgba(255, 255, 255, 0.35);
+  transform: translateY(-4px) scale(1.03);
+}
+
+.floating-cyberbot-dock:active {
+  transform: translateY(-1px) scale(0.98);
+}
+
+.floating-cyberbot-dock .robot-stage.robot-mini {
+  width: 56px;
+  height: 46px;
+  margin-bottom: 0;
+  transform: scale(0.36);
+  transform-origin: center center;
+  filter: drop-shadow(0 4px 12px rgba(0, 210, 255, 0.45));
+  animation: robot-nav-hover-float 3s ease-in-out infinite;
+}
+
+/* Only dynamic face visible: hide hands, waving, and speech bubble greetings */
+.floating-cyberbot-dock .robot-hand,
+.robot-stage.robot-mini .robot-hand {
+  display: none !important;
+}
+
+.floating-cyberbot-dock .robot-speech-bubble,
+.robot-stage.robot-mini .robot-speech-bubble {
+  display: none !important;
+}
+
+.floating-bot-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.floating-bot-label {
+  font-family: var(--font-heading, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+}
+
+.floating-bot-kbd {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 6px;
+  padding: 2px 7px;
+  font-family: var(--font-heading, monospace);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+.floating-cyberbot-dock:hover .floating-bot-kbd {
+  color: #00d2ff;
+  border-color: rgba(0, 210, 255, 0.5);
+}
+
+/* Adjust Toast notification so it floats nicely above the bottom-right dock */
+.dash-toast {
+  bottom: 96px !important;
+  right: 24px !important;
+}
+/* Screen Backdrop: Completely removed so the rest of the screen stays 100% visible and unblurred */
+.cyberbot-backdrop {
+  display: none !important;
+}
+
+/* Floating CyberBot AI Card (Hovering Rounded Rectangle) */
+.cyberbot-drawer {
+  position: fixed;
+  bottom: 84px;
+  right: 24px;
+  top: auto;
+  left: auto;
+  width: 420px;
+  max-width: calc(100vw - 32px);
+  height: 590px;
+  max-height: calc(100vh - 108px);
+  background: linear-gradient(165deg, rgba(13, 20, 36, 0.98) 0%, rgba(15, 23, 42, 0.98) 60%, rgba(8, 14, 28, 0.99) 100%);
+  border: 1.5px solid rgba(0, 210, 255, 0.45);
+  border-radius: 24px;
+  box-shadow: 
+    0 24px 60px rgba(0, 0, 0, 0.88), 
+    0 0 35px rgba(0, 210, 255, 0.22),
+    inset 0 1px 2px rgba(255, 255, 255, 0.2);
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(20px) scale(0.95);
+  transform-origin: bottom right;
+  transition: 
+    opacity 0.26s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.26s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0.26s ease;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.cyberbot-drawer.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+/* Chatbot Drawer Header */
+.cyberbot-header {
+  padding: 18px 22px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cyberbot-header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.cyberbot-avatar-badge {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: radial-gradient(circle at 40% 30%, #1e293b 0%, #020617 100%);
+  border: 1.5px solid #00d2ff;
+  box-shadow: 0 0 16px rgba(0, 210, 255, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+/* Embedded Miniature 3D Robot in Header Badge */
+.cyberbot-avatar-badge .robot-stage.robot-avatar-mini {
+  position: absolute;
+  top: 52%;
+  left: 50%;
+  width: 46px;
+  height: 46px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(-50%, -50%) scale(0.25);
+  transform-origin: center center;
+  filter: drop-shadow(0 2px 8px rgba(0, 210, 255, 0.5));
+  pointer-events: none;
+}
+
+.cyberbot-avatar-badge .robot-ground-shadow,
+.cyberbot-avatar-badge .robot-hand,
+.cyberbot-avatar-badge .robot-speech-bubble {
+  display: none !important;
+}
+
+.cyberbot-online-orb {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #10b981;
+  border: 2px solid #090e17;
+  box-shadow: 0 0 8px #10b981, 0 0 14px rgba(16, 185, 129, 0.8);
+  z-index: 30;
+}
+
+.bot-avatar-svg {
+  display: block;
+  filter: drop-shadow(0 0 4px rgba(0, 210, 255, 0.5));
+}
+
+.cyberbot-title {
+  font-family: var(--font-heading, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cyberbot-ai-tag {
+  background: linear-gradient(135deg, #00d2ff, #2563eb);
+  color: #ffffff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 6px;
+  letter-spacing: 0.06em;
+}
+
+.cyberbot-subtitle {
+  font-family: var(--font-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto);
+  font-size: 0.76rem;
+  color: #94a3b8;
+  margin-top: 2px;
+}
+
+.cyberbot-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-cyberbot-tool {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+  border-radius: 10px;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-cyberbot-tool:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  border-color: #00d2ff;
+}
+
+/* Chat Messages Container */
+.cyberbot-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  scroll-behavior: smooth;
+}
+
+.cyberbot-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.cyberbot-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.cyberbot-body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+/* Message Bubbles */
+.chat-msg {
+  display: flex;
+  gap: 12px;
+  max-width: 92%;
+  animation: chat-fade-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes chat-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.chat-msg.user {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+.chat-msg.bot {
+  align-self: flex-start;
+}
+
+.chat-msg-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.chat-msg.bot .chat-msg-avatar {
+  background: rgba(0, 210, 255, 0.12);
+  border: 1px solid rgba(0, 210, 255, 0.4);
+}
+
+.chat-msg.user .chat-msg-avatar {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+
+.chat-bubble {
+  padding: 12px 16px;
+  border-radius: 18px;
+  font-family: var(--font-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  position: relative;
+}
+
+.chat-msg.bot .chat-bubble {
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #e2e8f0;
+  border-top-left-radius: 4px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+}
+
+.chat-msg.user .chat-bubble {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: #ffffff;
+  border-top-right-radius: 4px;
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.35);
+}
+
+.chat-bubble p {
+  margin: 0 0 8px 0;
+}
+
+.chat-bubble p:last-child {
+  margin-bottom: 0;
+}
+
+.chat-bubble strong {
+  color: #38bdf8;
+}
+
+.chat-msg.user .chat-bubble strong {
+  color: #ffffff;
+}
+
+/* Direct Action Buttons inside Bot Message */
+.chat-actions-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.chat-action-btn {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.25) 0%, rgba(14, 165, 233, 0.2) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.5);
+  color: #38bdf8;
+  font-family: var(--font-heading, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 6px 13px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.chat-action-btn:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #0284c7 100%);
+  color: #ffffff;
+  border-color: #38bdf8;
+  box-shadow: 0 4px 14px rgba(0, 210, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+/* Quick Recommendation Chips */
+.cyberbot-quick-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 0 4px 0;
+}
+
+.chip-btn {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #94a3b8;
+  font-family: var(--font-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto);
+  font-size: 0.76rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chip-btn:hover {
+  background: rgba(56, 189, 248, 0.18);
+  border-color: #00d2ff;
+  color: #38bdf8;
+  transform: translateY(-1px);
+}
+
+/* Chat Input Footer */
+.cyberbot-footer {
+  padding: 16px 20px 20px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(10px);
+}
+
+.cyberbot-input-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(2, 6, 23, 0.8);
+  border: 1.5px solid rgba(56, 189, 248, 0.35);
+  border-radius: 16px;
+  padding: 4px 8px 4px 16px;
+  transition: all 0.2s ease;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.cyberbot-input-box:focus-within {
+  border-color: #00d2ff;
+  box-shadow: 0 0 16px rgba(0, 210, 255, 0.25), inset 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.cyberbot-text-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--font-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto);
+  font-size: 0.88rem;
+  color: #f8fafc;
+}
+
+.cyberbot-text-input::placeholder {
+  color: #64748b;
+}
+
+.btn-cyberbot-send {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #00d2ff 0%, #2563eb 100%);
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 3px 10px rgba(0, 210, 255, 0.35);
+}
+
+.btn-cyberbot-send:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 16px rgba(0, 210, 255, 0.55);
+}
+
+.btn-cyberbot-send:active {
+  transform: scale(0.96);
+}
+
+.cyberbot-hints-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  padding: 0 4px;
+  font-family: var(--font-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto);
+  font-size: 0.70rem;
+  color: #64748b;
+}
+
+.cyberbot-hints-row kbd {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  padding: 1px 5px;
+  color: #94a3b8;
+}
+
+@media (max-width: 640px) {
+  .cyberbot-drawer {
+    width: calc(100vw - 24px);
+    right: 12px;
+    bottom: 80px;
+    max-height: calc(100vh - 96px);
+    border-radius: 20px;
+  }
+}
