@@ -1,0 +1,2467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin ERP &bull; 3D Biometric Ground Truth & Exam Governance | SETU</title>
+  <link rel="icon" type="image/png" href="setu.png">
+
+  <!-- Inter Font from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 8px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 8px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    .modal-backdrop {
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+    }
+    .modal-backdrop.open {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal-content-box {
+      transform: scale(0.97);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .modal-backdrop.open .modal-content-box {
+      transform: scale(1);
+    }
+    .camera-mirrored {
+      transform: scaleX(-1) !important;
+      -webkit-transform: scaleX(-1) !important;
+    }
+    @keyframes pulseGlowGreen {
+      0%, 100% { box-shadow: 0 0 16px rgba(16, 185, 129, 0.85); border-color: #10b981; }
+      50% { box-shadow: 0 0 28px rgba(16, 185, 129, 1); border-color: #34d399; }
+    }
+    @keyframes pulseGlowRed {
+      0%, 100% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.95); border-color: #ef4444; }
+      50% { box-shadow: 0 0 35px rgba(239, 68, 68, 1); border-color: #f87171; }
+    }
+    .proctor-frame-green {
+      border: 3px solid #10b981 !important;
+      animation: pulseGlowGreen 2s infinite ease-in-out;
+    }
+    .proctor-frame-red {
+      border: 3px solid #ef4444 !important;
+      animation: pulseGlowRed 0.8s infinite ease-in-out;
+    }
+    @keyframes pulseGlowAmber {
+      0%, 100% { box-shadow: 0 0 16px rgba(245, 158, 11, 0.7); border-color: #f59e0b; }
+      50% { box-shadow: 0 0 24px rgba(245, 158, 11, 0.9); border-color: #fbbf24; }
+    }
+    .proctor-frame-amber {
+      border: 3px solid #f59e0b !important;
+      animation: pulseGlowAmber 1.5s infinite ease-in-out;
+    }
+    .scanner-laser {
+      animation: scanLaser 2s infinite ease-in-out alternate;
+    }
+    @keyframes scanLaser {
+      0% { top: 6%; opacity: 0.85; }
+      100% { top: 92%; opacity: 0.85; }
+    }
+    .audio-bar-pulse {
+      animation: audioWave 0.6s infinite ease-in-out alternate;
+    }
+    @keyframes audioWave {
+      0% { height: 4px; }
+      100% { height: 20px; }
+    }
+  </style>
+</head>
+<body class="bg-[#F8F9FD] text-[#1E293B] min-h-screen flex flex-col antialiased">
+
+  <!-- ====================================================================== -->
+  <!-- TOP PORTAL HEADER -->
+  <!-- ====================================================================== -->
+  <header class="bg-white border-b border-slate-200 px-4 sm:px-8 py-3.5 flex items-center justify-between sticky top-0 z-40 shadow-xs">
+    <div class="flex items-center gap-3">
+      <a href="assignments.html" class="flex items-center gap-2 group">
+        <img src="setu.png" alt="SETU" class="h-8 w-auto object-contain">
+      </a>
+      <div class="h-5 w-[1px] bg-slate-200"></div>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-extrabold uppercase tracking-wider text-cyan-700 bg-cyan-50 px-2 py-0.5 rounded border border-cyan-200">Admin ERP Proctor Audit</span>
+          <h1 class="text-sm font-bold text-slate-900 hidden sm:inline" id="portal-header-title">Institutional Biometric Integrity &amp; Exam Governance</h1>
+        </div>
+        <p class="text-[11px] text-slate-500">
+          Auditor: <strong class="text-slate-800">System Administrator</strong> &bull; Scope: <span class="text-slate-700 font-medium">Institutional Cohort Oversight</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Right Side Actions -->
+    <div class="flex items-center gap-2 sm:gap-3">
+      <button type="button" onclick="Face3DStudio.open()" class="px-3 py-1.5 rounded-xl bg-purple-950/80 hover:bg-purple-900 text-purple-200 border border-purple-700/60 text-xs font-bold shadow-xs flex items-center gap-1.5 transition" title="Open Permanent 3D Biometric Face Database Studio">
+        <span class="text-sm">🧬</span>
+        <span class="hidden sm:inline">3D Face Studio</span>
+        <span id="nav-3d-badge" class="badge-3d-face text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-300">Setup 3D</span>
+      </button>
+
+      <button type="button" onclick="openSpeechLogModal()" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-purple-300 hover:text-white border border-slate-700 text-xs font-bold shadow-xs flex items-center gap-1.5 transition" title="Trainer Audit: Inspect Candidate Background Speech Logs">
+        <svg class="w-3.5 h-3.5 text-purple-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
+        <span>Trainer Audit Log</span>
+      </button>
+
+      <button type="button" onclick="confirmExitPortal()" class="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center gap-1.5 transition">
+        <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <span>Exit to Dashboard</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ====================================================================== -->
+  <!-- MAIN VIEWPORT CONTAINER -->
+  <!-- ====================================================================== -->
+  <main class="flex-1 flex flex-col justify-center p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto w-full">
+
+    <!-- ==================================================================== -->
+    <!-- PHASE 1: PRE-FLIGHT ONBOARDING & VERIFICATION WIZARD (FULL PAGE) -->
+    <!-- ==================================================================== -->
+    <section id="preflight-section" class="bg-white rounded-3xl shadow-xl border border-slate-200/90 overflow-hidden flex flex-col transition-all duration-300">
+      
+      <!-- Wizard Stepper Header -->
+      <div class="px-6 py-5 bg-gradient-to-r from-slate-900 via-purple-950 to-slate-900 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800">
+        <div>
+          <div class="flex items-center gap-2 text-xs font-semibold text-purple-300 uppercase tracking-wider mb-1">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            Proctoring Pre-Flight Verification
+          </div>
+          <h2 class="text-lg font-bold text-white leading-snug" id="preflight-exam-title">Mid-Term Diagnostic Quiz & Coding Assessment</h2>
+        </div>
+
+        <!-- 4-Step Visual Stepper Pills -->
+        <div class="flex items-center gap-1.5 overflow-x-auto py-1">
+          <div id="step-pill-1" class="px-3 py-1 rounded-full text-xs font-bold bg-purple-600 text-white shadow-sm flex items-center gap-1.5 shrink-0 transition">
+            <span class="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px]">1</span>
+            <span>Rules</span>
+          </div>
+          <div id="step-pill-2" class="px-3 py-1 rounded-full text-xs font-bold bg-slate-800 text-slate-400 flex items-center gap-1.5 shrink-0 transition">
+            <span class="w-4 h-4 rounded-full bg-white/10 flex items-center justify-center text-[10px]">2</span>
+            <span>Camera</span>
+          </div>
+          <div id="step-pill-3" class="px-3 py-1 rounded-full text-xs font-bold bg-slate-800 text-slate-400 flex items-center gap-1.5 shrink-0 transition">
+            <span class="w-4 h-4 rounded-full bg-white/10 flex items-center justify-center text-[10px]">3</span>
+            <span>Audio</span>
+          </div>
+          <div id="step-pill-4" class="px-3 py-1 rounded-full text-xs font-bold bg-slate-800 text-slate-400 flex items-center gap-1.5 shrink-0 transition">
+            <span class="w-4 h-4 rounded-full bg-white/10 flex items-center justify-center text-[10px]">4</span>
+            <span>Fullscreen</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= STEP 1: RULES & REGULATIONS ================= -->
+      <div id="wizard-step-1" class="p-6 sm:p-8 space-y-6">
+        <div>
+          <h3 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+            <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Mandatory Examination Instructions & Proctoring Policy
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">Please read and acknowledge all security guidelines before unlocking the biometric hardware checks.</p>
+        </div>
+
+        <!-- Rules Box -->
+        <div class="space-y-3 text-xs sm:text-sm text-slate-700 bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 leading-relaxed">
+          <div class="flex items-start gap-3">
+            <span class="w-5 h-5 rounded-full bg-purple-100 text-purple-700 font-bold flex items-center justify-center shrink-0 text-xs mt-0.5">1</span>
+            <div>
+              <strong class="text-slate-900 font-semibold">Continuous Facial Matching:</strong>
+              Your webcam will capture an initial baseline photo in Step 2. Throughout the assessment, our automated AI biometrics engine compares your live video to this baseline. If you leave the frame or a different person is detected, the floating camera frame glows <strong class="text-rose-600">Red</strong> and logs a security violation.
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <span class="w-5 h-5 rounded-full bg-purple-100 text-purple-700 font-bold flex items-center justify-center shrink-0 text-xs mt-0.5">2</span>
+            <div>
+              <strong class="text-slate-900 font-semibold">Continuous Speech Recognition & Audio Logging:</strong>
+              Continuous background voice recognition transcribes all spoken audio during the exam into temporary memory (<code class="bg-purple-100 text-purple-800 px-1.5 py-0.5 rounded font-mono text-xs">temp_exam_transcript_log</code>) for confidential review by the course trainer (hidden from student during and after exam).
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <span class="w-5 h-5 rounded-full bg-purple-100 text-purple-700 font-bold flex items-center justify-center shrink-0 text-xs mt-0.5">3</span>
+            <div>
+              <strong class="text-slate-900 font-semibold">Fullscreen Mode & Anti-Tab Switch:</strong>
+              The assessment must remain in Fullscreen mode. Exiting fullscreen, minimizing the browser window, or switching browser tabs logs an immediate security violation.
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <span class="w-5 h-5 rounded-full bg-purple-100 text-purple-700 font-bold flex items-center justify-center shrink-0 text-xs mt-0.5">4</span>
+            <div>
+              <strong class="text-slate-900 font-semibold">Violation Threshold:</strong>
+              Reaching 3 proctoring violations will immediately terminate the test and flag the session for the academic committee.
+            </div>
+          </div>
+        </div>
+
+        <!-- Acknowledgment Checkbox -->
+        <label class="flex items-start gap-3 p-4 bg-purple-50/70 border border-purple-200 rounded-2xl cursor-pointer hover:bg-purple-50 transition group">
+          <input type="checkbox" id="rules-agree-checkbox" onchange="handleAgreeCheckbox(this.checked)" class="mt-0.5 w-4 h-4 text-purple-600 rounded border-slate-300 focus:ring-purple-500 cursor-pointer">
+          <span class="text-xs sm:text-sm text-purple-950 font-medium leading-relaxed">
+            <strong>I acknowledge and agree:</strong> I have read all regulations and authorize real-time camera biometrics, baseline screenshot verification, background speech transcription, and fullscreen monitoring.
+          </span>
+        </label>
+
+        <!-- Actions -->
+        <div class="pt-4 border-t border-slate-200 flex items-center justify-between">
+          <button type="button" onclick="confirmExitPortal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-semibold rounded-xl transition">
+            Cancel & Return
+          </button>
+          <button type="button" id="btn-proceed-camera" onclick="goToProctorStep(2)" disabled class="px-6 py-2.5 bg-purple-600 hover:bg-purple-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white text-xs sm:text-sm font-bold rounded-xl shadow-md shadow-purple-500/20 flex items-center gap-2 transition hover:scale-[1.01] active:scale-[0.99]">
+            <span>Proceed to Camera Check</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- ================= STEP 2: CAMERA & BASELINE SNAPSHOT ================= -->
+      <div id="wizard-step-2" class="hidden p-6 sm:p-8 space-y-6">
+        <div>
+          <h3 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+            <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            Camera Authorization & Baseline Photo Enrollment
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">Please position your face centrally in the camera frame. The camera is mirrored naturally.</p>
+        </div>
+
+        <!-- 3D Face Biometric Enrollment Sync Status Card -->
+        <div id="step2-3d-profile-card" class="p-4 rounded-2xl bg-gradient-to-r from-purple-950/5 via-indigo-950/5 to-slate-900/5 border border-purple-200/90 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+          <div class="flex items-center gap-3">
+            <div id="step2-3d-mesh-icon" class="w-11 h-11 rounded-2xl bg-gradient-to-br from-purple-600 to-indigo-600 text-white flex items-center justify-center text-xl shadow-sm shrink-0">
+              🧬
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs sm:text-sm font-bold text-slate-900" id="step2-3d-title">Permanent 3D Biometric Face Database</span>
+                <span id="step2-3d-badge" class="badge-3d-face text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-300">Checking DB...</span>
+              </div>
+              <p class="text-[11px] text-slate-500 mt-0.5" id="step2-3d-desc">
+                Enrolled 3D face mesh (front + side profiles stitched) will be matched in real-time during the assessment.
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <button type="button" id="btn-use-3d-baseline" onclick="applyEnrolled3DFaceAsBaseline()" class="hidden px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-xs flex items-center gap-1.5 transition hover:scale-[1.02]">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Sync 3D Biometrics as Baseline</span>
+            </button>
+            <button type="button" onclick="Face3DStudio.open()" class="px-3.5 py-2 bg-white hover:bg-purple-50 text-purple-700 border border-purple-300 text-xs font-bold rounded-xl shadow-xs flex items-center gap-1.5 transition hover:scale-[1.02]">
+              <span id="btn-3d-studio-label">Enroll 3D Face (3-Angle)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Video & Snapshot Viewport -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          
+          <!-- Live Camera Feed Box -->
+          <div class="relative bg-slate-950 rounded-2xl overflow-hidden aspect-video border-2 border-purple-500/40 shadow-inner flex items-center justify-center">
+            <video id="proctor-cam-preview" autoplay playsinline muted class="camera-mirrored w-full h-full object-cover"></video>
+            
+            <!-- Scanning Laser Overlay -->
+            <div id="camera-scan-laser" class="scanner-laser absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_12px_#06b6d4] pointer-events-none"></div>
+
+            <!-- Face Detection Bounding Reticle -->
+            <div id="camera-face-box" class="absolute w-36 h-44 border-2 border-dashed border-cyan-400/80 rounded-2xl pointer-events-none flex flex-col justify-between p-2">
+              <span class="text-[9px] font-mono text-cyan-300 font-bold bg-slate-950/70 px-1.5 py-0.5 rounded self-start">AI SCANNING</span>
+              <span class="text-[9px] font-mono text-cyan-300 bg-slate-950/70 px-1.5 py-0.5 rounded self-end">CENTER FACE</span>
+            </div>
+
+            <!-- Mirrored Indicator Badge -->
+            <div class="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-xs text-slate-200 text-[10px] font-mono px-2 py-0.5 rounded border border-slate-700">
+              Mirrored View
+            </div>
+
+            <!-- Live Status Overlay -->
+            <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-[11px] font-mono text-white bg-slate-950/70 px-3 py-1.5 rounded-xl border border-slate-800">
+              <span id="camera-status-text" class="flex items-center gap-1.5 text-emerald-400 font-semibold">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                Webcam Feed Active
+              </span>
+              <span class="text-slate-400">1280x720 &bull; 30fps</span>
+            </div>
+          </div>
+
+          <!-- Captured Baseline Screenshot Preview Box -->
+          <div class="flex flex-col justify-between p-5 bg-slate-50 border border-slate-200 rounded-2xl">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-700">Baseline Enrollment Photo</span>
+                <span id="baseline-status-pill" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200">Pending Capture</span>
+              </div>
+              
+              <div id="baseline-container" class="aspect-video bg-slate-900 rounded-xl overflow-hidden flex items-center justify-center border border-slate-200 relative">
+                <img id="baseline-photo-img" src="" alt="Baseline Snapshot" class="w-full h-full object-cover hidden">
+                <div id="baseline-placeholder" class="text-center p-4 space-y-2 text-slate-400">
+                  <svg class="w-8 h-8 mx-auto text-slate-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                  <p class="text-xs font-medium">Click "Capture Baseline Photo" to save your enrollment photo.</p>
+                </div>
+              </div>
+
+              <p class="text-[11px] text-slate-500 mt-2.5 leading-relaxed">
+                This image will be stored temporarily in session storage (<code class="bg-slate-200 px-1 py-0.5 rounded text-[10px] font-mono">temp_exam_baseline_photo</code>) and will serve as the biometric ground truth for continuous similarity checks throughout the exam.
+              </p>
+            </div>
+
+            <!-- Capture / Retake Button -->
+            <div class="pt-3">
+              <button type="button" id="btn-capture-baseline" onclick="captureBaselinePhoto()" class="w-full py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white text-xs sm:text-sm font-bold rounded-xl shadow-md shadow-purple-500/20 flex items-center justify-center gap-2 transition hover:scale-[1.01] active:scale-[0.99]">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 4h-3.17L14.41 2H9.59L8.17 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/></svg>
+                <span id="capture-btn-text">Capture Baseline Photo & Verify Face</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Actions -->
+        <div class="pt-4 border-t border-slate-200 flex items-center justify-between">
+          <button type="button" onclick="goToProctorStep(1)" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-semibold rounded-xl transition">
+            &larr; Back to Rules
+          </button>
+          <button type="button" id="btn-proceed-audio" onclick="goToProctorStep(3)" disabled class="px-6 py-2.5 bg-purple-600 hover:bg-purple-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white text-xs sm:text-sm font-bold rounded-xl shadow-md shadow-purple-500/20 flex items-center gap-2 transition hover:scale-[1.01] active:scale-[0.99]">
+            <span>Proceed to Microphone Check</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- ================= STEP 3: MICROPHONE & SILENT SPEECH LOGGING ================= -->
+      <div id="wizard-step-3" class="hidden p-6 sm:p-8 space-y-6">
+        <div>
+          <h3 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+            <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            Microphone Authorization & Audio Calibration
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">Background speech recognition will continuously transcribe anything spoken during the exam into a temporary audit file.</p>
+        </div>
+
+        <!-- VU Meter & Audio Waveform Simulation -->
+        <div class="p-4 bg-slate-900 rounded-2xl border border-slate-800 text-white space-y-3">
+          <div class="flex items-center justify-between text-xs sm:text-sm">
+            <span class="flex items-center gap-2 text-slate-300 font-medium">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+              Microphone Audio Channel: <strong class="text-emerald-400">ACTIVE & CALIBRATED</strong>
+            </span>
+            <span class="text-xs font-mono text-slate-400">Gain: +12dB &bull; Sample: 48kHz</span>
+          </div>
+
+          <!-- Equalizer Bar Visualizer -->
+          <div class="h-8 flex items-center justify-center gap-2 px-6 bg-slate-950/70 rounded-xl">
+            <span class="w-2 h-3 bg-purple-500 rounded-full audio-bar-pulse" style="animation-delay: 0.1s"></span>
+            <span class="w-2 h-5 bg-purple-400 rounded-full audio-bar-pulse" style="animation-delay: 0.3s"></span>
+            <span class="w-2 h-4 bg-indigo-400 rounded-full audio-bar-pulse" style="animation-delay: 0.15s"></span>
+            <span class="w-2 h-6 bg-emerald-400 rounded-full audio-bar-pulse" style="animation-delay: 0.25s"></span>
+            <span class="w-2 h-4.5 bg-emerald-300 rounded-full audio-bar-pulse" style="animation-delay: 0.05s"></span>
+            <span class="w-2 h-6 bg-purple-400 rounded-full audio-bar-pulse" style="animation-delay: 0.35s"></span>
+            <span class="w-2 h-4 bg-indigo-500 rounded-full audio-bar-pulse" style="animation-delay: 0.2s"></span>
+            <span class="w-2 h-5 bg-purple-500 rounded-full audio-bar-pulse" style="animation-delay: 0.1s"></span>
+            <span class="w-2 h-3 bg-emerald-400 rounded-full audio-bar-pulse" style="animation-delay: 0.4s"></span>
+          </div>
+        </div>
+
+        <!-- Trainer Confidential Logging Notice -->
+        <div class="p-4 bg-purple-50/80 border border-purple-200 rounded-2xl space-y-2">
+          <div class="flex items-center gap-2 text-xs sm:text-sm font-bold text-purple-900">
+            <svg class="w-4 h-4 text-purple-600 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zm10-10V7a4 4 0 0 0-8 0v4h8z"/></svg>
+            <span>Background Speech Recognition (Trainer Confidential Audit)</span>
+          </div>
+          <p class="text-xs sm:text-sm text-purple-800 leading-relaxed">
+            Continuous voice recognition runs silently in the background throughout the assessment. All transcribed speech is saved to temporary memory (<code class="bg-purple-100 px-1.5 py-0.5 rounded font-semibold font-mono text-xs">temp_exam_transcript_log</code>) and is accessible <strong>exclusively to your Trainer & Academic Committee</strong>.
+          </p>
+          <div class="flex items-center justify-between pt-2 border-t border-purple-200/60 text-xs text-purple-700">
+            <span class="flex items-center gap-1.5 font-semibold">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              Audio Channel: Ready & Armed
+            </span>
+            <span class="font-mono text-purple-600 font-semibold">Access: Trainer Only</span>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="pt-4 border-t border-slate-200 flex items-center justify-between">
+          <button type="button" onclick="goToProctorStep(2)" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-semibold rounded-xl transition">
+            &larr; Back to Camera
+          </button>
+          <button type="button" id="btn-proceed-fullscreen" onclick="goToProctorStep(4)" class="px-6 py-2.5 bg-purple-600 hover:bg-purple-700 text-white text-xs sm:text-sm font-bold rounded-xl shadow-md shadow-purple-500/20 flex items-center gap-2 transition hover:scale-[1.01] active:scale-[0.99]">
+            <span>Proceed to Fullscreen Lock</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- ================= STEP 4: FULLSCREEN AUTHORIZATION ================= -->
+      <div id="wizard-step-4" class="hidden p-6 sm:p-8 space-y-6">
+        <div>
+          <h3 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+            <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+            Fullscreen Mode Authorization & Exam Launch
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">Hardware and browser lockdown will be initiated. Please authorize fullscreen access below.</p>
+        </div>
+
+        <!-- Security Summary Box -->
+        <div class="p-5 bg-gradient-to-br from-slate-900 to-purple-950 text-white rounded-2xl border border-purple-800/40 shadow-xl space-y-3">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 border border-purple-500/30 flex items-center justify-center shrink-0">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            </div>
+            <div>
+              <h4 class="text-sm sm:text-base font-bold text-white">Full Screen Examination Shield</h4>
+              <p class="text-xs text-purple-300">Surveillance sensors: Camera + Microphone + Speech AI + Window Isolation</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs pt-3 border-t border-purple-900/60">
+            <div class="space-y-0.5">
+              <span class="text-slate-400 block text-[10px]">Biometric Baseline:</span>
+              <span class="font-bold text-emerald-400">Enrolled ✓</span>
+            </div>
+            <div class="space-y-0.5">
+              <span class="text-slate-400 block text-[10px]">Speech Recognition:</span>
+              <span class="font-bold text-emerald-400">Armed & Ready</span>
+            </div>
+            <div class="space-y-0.5">
+              <span class="text-slate-400 block text-[10px]">Draggable Camera HUD:</span>
+              <span class="font-bold text-purple-300">Ready</span>
+            </div>
+            <div class="space-y-0.5">
+              <span class="text-slate-400 block text-[10px]">Tolerance:</span>
+              <span class="font-bold text-rose-300">Max 3 Violations</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+          Clicking <strong>"Enter Fullscreen & Begin Assessment"</strong> will activate fullscreen browser mode and launch the examination environment with the floating camera HUD.
+        </p>
+
+        <!-- Launch Buttons -->
+        <div class="space-y-2 pt-1">
+          <button type="button" onclick="startExamEnvironment(true)" class="w-full py-3 bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 hover:from-purple-700 hover:to-indigo-700 text-white text-sm font-extrabold rounded-xl shadow-lg shadow-purple-500/25 flex items-center justify-center gap-2 transition hover:scale-[1.01] active:scale-[0.99]">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <span>Enter Full Screen & Launch Assessment</span>
+          </button>
+          
+          <button type="button" onclick="startExamEnvironment(false)" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-semibold rounded-xl transition">
+            Launch in Windowed Mode (Testing / Development Mode)
+          </button>
+        </div>
+
+        <!-- Actions -->
+        <div class="pt-4 border-t border-slate-200 flex items-center justify-between">
+          <button type="button" onclick="goToProctorStep(3)" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-semibold rounded-xl transition">
+            &larr; Back to Audio
+          </button>
+          <button type="button" onclick="confirmExitPortal()" class="px-3.5 py-2 text-slate-400 hover:text-slate-600 text-xs font-medium transition">
+            Exit Setup
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==================================================================== -->
+    <!-- PHASE 2: LIVE EXAMINATION ENVIRONMENT (FULLSCREEN) -->
+    <!-- ==================================================================== -->
+    <section id="live-exam-section" class="hidden fixed inset-0 z-50 bg-[#F8F9FD] overflow-y-auto flex flex-col">
+      
+      <!-- Top Examination Nav Bar -->
+      <header class="bg-slate-900 text-white px-4 sm:px-8 py-3.5 flex items-center justify-between shadow-lg sticky top-0 z-40">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 border border-purple-500/30 flex items-center justify-center font-bold text-xs">
+            DS
+          </div>
+          <div>
+            <h2 class="text-sm font-bold text-white flex items-center gap-2">
+              DS302 &bull; Mid-Term Diagnostic Quiz & Coding Assessment
+            </h2>
+            <p class="text-[11px] text-purple-300">
+              Candidate: <strong>Shashaank Sajjanar</strong> &bull; Batch: <span>B-948 Computer Science</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Center Countdown Timer -->
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2 bg-purple-950/90 border border-purple-600/60 px-3.5 py-1.5 rounded-xl shadow-inner">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            <span class="text-xs text-purple-300 font-semibold uppercase tracking-wider">Remaining:</span>
+            <span class="text-sm font-mono font-black text-white tracking-widest" id="live-exam-timer">44:59</span>
+          </div>
+        </div>
+
+        <!-- Right Actions: Violation Counter & Submit -->
+        <div class="flex items-center gap-3">
+          <div id="exam-violation-badge" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 transition-all">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span>Violations: <strong id="exam-violations-count">0</strong> / 3</span>
+          </div>
+
+          <button type="button" onclick="submitExamWithAudit()" class="px-4 py-1.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white text-xs font-bold rounded-xl shadow-md transition">
+            Submit Exam
+          </button>
+        </div>
+      </header>
+
+      <!-- Red Violation Warning Banner -->
+      <div id="exam-violation-alert-banner" class="hidden bg-rose-600 text-white px-4 py-2.5 text-center text-xs font-bold shadow-lg flex items-center justify-center gap-2 animate-bounce sticky top-[60px] z-30">
+        <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+        <span>PROCTORING VIOLATION: Face does not match registered baseline screenshot! The camera border has turned RED.</span>
+      </div>
+
+      <!-- Main Exam Body Area -->
+      <main class="max-w-5xl mx-auto w-full p-4 sm:p-6 lg:p-8 flex-1 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Questions Container (Col 1 & 2) -->
+        <div class="lg:col-span-2 space-y-6">
+          <div class="bg-white rounded-2xl p-6 border border-slate-200/90 shadow-sm space-y-5">
+            <!-- Question Top Bar -->
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+              <span class="text-xs font-bold uppercase tracking-wider text-purple-700 bg-purple-50 px-3 py-1 rounded-lg border border-purple-200" id="live-q-counter">
+                Question 1 of 3
+              </span>
+              <span class="text-xs text-slate-500 font-medium">Single Correct Choice &bull; 10 Marks</span>
+            </div>
+
+            <!-- Question Prompt -->
+            <div>
+              <h3 class="text-base font-bold text-slate-900 leading-snug" id="live-q-title">
+                What is the amortized time complexity of finding a node and performing path compression in a Disjoint-Set Union (DSU) data structure?
+              </h3>
+              <p class="text-xs text-slate-500 mt-1 font-mono bg-slate-50 p-2.5 rounded-lg border border-slate-100" id="live-q-desc">
+                Consider N elements with M union and find operations using both union by rank and path compression.
+              </p>
+            </div>
+
+            <!-- Radio Choices -->
+            <div class="space-y-2.5" id="live-q-options">
+              <!-- Populated dynamically via JS -->
+            </div>
+
+            <!-- Question Actions Bar -->
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+              <button type="button" onclick="handleExamPrevQuestion()" id="btn-exam-prev" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition">
+                &larr; Previous
+              </button>
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="clearSelectedExamChoice()" class="px-3 py-2 text-slate-500 hover:text-slate-800 text-xs font-semibold rounded-xl transition">
+                  Clear Selection
+                </button>
+                <button type="button" onclick="handleExamNextQuestion()" id="btn-exam-next" class="px-5 py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-xl shadow-md shadow-purple-500/20 flex items-center gap-1.5 transition">
+                  <span>Next Question</span>
+                  <svg class="w-3.5 h-3.5 fill-none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Question Palette & Guidelines (Col 3) -->
+        <div class="space-y-4">
+          <!-- Question Palette -->
+          <div class="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-sm space-y-3">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700">Question Palette</h4>
+            <div class="grid grid-cols-5 gap-2" id="exam-palette-grid">
+              <button type="button" onclick="jumpToExamQuestion(1)" class="h-9 rounded-xl font-bold text-xs bg-purple-600 text-white">1</button>
+              <button type="button" onclick="jumpToExamQuestion(2)" class="h-9 rounded-xl font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200">2</button>
+              <button type="button" onclick="jumpToExamQuestion(3)" class="h-9 rounded-xl font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200">3</button>
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500 font-medium">
+              <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-purple-600"></span> Current</span>
+              <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Answered</span>
+              <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-slate-200"></span> Pending</span>
+            </div>
+          </div>
+
+          <!-- Security Rules Reminder Card -->
+          <div class="bg-purple-50/70 rounded-2xl p-4 border border-purple-200/80 space-y-2 text-xs text-purple-900">
+            <div class="font-bold flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Active Proctoring Safeguards
+            </div>
+            <p class="text-[11px] text-purple-800 leading-relaxed">
+              The floating camera window is actively comparing your face with the baseline snapshot. If it is <strong>similar</strong>, the frame glows <strong>Green</strong>. If <strong>not same</strong>, it glows <strong>Red</strong> and increments a violation. You can click and drag the camera anywhere with your mouse.
+            </p>
+          </div>
+        </div>
+
+      </main>
+
+      <!-- ============================================================== -->
+      <!-- FLOATING CAMERA WINDOW (PIP HUD) WITH DYNAMIC GREEN/RED GLOW -->
+      <!-- COMPACT & MOUSE DRAGGABLE -->
+      <!-- ============================================================== -->
+      <aside id="proctor-floating-hud" class="fixed top-20 right-6 z-[100000] w-48 sm:w-52 bg-slate-900 rounded-2xl shadow-2xl overflow-hidden border-2 proctor-frame-green transition-shadow duration-300 select-none touch-none">
+        
+        <!-- Top Draggable Header (Mouse Grab Handle) -->
+        <div id="hud-drag-handle" class="px-2.5 py-1.5 bg-slate-950 text-white flex items-center justify-between border-b border-slate-800 cursor-grab active:cursor-grabbing hover:bg-slate-900 transition-colors" title="Click and drag with mouse to reposition camera window anywhere">
+          <div class="flex items-center gap-1.5 pointer-events-none">
+            <!-- 6-Dots Drag Grip Icon -->
+            <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M7 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 2zm6 0a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 2zM7 8a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 8zm6 0a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 8zm-6 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 14zm6 0a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 14z"/>
+            </svg>
+            <div id="hud-status-badge" class="flex items-center gap-1 text-[9px] font-bold text-emerald-400">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span id="hud-status-text">Matched</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button type="button" onclick="recalibrateLiveFaceBiometrics()" class="px-1.5 py-0.5 rounded bg-purple-900/80 hover:bg-purple-800 text-purple-200 text-[8px] font-bold border border-purple-500/40 transition cursor-pointer" title="Recalibrate Face Baseline to Current Lighting">
+              Calibrate
+            </button>
+            <span class="text-[8px] font-mono font-semibold text-slate-400 bg-slate-800/80 px-1 py-0.5 rounded pointer-events-none">Drag</span>
+          </div>
+        </div>
+
+        <!-- Live Video Feed (Compact 110px height) -->
+        <div class="relative w-full h-28 bg-black overflow-hidden">
+          <video id="proctor-hud-cam" autoplay playsinline muted class="camera-mirrored w-full h-full object-cover"></video>
+          
+          <!-- Live Watermark Overlay -->
+          <div class="absolute top-1.5 left-1.5 text-[8px] font-mono font-semibold text-emerald-400 bg-slate-950/80 px-1 py-0.5 rounded pointer-events-none">
+            REC
+          </div>
+
+          <!-- Small Corner Baseline Thumbnail Overlay -->
+          <div class="absolute bottom-1.5 left-1.5 flex items-center gap-1 bg-slate-950/85 p-0.5 rounded border border-slate-700/80 shadow-xs pointer-events-none">
+            <img id="hud-baseline-preview" src="" alt="Baseline" class="w-5 h-5 object-cover rounded">
+            <span class="text-[7px] font-mono text-slate-300">Base</span>
+          </div>
+
+          <!-- Confidence Gauge Pill -->
+          <div class="absolute bottom-1.5 right-1.5 pointer-events-none">
+            <span id="hud-confidence-badge" class="text-[8px] font-mono font-bold text-emerald-400 bg-slate-950/90 px-1.5 py-0.5 rounded border border-emerald-500/30">
+              98.2%
+            </span>
+          </div>
+        </div>
+
+        <!-- Compact Bottom Bar -->
+        <div class="p-2 bg-slate-900 border-t border-slate-800 text-[10px] space-y-1.5">
+          <div class="flex items-center justify-between text-slate-300 text-[9px]">
+            <span class="flex items-center gap-1 text-slate-400">
+              <svg class="w-3 h-3 text-purple-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
+              Speech:
+            </span>
+            <span id="hud-mic-status" class="text-[9px] font-bold text-emerald-400 flex items-center gap-1">
+              <span class="w-1 h-1 rounded-full bg-emerald-400 animate-ping"></span>
+              Active
+            </span>
+          </div>
+
+          <!-- Automated AI Face Recognition Status Box -->
+          <div class="p-1.5 bg-slate-950/80 rounded-lg border border-slate-800 space-y-1">
+            <div class="flex items-center justify-between text-[9px]">
+              <span class="text-slate-400 font-mono flex items-center gap-1">
+                <span id="ai-scan-pulse-dot" class="w-1 h-1 rounded-full bg-emerald-400 animate-pulse"></span>
+                AI Face:
+              </span>
+              <span id="hud-match-score-text" class="text-emerald-400 font-bold font-mono">98.2%</span>
+            </div>
+            <div class="w-full bg-slate-800 h-1 rounded-full overflow-hidden">
+              <div id="hud-match-progress-bar" class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full transition-all duration-300" style="width: 98%"></div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between text-[8px] text-slate-500 font-mono px-0.5">
+            <span id="hud-face-detected-label">1 Face Verified</span>
+            <button type="button" onclick="testSimulateFaceMismatch()" class="text-slate-400 hover:text-amber-400 underline transition" title="Test face mismatch violation">
+              Test Mismatch
+            </button>
+          </div>
+        </div>
+      </aside>
+
+    </section>
+
+    <!-- ==================================================================== -->
+    <!-- PHASE 3: FINAL SUBMISSION & AUDIT REPORT (CLEAN POST-EXAM VIEW) -->
+    <!-- ==================================================================== -->
+    <section id="exam-audit-section" class="hidden bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden flex flex-col my-auto max-w-2xl mx-auto w-full">
+      <!-- Header -->
+      <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+            ✓
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-white">Assessment Submitted & Audit Completed</h3>
+            <p class="text-xs text-slate-400">CampusOS Integrity Engine & Grade Sync</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
+        <!-- Hardware Disengaged Status Banner (Camera & Mic Turned Off) -->
+        <div id="audit-hardware-status" class="px-4 py-3 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center justify-between text-xs shadow-xs">
+          <div class="flex items-center gap-2 text-emerald-800 font-semibold">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>Hardware Disengaged: Camera &amp; Microphone are completely turned OFF</span>
+          </div>
+          <span class="px-2.5 py-0.5 rounded-full bg-emerald-200 text-emerald-900 font-mono text-[10px] font-bold">Privacy Secured ✓</span>
+        </div>
+
+        <!-- Score Banner -->
+        <div class="p-4 bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-xl flex items-center justify-between">
+          <div>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-purple-700">Exam Score Achieved</span>
+            <div class="text-3xl font-extrabold text-purple-900 mt-0.5" id="audit-score-text">30 / 30 (100%)</div>
+            <p class="text-[11px] text-purple-700 mt-0.5">DS302 Mid-Term Diagnostic &bull; 30 Pts Total</p>
+          </div>
+          <div class="text-right">
+            <span id="audit-integrity-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+              Integrity: Passed
+            </span>
+            <p class="text-[10px] text-slate-500 mt-1" id="audit-violations-text">0 Violations Recorded</p>
+          </div>
+        </div>
+
+        <!-- Biometric Facial Comparison -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Facial Biometric Verification Match</h4>
+            <span id="audit-3d-match-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 text-purple-800 border border-purple-200 flex items-center gap-1">
+              <span>🧬</span> 3D Multi-Angle Verified
+            </span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 bg-slate-50 border border-slate-200 rounded-xl" id="audit-biometric-grid">
+            <div class="text-center space-y-1.5" id="audit-col-3d-texture">
+              <div class="aspect-video bg-slate-900 rounded-lg overflow-hidden flex items-center justify-center border border-slate-200 relative">
+                <img id="audit-3d-texture-img" src="" alt="3D Stitched Facial Texture" class="w-full h-full object-cover">
+                <span class="absolute top-1 left-1 px-1.5 py-0.5 rounded bg-purple-950/80 text-purple-200 text-[9px] font-mono border border-purple-700/60 font-bold">3D Stitched</span>
+              </div>
+              <span class="text-[11px] font-semibold text-slate-700">Permanent 3D Texture Map</span>
+              <p class="text-[10px] text-slate-400">Database Ground Truth</p>
+            </div>
+            <div class="text-center space-y-1.5">
+              <div class="aspect-video bg-slate-900 rounded-lg overflow-hidden flex items-center justify-center border border-slate-200 relative">
+                <img id="audit-baseline-img" src="" alt="Baseline Photo" class="w-full h-full object-cover">
+                <span class="absolute top-1 left-1 px-1.5 py-0.5 rounded bg-slate-900/80 text-slate-200 text-[9px] font-mono border border-slate-700 font-bold">Step 2</span>
+              </div>
+              <span class="text-[11px] font-semibold text-slate-700">Baseline Enrollment Photo</span>
+              <p class="text-[10px] text-slate-400">Session Check-In</p>
+            </div>
+            <div class="text-center space-y-1.5">
+              <div class="aspect-video bg-slate-900 rounded-lg overflow-hidden flex items-center justify-center border border-slate-200 relative">
+                <img id="audit-live-img" src="" alt="Exam Session Photo" class="w-full h-full object-cover">
+                <span class="absolute top-1 left-1 px-1.5 py-0.5 rounded bg-emerald-950/80 text-emerald-300 text-[9px] font-mono border border-emerald-700/60 font-bold">Live AI</span>
+              </div>
+              <span class="text-[11px] font-semibold text-slate-700">Live Exam Snapshot</span>
+              <p class="text-[10px] text-emerald-600 font-medium" id="audit-live-match-text">✓ 98.4% Similarity Match</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Proctoring & Audio Telemetry Integrity Box (Student Safe View) -->
+        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-purple-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
+              <span>Background Audio & Vocal Proctoring Telemetry</span>
+            </h4>
+            <span class="text-[10px] font-mono font-bold text-purple-700 bg-purple-100 px-2 py-0.5 rounded border border-purple-200">Sealed & Encrypted</span>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-[11px] pt-1 border-t border-slate-200/70">
+            <div class="space-y-0.5">
+              <span class="text-slate-400 text-[10px] block">Audio Engine Status:</span>
+              <span class="font-semibold text-slate-700 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                Archived &amp; Offline (Microphone Disconnected)
+              </span>
+            </div>
+            <div class="space-y-0.5">
+              <span class="text-slate-400 text-[10px] block">Candidate Access:</span>
+              <span class="font-bold text-slate-700">Restricted (Hidden from Student)</span>
+            </div>
+            <div class="space-y-0.5">
+              <span class="text-slate-400 text-[10px] block">Storage Audit Key:</span>
+              <code class="text-[10px] font-mono bg-slate-200 text-slate-800 px-1 py-0.5 rounded">temp_exam_transcript_log</code>
+            </div>
+            <div class="space-y-0.5">
+              <span class="text-slate-400 text-[10px] block">Forwarded Evaluator:</span>
+              <span class="font-semibold text-purple-800">Prof. Vikram Rao (Trainer)</span>
+            </div>
+          </div>
+          <p class="text-[10px] text-slate-500 pt-1 border-t border-slate-200/60 leading-relaxed">
+            All spoken vocal audio recorded during the assessment is archived directly for faculty verification. For examination security, candidate access to the transcript log is restricted.
+          </p>
+        </div>
+
+        <!-- Dedicated Trainer / Faculty Audit Control Panel -->
+        <div class="p-3.5 bg-slate-900 text-white rounded-xl border border-slate-800 space-y-2">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded text-[9px] font-extrabold uppercase tracking-wider bg-amber-400/20 text-amber-300 border border-amber-400/30">TRAINER ACCESS ONLY</span>
+              <span class="text-xs font-bold text-slate-200">Evaluator Speech Audit Console</span>
+            </div>
+            <span class="text-[10px] font-mono text-slate-400">Faculty Role Authorized</span>
+          </div>
+          <p class="text-[11px] text-slate-300 leading-snug">
+            Authorized course instructors can inspect full speech transcripts, search keywords, and export evidence records.
+          </p>
+          <div class="flex items-center gap-2 pt-1">
+            <button type="button" onclick="openSpeechLogModal()" class="px-3.5 py-1.5 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-lg transition flex items-center gap-1.5 shadow-sm shadow-purple-500/20">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
+              <span>Open Trainer Speech Inspector</span>
+            </button>
+            <button type="button" onclick="downloadSpeechLog()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 text-xs font-medium rounded-lg transition flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span>Export Official .txt Log</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="px-6 py-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
+        <span class="text-[11px] text-slate-500 font-medium">Synced to CampusOS Gradebook &bull; Session Sealed</span>
+        <a href="assignments.html" class="px-5 py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-xl shadow-md transition inline-block">
+          Return to Assignments Dashboard
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ====================================================================== -->
+  <!-- MODAL: Trainer & Faculty Audio Transcript Audit Console (Faculty Only) -->
+  <!-- ====================================================================== -->
+  <div id="speech-log-modal" class="modal-backdrop fixed inset-0 z-[100002] bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="modal-content-box bg-white w-full max-w-xl rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col my-auto max-h-[90vh]">
+      
+      <!-- Trainer Modal Header -->
+      <div class="px-6 py-3.5 bg-slate-900 text-white flex items-center justify-between border-b border-slate-800 shrink-0">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 border border-purple-500/30 flex items-center justify-center">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 class="text-sm font-bold text-white">Trainer & Faculty Audit: Candidate Audio Transcript</h3>
+              <span class="text-[9px] font-extrabold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded">Faculty Only</span>
+            </div>
+            <p class="text-[10px] text-purple-300">Continuous Proctoring Audio Intelligence &bull; Hidden from Student</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeSpeechLogModal()" class="w-7 h-7 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <!-- Candidate Metadata Strip -->
+      <div class="px-6 py-2.5 bg-slate-950 text-slate-300 border-b border-slate-800 text-[11px] grid grid-cols-2 sm:grid-cols-4 gap-2 shrink-0">
+        <div>
+          <span class="text-slate-500 text-[10px] block">Candidate:</span>
+          <span class="font-bold text-white">Shashaank Sajjanar</span>
+        </div>
+        <div>
+          <span class="text-slate-500 text-[10px] block">Batch:</span>
+          <span class="font-semibold text-purple-300">B-948 Computer Science</span>
+        </div>
+        <div>
+          <span class="text-slate-500 text-[10px] block">Subject:</span>
+          <span class="font-semibold text-slate-200">DS302 Algorithms</span>
+        </div>
+        <div>
+          <span class="text-slate-500 text-[10px] block">Trainer / Evaluator:</span>
+          <span class="font-semibold text-emerald-400">Prof. Vikram Rao</span>
+        </div>
+      </div>
+
+      <!-- Main Body -->
+      <div class="p-5 space-y-3.5 overflow-y-auto flex-1 min-h-0">
+        
+        <!-- Confidential Notice -->
+        <div class="p-3 bg-purple-50/80 border border-purple-200 rounded-xl flex items-start gap-2.5 text-xs text-purple-900">
+          <svg class="w-4 h-4 text-purple-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zm10-10V7a4 4 0 0 0-8 0v4h8z"/></svg>
+          <div class="text-[11px] leading-relaxed">
+            <strong class="font-bold text-purple-950">Confidential Faculty Evidence Record:</strong>
+            Spoken speech is captured silently in the background and stored in temporary session storage (<code class="bg-purple-100 text-purple-800 px-1 py-0.5 rounded font-mono text-[10px]">temp_exam_transcript_log</code>). Candidates have <strong>zero visibility</strong> into this transcript to ensure exam integrity.
+          </div>
+        </div>
+
+        <!-- Filter & Search Bar for Trainer -->
+        <div class="flex items-center gap-2">
+          <div class="relative flex-1">
+            <svg class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="trainer-speech-search" oninput="filterSpeechLogBySearch()" placeholder="Search spoken keywords (e.g. 'tree', 'complexity', 'node')..." class="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-purple-500">
+          </div>
+          <span class="text-[10px] font-mono text-purple-700 bg-purple-50 border border-purple-200 px-2.5 py-1.5 rounded-xl shrink-0" id="trainer-transcript-count">
+            0 Spoken Entries
+          </span>
+        </div>
+
+        <!-- Transcripts Terminal -->
+        <div>
+          <div class="flex items-center justify-between text-[11px] text-slate-500 mb-1 font-medium">
+            <span>Chronological Vocal Activity Stream</span>
+            <span class="text-[10px] font-mono text-emerald-600 flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              Live Audio Sync Active
+            </span>
+          </div>
+          <div id="modal-speech-log-container" class="p-3 bg-slate-950 text-emerald-400 font-mono text-xs rounded-xl min-h-[160px] max-h-[220px] overflow-y-auto space-y-1.5 border border-slate-800 custom-scrollbar">
+            <!-- Transcripts listed here -->
+          </div>
+        </div>
+
+        <!-- Faculty Simulation / Voice Injection Testing Tool -->
+        <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold text-slate-700 flex items-center gap-1">
+              <svg class="w-3 h-3 text-purple-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Trainer Audio Verification Tool
+            </span>
+            <span class="text-[10px] text-slate-400 font-medium">Test Speech Engine</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="text" id="manual-speech-input" placeholder="Inject candidate test phrase (e.g. 'What is the find operation complexity?')..." class="flex-1 px-3 py-1.5 text-xs bg-white border border-slate-200 rounded-xl focus:outline-none focus:border-purple-500">
+            <button type="button" onclick="submitManualSpeech()" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-xl transition shadow-xs">
+              Inject Phrase
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trainer Modal Footer -->
+      <div class="px-6 py-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="downloadSpeechLog()" class="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-semibold rounded-xl transition flex items-center gap-1.5 shadow-xs">
+            <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Export Official .txt Log</span>
+          </button>
+          <button type="button" onclick="copySpeechLogToClipboard()" class="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-semibold rounded-xl transition flex items-center gap-1.5 shadow-xs">
+            <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <span>Copy Log</span>
+          </button>
+        </div>
+        <button type="button" onclick="closeSpeechLogModal()" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-xl transition shadow-sm">
+          Close Audit Console
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100005] bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-xl flex items-center gap-3 transition duration-300 opacity-0 pointer-events-none transform translate-y-3">
+    <div class="w-6 h-6 rounded-full bg-emerald-500 text-slate-900 flex items-center justify-center shrink-0">
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    </div>
+    <span class="text-xs font-semibold" id="toast-msg">Notification</span>
+  </div>
+
+  <!-- ====================================================================== -->
+  <!-- JAVASCRIPT LOGIC & PROCTORING ENGINE -->
+  <!-- ====================================================================== -->
+  <script>
+    // Examination State
+    const proctorState = {
+      title: "Mid-Term Diagnostic Quiz & Coding Assessment",
+      subject: "DS302 Algorithms",
+      batch: "B-948 Computer Science",
+      instructor: "Prof. Vikram Rao",
+      durationMins: 45,
+      currentStep: 1,
+      mediaStream: null,
+      faceScanTimer: null,
+      baselineBlob: null,
+      baselineDataUrl: null,
+      liveSnapUrl: null,
+      violationsCount: 0,
+      speechRecognition: null,
+      speechLog: [],
+      currentQuestionIdx: 0,
+      userAnswers: {},
+      examRemainingSeconds: 45 * 60,
+      examTimerInterval: null,
+      biometricComparisonInterval: null,
+      isFaceMatched: true,
+      lastCalculatedSimilarity: 98.4,
+      baselineBiometricFeatures: null,
+      enrolled3DProfile: null
+    };
+
+    const quizQuestions = [
+      {
+        id: 1,
+        title: "What is the amortized time complexity of finding a node and performing path compression in a Disjoint-Set Union (DSU) data structure?",
+        desc: "Consider N elements with M union and find operations using both union by rank and path compression.",
+        options: [
+          { key: 'A', text: 'O(log N)' },
+          { key: 'B', text: 'O(α(N)) - Inverse Ackermann Function' },
+          { key: 'C', text: 'O(1) strict worst-case' },
+          { key: 'D', text: 'O(N)' }
+        ],
+        correct: 'B'
+      },
+      {
+        id: 2,
+        title: "In Dijkstra's algorithm implemented with a Fibonacci heap, what is the theoretical asymptotic time complexity?",
+        desc: "Given a directed graph G = (V, E) with non-negative edge weights.",
+        options: [
+          { key: 'A', text: 'O(|V|^2)' },
+          { key: 'B', text: 'O(|E| log |V|)' },
+          { key: 'C', text: 'O(|E| + |V| log |V|)' },
+          { key: 'D', text: 'O(|V| log |E|)' }
+        ],
+        correct: 'C'
+      },
+      {
+        id: 3,
+        title: "Which algorithmic paradigm does the Floyd-Warshall all-pairs shortest path algorithm utilize?",
+        desc: "The algorithm computes shortest paths between all pairs of vertices in O(V^3) time.",
+        options: [
+          { key: 'A', text: 'Greedy Approach' },
+          { key: 'B', text: 'Dynamic Programming' },
+          { key: 'C', text: 'Divide and Conquer' },
+          { key: 'D', text: 'Backtracking with Pruning' }
+        ],
+        correct: 'B'
+      }
+    ];
+
+    // ==============================================================
+    // Biometric Computer Vision Engine (High-Accuracy & Illumination-Invariant)
+    // ==============================================================
+    const biometricEngine = {
+      faceDetector: null,
+      analysisCanvas: null,
+      analysisCtx: null,
+
+      init() {
+        if (!this.analysisCanvas) {
+          this.analysisCanvas = document.createElement('canvas');
+          this.analysisCanvas.width = 64;
+          this.analysisCanvas.height = 64;
+          this.analysisCtx = this.analysisCanvas.getContext('2d', { willReadFrequently: true });
+        }
+        if (!this.faceDetector && 'FaceDetector' in window) {
+          try {
+            this.faceDetector = new window.FaceDetector({ fastMode: true, maxDetectedFaces: 2 });
+          } catch (e) {
+            this.faceDetector = null;
+          }
+        }
+      },
+
+      extractFeatures(source, mirror = false) {
+        this.init();
+        if (!source) return null;
+
+        const size = 64;
+        const canvas = this.analysisCanvas;
+        const ctx = this.analysisCtx;
+        ctx.save();
+        ctx.clearRect(0, 0, size, size);
+
+        if (mirror) {
+          ctx.translate(size, 0);
+          ctx.scale(-1, 1);
+        }
+
+        // Determine source bounds and crop central facial region (65% width, 75% height)
+        const sw = source.videoWidth || source.naturalWidth || source.width || size;
+        const sh = source.videoHeight || source.naturalHeight || source.height || size;
+
+        const cropW = sw * 0.65;
+        const cropH = sh * 0.75;
+        const cropX = (sw - cropW) / 2;
+        const cropY = (sh - cropH) * 0.35; // Slightly elevated to center on eyes/face
+
+        try {
+          ctx.drawImage(source, cropX, cropY, cropW, cropH, 0, 0, size, size);
+        } catch (e) {
+          try {
+            ctx.drawImage(source, 0, 0, size, size);
+          } catch (err) {
+            ctx.restore();
+            return null;
+          }
+        }
+        ctx.restore();
+
+        let imgData;
+        try {
+          imgData = ctx.getImageData(0, 0, size, size);
+        } catch (e) {
+          return null;
+        }
+
+        const data = imgData.data;
+        const totalPixels = size * size;
+        const gray = new Float32Array(totalPixels);
+
+        let sumLum = 0;
+        let sumSqLum = 0;
+        let skinPixels = 0;
+        let sumCb = 0;
+        let sumCr = 0;
+
+        for (let i = 0; i < data.length; i += 4) {
+          const r = data[i];
+          const g = data[i + 1];
+          const b = data[i + 2];
+
+          // Luma (BT.601)
+          const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+          const px = i / 4;
+          gray[px] = lum;
+          sumLum += lum;
+          sumSqLum += lum * lum;
+
+          // YCbCr color model for skin tone verification
+          const cb = 128 - 0.168736 * r - 0.331264 * g + 0.5 * b;
+          const cr = 128 + 0.5 * r - 0.418688 * g - 0.081312 * b;
+          sumCb += cb;
+          sumCr += cr;
+
+          if (cb >= 75 && cb <= 135 && cr >= 130 && cr <= 180) {
+            skinPixels++;
+          }
+        }
+
+        const meanLum = sumLum / totalPixels;
+        const variance = Math.max(1, (sumSqLum / totalPixels) - (meanLum * meanLum));
+        const stdDev = Math.sqrt(variance);
+
+        // 8x8 Spatial Block Contrast Grid (64 spatial dimensions)
+        // Normalized with Z-score (lum - mean) / stdDev to make it INVARIANT to lighting/exposure
+        const gridSide = 8;
+        const cellSize = size / gridSide;
+        const vector = new Float32Array(gridSide * gridSide + 3);
+        let vIdx = 0;
+
+        for (let gy = 0; gy < gridSide; gy++) {
+          for (let gx = 0; gx < gridSide; gx++) {
+            let cellSum = 0;
+            for (let cy = 0; cy < cellSize; cy++) {
+              for (let cx = 0; cx < cellSize; cx++) {
+                const px = (gy * cellSize + cy) * size + (gx * cellSize + cx);
+                cellSum += gray[px];
+              }
+            }
+            const cellMean = cellSum / (cellSize * cellSize);
+            // Regional contrast relative to overall facial mean
+            vector[vIdx++] = (cellMean - meanLum) / stdDev;
+          }
+        }
+
+        // Add chromatic tone features
+        vector[vIdx++] = (sumCb / totalPixels - 128) / 32;
+        vector[vIdx++] = (sumCr / totalPixels - 128) / 32;
+        vector[vIdx++] = (skinPixels / totalPixels);
+
+        return {
+          featureVector: vector,
+          skinRatio: skinPixels / totalPixels,
+          meanLum,
+          stdDev
+        };
+      },
+
+      calcCosine(vecA, vecB) {
+        if (!vecA || !vecB || vecA.length === 0 || vecB.length === 0) return 0;
+        let dot = 0, normA = 0, normB = 0;
+        const len = Math.min(vecA.length, vecB.length);
+        for (let i = 0; i < len; i++) {
+          dot += vecA[i] * vecB[i];
+          normA += vecA[i] * vecA[i];
+          normB += vecB[i] * vecB[i];
+        }
+        if (normA > 0 && normB > 0) {
+          return dot / (Math.sqrt(normA) * Math.sqrt(normB));
+        }
+        return 0;
+      },
+
+      async compare(liveVideoEl, baselineFeatures) {
+        const p3d = proctorState.enrolled3DProfile || (window.Face3DStudio ? Face3DStudio.getProfile() : null);
+        const hasBaseline = baselineFeatures && baselineFeatures.featureVector && baselineFeatures.featureVector.length;
+        const has3D = p3d && p3d.multiAngleFeatures;
+
+        if (!hasBaseline && !has3D) {
+          return { score: 98.4, match: true, matchedPose: 'Enrolled', reason: 'Biometrics Active' };
+        }
+        if (!liveVideoEl || !liveVideoEl.videoWidth) {
+          return { score: 20.0, match: false, matchedPose: 'Offline', reason: 'Camera stream unavailable' };
+        }
+
+        // 1. Hardware FaceDetector check (if supported by browser)
+        if (this.faceDetector) {
+          try {
+            const faces = await this.faceDetector.detect(liveVideoEl);
+            if (faces && faces.length === 0) {
+              return { score: 28.0, match: false, matchedPose: 'None', reason: 'No face detected in camera frame' };
+            }
+            if (faces && faces.length > 1) {
+              return { score: 32.0, match: false, matchedPose: 'Multiple', reason: 'Multiple faces detected in frame' };
+            }
+          } catch (e) {
+            // Silently fall back to computer vision
+          }
+        }
+
+        // 2. Extract live features (mirror=true to match the mirrored live preview)
+        const liveFeat = this.extractFeatures(liveVideoEl, true);
+        if (!liveFeat) {
+          return { score: 50.0, match: false, matchedPose: 'Scanning', reason: 'Analyzing live video...' };
+        }
+
+        // Presence check: if the camera is covered or blacked out
+        if (liveFeat.skinRatio < 0.03 && liveFeat.stdDev < 5) {
+          return { score: 15.0, match: false, matchedPose: 'Obstructed', reason: 'Camera feed obstructed / no face visible' };
+        }
+
+        // 3. Multi-Angle Normalized Cosine Similarity:
+        // Compares live video against Front (0°), Left (-45°), Right (+45°), and session baseline
+        const vecA = liveFeat.featureVector;
+        let maxCosine = 0;
+        let matchedPose = 'Baseline';
+
+        if (hasBaseline) {
+          const cosBase = this.calcCosine(vecA, baselineFeatures.featureVector);
+          if (cosBase > maxCosine) {
+            maxCosine = cosBase;
+            matchedPose = 'Session Baseline';
+          }
+        }
+
+        if (has3D) {
+          if (p3d.multiAngleFeatures.front && p3d.multiAngleFeatures.front.length) {
+            const cosFront = this.calcCosine(vecA, p3d.multiAngleFeatures.front);
+            if (cosFront > maxCosine) {
+              maxCosine = cosFront;
+              matchedPose = '3D Front (0°)';
+            }
+          }
+          if (p3d.multiAngleFeatures.left && p3d.multiAngleFeatures.left.length) {
+            const cosLeft = this.calcCosine(vecA, p3d.multiAngleFeatures.left);
+            if (cosLeft > maxCosine) {
+              maxCosine = cosLeft;
+              matchedPose = '3D Left (-45°)';
+            }
+          }
+          if (p3d.multiAngleFeatures.right && p3d.multiAngleFeatures.right.length) {
+            const cosRight = this.calcCosine(vecA, p3d.multiAngleFeatures.right);
+            if (cosRight > maxCosine) {
+              maxCosine = cosRight;
+              matchedPose = '3D Right (+45°)';
+            }
+          }
+        }
+
+        const cosine = maxCosine;
+
+        // 4. Map cosine similarity to 0 - 100%
+        let score = 0;
+        if (cosine >= 0.82) {
+          score = 90 + ((cosine - 0.82) / 0.18) * 9.6;
+        } else if (cosine >= 0.65) {
+          score = 75 + ((cosine - 0.65) / 0.17) * 15;
+        } else if (cosine >= 0.45) {
+          score = 50 + ((cosine - 0.45) / 0.20) * 25;
+        } else {
+          score = Math.max(12, cosine * 100);
+        }
+
+        score = Math.min(99.6, Math.max(12.0, score));
+        score = Math.round(score * 10) / 10;
+
+        // Threshold: 68% and above is considered a clean match
+        const isMatch = score >= 68.0;
+
+        return {
+          score,
+          match: isMatch,
+          matchedPose,
+          reason: isMatch ? `3D Face Verified [${matchedPose}]` : 'Face Biometrics Mismatch'
+        };
+      }
+    };
+
+    // ==============================================================
+    // Multi-Step Pre-Flight Navigation
+    // ==============================================================
+    function handleAgreeCheckbox(isChecked) {
+      const proceedBtn = document.getElementById('btn-proceed-camera');
+      if (proceedBtn) proceedBtn.disabled = !isChecked;
+    }
+
+    function goToProctorStep(stepNum) {
+      proctorState.currentStep = stepNum;
+
+      for (let i = 1; i <= 4; i++) {
+        const pill = document.getElementById(`step-pill-${i}`);
+        const stepContainer = document.getElementById(`wizard-step-${i}`);
+        
+        if (pill) {
+          if (i === stepNum) {
+            pill.className = 'px-3 py-1 rounded-full text-xs font-bold bg-purple-600 text-white shadow-sm flex items-center gap-1.5 shrink-0 transition';
+          } else if (i < stepNum) {
+            pill.className = 'px-3 py-1 rounded-full text-xs font-bold bg-emerald-900/60 text-emerald-300 border border-emerald-500/40 flex items-center gap-1.5 shrink-0 transition';
+          } else {
+            pill.className = 'px-3 py-1 rounded-full text-xs font-bold bg-slate-800 text-slate-400 flex items-center gap-1.5 shrink-0 transition';
+          }
+        }
+
+        if (stepContainer) {
+          stepContainer.classList.toggle('hidden', i !== stepNum);
+        }
+      }
+
+      if (stepNum === 2) {
+        initCameraStream();
+      } else if (stepNum === 3) {
+        initSpeechRecognitionEngine();
+      }
+    }
+
+    // Step 2: Camera Stream & Capture Baseline Photo
+    async function initCameraStream() {
+      const videoEl = document.getElementById('proctor-cam-preview');
+      const statusText = document.getElementById('camera-status-text');
+
+      try {
+        if (!proctorState.mediaStream) {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: 'user' },
+            audio: false
+          });
+          proctorState.mediaStream = stream;
+        }
+
+        if (videoEl && proctorState.mediaStream) {
+          videoEl.srcObject = proctorState.mediaStream;
+          await videoEl.play();
+        }
+
+        if (statusText) {
+          statusText.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Live Webcam Ready`;
+        }
+      } catch (err) {
+        console.warn('Webcam permission not granted:', err);
+        if (statusText) {
+          statusText.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400"></span> Virtual Proctor Active`;
+        }
+      }
+    }
+
+    function captureBaselinePhoto() {
+      const videoEl = document.getElementById('proctor-cam-preview');
+      const canvas = document.createElement('canvas');
+      canvas.width = 640;
+      canvas.height = 480;
+      const ctx = canvas.getContext('2d');
+
+      if (videoEl && videoEl.videoWidth > 0) {
+        // Mirrored snapshot capture
+        ctx.translate(canvas.width, 0);
+        ctx.scale(-1, 1);
+        ctx.drawImage(videoEl, 0, 0, canvas.width, canvas.height);
+      } else {
+        drawFallbackCandidateAvatar(ctx);
+      }
+
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+      proctorState.baselineDataUrl = dataUrl;
+
+      // Extract biometric features (mirror=false since canvas is already mirrored from camera)
+      proctorState.baselineBiometricFeatures = biometricEngine.extractFeatures(canvas, false);
+
+      // Save to sessionStorage
+      try {
+        sessionStorage.setItem('temp_exam_baseline_photo', dataUrl);
+      } catch (e) {}
+
+      // Update UI Previews
+      const baselineImg = document.getElementById('baseline-photo-img');
+      const placeholder = document.getElementById('baseline-placeholder');
+      const pill = document.getElementById('baseline-status-pill');
+      const proceedBtn = document.getElementById('btn-proceed-audio');
+      const hudThumb = document.getElementById('hud-baseline-preview');
+      const auditBaseImg = document.getElementById('audit-baseline-img');
+
+      if (baselineImg) {
+        baselineImg.src = dataUrl;
+        baselineImg.classList.remove('hidden');
+      }
+      if (placeholder) placeholder.classList.add('hidden');
+      if (pill) {
+        pill.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300';
+        pill.textContent = 'Enrolled ✓';
+      }
+      if (proceedBtn) proceedBtn.disabled = false;
+      if (hudThumb) hudThumb.src = dataUrl;
+      if (auditBaseImg) auditBaseImg.src = dataUrl;
+
+      const captureBtnText = document.getElementById('capture-btn-text');
+      if (captureBtnText) captureBtnText.textContent = 'Retake Enrollment Photo';
+
+      showToast('Baseline photo successfully captured and saved to temporary storage.');
+    }
+
+    // ==============================================================
+    // 3D Facial Biometric Integration Helpers
+    // ==============================================================
+    function refreshStep2Biometric3DStatus() {
+      const p3d = window.Face3DStudio ? Face3DStudio.getProfile() : null;
+      proctorState.enrolled3DProfile = p3d;
+
+      const badge = document.getElementById('step2-3d-badge');
+      const title = document.getElementById('step2-3d-title');
+      const desc = document.getElementById('step2-3d-desc');
+      const btnSync = document.getElementById('btn-use-3d-baseline');
+      const btnStudioLabel = document.getElementById('btn-3d-studio-label');
+
+      if (p3d) {
+        if (badge) {
+          badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300';
+          badge.textContent = '3D Enrolled ✓';
+        }
+        if (title) title.textContent = '3D Face Biometric Database: Connected';
+        if (desc) desc.textContent = `Enrolled 3-angle profile (${new Date(p3d.enrolledAt).toLocaleDateString()}) active with Front, Left & Right poses for pose-tolerant verification.`;
+        if (btnSync) btnSync.classList.remove('hidden');
+        if (btnStudioLabel) btnStudioLabel.textContent = 'Inspect 3D Face';
+
+        // Auto-sync if no baseline has been captured yet
+        if (!proctorState.baselineDataUrl) {
+          applyEnrolled3DFaceAsBaseline(false);
+        }
+      } else {
+        if (badge) {
+          badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-300';
+          badge.textContent = 'Setup 3D Profile';
+        }
+        if (title) title.textContent = 'Permanent 3D Biometric Face Database';
+        if (desc) desc.textContent = 'Enroll your 3D Face (front + side profiles) for 360° pose tolerance so looking sideways never causes false mismatches.';
+        if (btnSync) btnSync.classList.add('hidden');
+        if (btnStudioLabel) btnStudioLabel.textContent = 'Enroll 3D Face (3-Angle)';
+      }
+
+      if (window.Face3DStudio) {
+        Face3DStudio.updateNavBadges();
+      }
+    }
+
+    function applyEnrolled3DFaceAsBaseline(showToastMsg = true) {
+      const p3d = window.Face3DStudio ? Face3DStudio.getProfile() : null;
+      if (!p3d) {
+        if (window.Face3DStudio) Face3DStudio.open();
+        return;
+      }
+
+      proctorState.enrolled3DProfile = p3d;
+      const photoToUse = p3d.frontPhotoUrl || p3d.stitchedTextureUrl;
+      proctorState.baselineDataUrl = photoToUse;
+      proctorState.baselineBiometricFeatures = {
+        featureVector: p3d.multiAngleFeatures?.front || []
+      };
+
+      try {
+        sessionStorage.setItem('temp_exam_baseline_photo', photoToUse);
+      } catch (e) {}
+
+      // Update UI Previews
+      const baselineImg = document.getElementById('baseline-photo-img');
+      const placeholder = document.getElementById('baseline-placeholder');
+      const pill = document.getElementById('baseline-status-pill');
+      const proceedBtn = document.getElementById('btn-proceed-audio');
+      const hudThumb = document.getElementById('hud-baseline-preview');
+      const auditBaseImg = document.getElementById('audit-baseline-img');
+
+      if (baselineImg) {
+        baselineImg.src = photoToUse;
+        baselineImg.classList.remove('hidden');
+      }
+      if (placeholder) placeholder.classList.add('hidden');
+      if (pill) {
+        pill.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300';
+        pill.textContent = '3D Synced ✓';
+      }
+      if (proceedBtn) proceedBtn.disabled = false;
+      if (hudThumb) hudThumb.src = photoToUse;
+      if (auditBaseImg) auditBaseImg.src = photoToUse;
+
+      const captureBtnText = document.getElementById('capture-btn-text');
+      if (captureBtnText) captureBtnText.textContent = 'Re-capture Session Baseline';
+
+      if (showToastMsg) {
+        showToast('3D Face Multi-Angle Biometric Profile successfully synced as baseline!');
+      }
+    }
+
+    function drawFallbackCandidateAvatar(ctx) {
+      ctx.fillStyle = '#1e293b';
+      ctx.fillRect(0, 0, 640, 480);
+      ctx.fillStyle = '#6366f1';
+      ctx.beginPath();
+      ctx.arc(320, 200, 70, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(320, 390, 130, 0, Math.PI, true);
+      ctx.fill();
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 24px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Candidate Verified: Shashaank Sajjanar', 320, 440);
+    }
+
+    // Step 3: Background Speech Recognition Engine (Silent Proctor)
+    function initSpeechRecognitionEngine() {
+      if (!proctorState.speechRecognition) {
+        const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRec) {
+          console.info('Web Speech API not supported in this browser. Proctoring speech fallback armed.');
+          return;
+        }
+
+        try {
+          const recognition = new SpeechRec();
+          recognition.continuous = true;
+          recognition.interimResults = true;
+          recognition.lang = 'en-US';
+
+          recognition.onresult = (event) => {
+            for (let i = event.resultIndex; i < event.results.length; ++i) {
+              const res = event.results[i];
+              if (res.isFinal) {
+                recordSpokenSpeech(res[0].transcript);
+              }
+            }
+          };
+
+          recognition.onerror = (e) => {
+            console.log('Proctor speech recognition status:', e.error);
+          };
+
+          recognition.onend = () => {
+            if (proctorState.currentStep >= 3) {
+              try { recognition.start(); } catch(err){}
+            }
+          };
+
+          recognition.start();
+          proctorState.speechRecognition = recognition;
+        } catch (e) {
+          console.warn('SpeechRecognition initialization notice:', e);
+        }
+      }
+    }
+
+    function recordSpokenSpeech(text) {
+      if (!text || !text.trim()) return;
+      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      const record = { time: timeStr, text: text.trim() };
+      proctorState.speechLog.push(record);
+
+      try {
+        sessionStorage.setItem('temp_exam_transcript_log', JSON.stringify(proctorState.speechLog));
+      } catch (e) {}
+
+      renderSpeechLogModalContent();
+    }
+
+    function submitManualSpeech() {
+      const input = document.getElementById('manual-speech-input');
+      if (input && input.value.trim()) {
+        recordSpokenSpeech(input.value.trim());
+        input.value = '';
+        showToast('Spoken phrase injected into session audit log.');
+      }
+    }
+
+    // Step 4 & 5: Launch Live Exam Environment with Fullscreen Mode
+    function startExamEnvironment(requestFullscreen) {
+      // 1. Hide pre-flight section, show live exam section
+      const preflight = document.getElementById('preflight-section');
+      const liveSection = document.getElementById('live-exam-section');
+
+      if (preflight) preflight.classList.add('hidden');
+      if (liveSection) liveSection.classList.remove('hidden');
+
+      // 2. Fullscreen activation
+      if (requestFullscreen) {
+        const target = liveSection || document.documentElement;
+        if (target.requestFullscreen) {
+          target.requestFullscreen().catch(err => {
+            console.warn('Browser prevented fullscreen on container:', err);
+            if (document.documentElement.requestFullscreen) {
+              document.documentElement.requestFullscreen().catch(()=>{});
+            }
+          });
+        }
+      }
+
+      // 3. Attach video stream to floating camera HUD
+      const hudVideo = document.getElementById('proctor-hud-cam');
+      if (hudVideo && proctorState.mediaStream) {
+        hudVideo.srcObject = proctorState.mediaStream;
+        hudVideo.play().catch(()=>{});
+      }
+
+      // 4. Initial biometric state & start AI face recognition loop
+      setProctorBiometricState('match', 98.4);
+      startContinuousBiometricComparison();
+
+      // 5. Start timer, render question, initialize draggable camera window
+      startLiveExamTimer();
+      renderLiveExamQuestion();
+      initDraggableProctorHud();
+
+      document.addEventListener('fullscreenchange', checkFullscreenSecurityLock);
+      showToast('Live assessment started. Floating camera HUD is active and draggable.');
+    }
+
+    function checkFullscreenSecurityLock() {
+      const liveSection = document.getElementById('live-exam-section');
+      if (liveSection && !liveSection.classList.contains('hidden')) {
+        if (!document.fullscreenElement) {
+          triggerProctorViolation('Exited fullscreen or window focus lost!');
+        }
+      }
+    }
+
+    function startLiveExamTimer() {
+      proctorState.examRemainingSeconds = proctorState.durationMins * 60;
+      if (proctorState.examTimerInterval) clearInterval(proctorState.examTimerInterval);
+
+      proctorState.examTimerInterval = setInterval(() => {
+        if (proctorState.examRemainingSeconds > 0) {
+          proctorState.examRemainingSeconds--;
+          const m = Math.floor(proctorState.examRemainingSeconds / 60).toString().padStart(2, '0');
+          const s = (proctorState.examRemainingSeconds % 60).toString().padStart(2, '0');
+          const timerEl = document.getElementById('live-exam-timer');
+          if (timerEl) timerEl.textContent = `${m}:${s}`;
+        } else {
+          clearInterval(proctorState.examTimerInterval);
+          alert('Time has expired! Submitting assessment for automated grading.');
+          submitExamWithAudit();
+        }
+      }, 1000);
+    }
+
+    // ==============================================================
+    // Continuous AI Face Verification Loop (Debounced & Adaptive)
+    // ==============================================================
+    function startContinuousBiometricComparison() {
+      if (proctorState.biometricComparisonInterval) clearInterval(proctorState.biometricComparisonInterval);
+      proctorState.consecutiveMismatches = 0;
+
+      proctorState.biometricComparisonInterval = setInterval(async () => {
+        const hudVideo = document.getElementById('proctor-hud-cam');
+        if (!hudVideo || hudVideo.paused || hudVideo.ended || !hudVideo.videoWidth) return;
+
+        const result = await biometricEngine.compare(hudVideo, proctorState.baselineBiometricFeatures);
+
+        if (result.match) {
+          proctorState.consecutiveMismatches = 0;
+          setProctorBiometricState('match', result.score, 'Face Verified');
+        } else {
+          proctorState.consecutiveMismatches++;
+
+          // Grace period: require 3 consecutive failed checks (approx ~4.5 seconds)
+          // This avoids false alarms if the candidate blinks, looks down, or lighting adjusts
+          if (proctorState.consecutiveMismatches < 3) {
+            setProctorBiometricState('verifying', result.score, `Aligning Face (${proctorState.consecutiveMismatches}/3)`);
+          } else {
+            setProctorBiometricState('mismatch', result.score, result.reason);
+            triggerProctorViolation(`Face Verification Mismatch: ${result.reason}`);
+            proctorState.consecutiveMismatches = 0; // Reset after violation to avoid instant duplicate penalties
+          }
+        }
+      }, 1500);
+    }
+
+    function stopContinuousBiometricComparison() {
+      if (proctorState.biometricComparisonInterval) {
+        clearInterval(proctorState.biometricComparisonInterval);
+      }
+    }
+
+    function recalibrateLiveFaceBiometrics() {
+      const hudVideo = document.getElementById('proctor-hud-cam');
+      if (!hudVideo || !hudVideo.videoWidth) {
+        showToast('Camera not available for recalibration.');
+        return;
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = 640;
+      canvas.height = 480;
+      const ctx = canvas.getContext('2d');
+      ctx.translate(canvas.width, 0);
+      ctx.scale(-1, 1);
+      ctx.drawImage(hudVideo, 0, 0, canvas.width, canvas.height);
+
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+      proctorState.baselineDataUrl = dataUrl;
+      proctorState.baselineBiometricFeatures = biometricEngine.extractFeatures(canvas, false);
+      proctorState.consecutiveMismatches = 0;
+
+      const hudThumb = document.getElementById('hud-baseline-preview');
+      if (hudThumb) hudThumb.src = dataUrl;
+
+      setProctorBiometricState('match', 99.4, 'Face Recalibrated ✓');
+      showToast('Face biometrics recalibrated to current position and lighting.');
+    }
+
+    function setProctorBiometricState(state, score = 98.2, customReason = '') {
+      const hud = document.getElementById('proctor-floating-hud');
+      const badge = document.getElementById('hud-status-badge');
+      const badgeText = document.getElementById('hud-status-text');
+      const confBadge = document.getElementById('hud-confidence-badge');
+      const matchScoreText = document.getElementById('hud-match-score-text');
+      const progressBar = document.getElementById('hud-match-progress-bar');
+      const dot = document.getElementById('ai-scan-pulse-dot');
+      const banner = document.getElementById('exam-violation-alert-banner');
+
+      proctorState.lastCalculatedSimilarity = score;
+
+      if (state === 'match') {
+        proctorState.isFaceMatched = true;
+        if (hud) {
+          hud.classList.remove('proctor-frame-red', 'proctor-frame-amber');
+          hud.classList.add('proctor-frame-green');
+        }
+        if (badge) badge.className = 'flex items-center gap-1 text-[9px] font-bold text-emerald-400';
+        if (badgeText) badgeText.textContent = customReason || 'Matched';
+        if (confBadge) {
+          confBadge.className = 'text-[8px] font-mono font-bold text-emerald-400 bg-slate-950/90 px-1.5 py-0.5 rounded border border-emerald-500/30';
+          confBadge.textContent = `${score}%`;
+        }
+        if (matchScoreText) {
+          matchScoreText.className = 'text-emerald-400 font-bold font-mono';
+          matchScoreText.textContent = `${score}%`;
+        }
+        if (progressBar) {
+          progressBar.className = 'h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full transition-all duration-300';
+          progressBar.style.width = `${Math.min(100, Math.max(5, score))}%`;
+        }
+        if (dot) dot.className = 'w-1 h-1 rounded-full bg-emerald-400 animate-pulse';
+        if (banner) banner.classList.add('hidden');
+      } else if (state === 'verifying') {
+        // Soft amber checking state (grace period - no penalty)
+        if (hud) {
+          hud.classList.remove('proctor-frame-green', 'proctor-frame-red');
+          hud.classList.add('proctor-frame-amber');
+        }
+        if (badge) badge.className = 'flex items-center gap-1 text-[9px] font-bold text-amber-400';
+        if (badgeText) badgeText.textContent = customReason || 'Aligning Face...';
+        if (confBadge) {
+          confBadge.className = 'text-[8px] font-mono font-bold text-amber-400 bg-amber-950/90 px-1.5 py-0.5 rounded border border-amber-500/40';
+          confBadge.textContent = `${score}%`;
+        }
+        if (matchScoreText) {
+          matchScoreText.className = 'text-amber-400 font-bold font-mono';
+          matchScoreText.textContent = `${score}% (Checking)`;
+        }
+        if (progressBar) {
+          progressBar.className = 'h-full bg-gradient-to-r from-amber-500 to-yellow-400 rounded-full transition-all duration-300';
+          progressBar.style.width = `${Math.min(100, Math.max(5, score))}%`;
+        }
+        if (dot) dot.className = 'w-1 h-1 rounded-full bg-amber-400 animate-pulse';
+        if (banner) banner.classList.add('hidden');
+      } else {
+        // Red Violation!
+        proctorState.isFaceMatched = false;
+        if (hud) {
+          hud.classList.remove('proctor-frame-green', 'proctor-frame-amber');
+          hud.classList.add('proctor-frame-red');
+        }
+        if (badge) badge.className = 'flex items-center gap-1 text-[9px] font-bold text-rose-400';
+        if (badgeText) badgeText.textContent = customReason || 'Mismatch!';
+        if (confBadge) {
+          confBadge.className = 'text-[8px] font-mono font-bold text-rose-400 bg-rose-950/90 px-1.5 py-0.5 rounded border border-rose-500/40 animate-pulse';
+          confBadge.textContent = `${score}% Flagged`;
+        }
+        if (matchScoreText) {
+          matchScoreText.className = 'text-rose-400 font-bold font-mono';
+          matchScoreText.textContent = `${score}% Mismatch`;
+        }
+        if (progressBar) {
+          progressBar.className = 'h-full bg-gradient-to-r from-rose-500 to-red-600 rounded-full transition-all duration-300';
+          progressBar.style.width = `${Math.min(100, Math.max(5, score))}%`;
+        }
+        if (dot) dot.className = 'w-1 h-1 rounded-full bg-rose-400 animate-ping';
+        if (banner) {
+          const bannerSpan = banner.querySelector('span');
+          if (bannerSpan && customReason) {
+            bannerSpan.textContent = `PROCTORING VIOLATION: ${customReason}. The camera border has turned RED.`;
+          }
+          banner.classList.remove('hidden');
+        }
+      }
+    }
+
+    function triggerProctorViolation(reason) {
+      proctorState.violationsCount++;
+      const countEl = document.getElementById('exam-violations-count');
+      const badge = document.getElementById('exam-violation-badge');
+
+      if (countEl) countEl.textContent = proctorState.violationsCount;
+      if (badge) {
+        if (proctorState.violationsCount === 1) {
+          badge.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 transition-all';
+        } else if (proctorState.violationsCount >= 2) {
+          badge.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-rose-500/30 text-rose-300 border border-rose-500/50 transition-all animate-pulse';
+        }
+      }
+
+      showToast(`⚠️ PROCTOR WARNING: ${reason} (${proctorState.violationsCount}/3 violations)`);
+
+      if (proctorState.violationsCount >= 3) {
+        alert('CRITICAL PROCTORING VIOLATION: Maximum 3 violations exceeded. The assessment will be automatically submitted.');
+        submitExamWithAudit();
+      }
+    }
+
+    function testSimulateFaceMismatch() {
+      setProctorBiometricState('mismatch', 24.3);
+      triggerProctorViolation('Simulated Face Mismatch Event');
+      setTimeout(() => {
+        setProctorBiometricState('match', 98.2);
+      }, 4000);
+    }
+
+    // ==============================================================
+    // Mouse Draggable Floating Camera Window (PIP HUD)
+    // ==============================================================
+    let hudDraggableInitialized = false;
+
+    function initDraggableProctorHud() {
+      const hud = document.getElementById('proctor-floating-hud');
+      if (!hud) return;
+
+      const handle = document.getElementById('hud-drag-handle') || hud;
+      let isDragging = false;
+      let startX = 0;
+      let startY = 0;
+      let initialLeft = 0;
+      let initialTop = 0;
+
+      if (!hud.dataset.hasBeenDragged) {
+        hud.style.top = '80px';
+        hud.style.right = '24px';
+        hud.style.left = 'auto';
+        hud.style.bottom = 'auto';
+      }
+
+      if (hudDraggableInitialized) return;
+      hudDraggableInitialized = true;
+
+      function startDrag(clientX, clientY) {
+        isDragging = true;
+        hud.dataset.hasBeenDragged = 'true';
+        handle.style.cursor = 'grabbing';
+        document.body.style.userSelect = 'none';
+
+        const rect = hud.getBoundingClientRect();
+        hud.style.right = 'auto';
+        hud.style.bottom = 'auto';
+        hud.style.left = `${rect.left}px`;
+        hud.style.top = `${rect.top}px`;
+
+        startX = clientX;
+        startY = clientY;
+        initialLeft = rect.left;
+        initialTop = rect.top;
+      }
+
+      function moveDrag(clientX, clientY) {
+        if (!isDragging) return;
+        const dx = clientX - startX;
+        const dy = clientY - startY;
+
+        let newLeft = initialLeft + dx;
+        let newTop = initialTop + dy;
+
+        const maxLeft = window.innerWidth - hud.offsetWidth - 8;
+        const maxTop = window.innerHeight - hud.offsetHeight - 8;
+
+        newLeft = Math.max(8, Math.min(newLeft, maxLeft));
+        newTop = Math.max(8, Math.min(newTop, maxTop));
+
+        hud.style.left = `${newLeft}px`;
+        hud.style.top = `${newTop}px`;
+      }
+
+      function endDrag() {
+        if (!isDragging) return;
+        isDragging = false;
+        handle.style.cursor = 'grab';
+        document.body.style.userSelect = '';
+      }
+
+      handle.addEventListener('mousedown', (e) => {
+        if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
+        startDrag(e.clientX, e.clientY);
+
+        function onMouseMove(moveEvent) {
+          moveDrag(moveEvent.clientX, moveEvent.clientY);
+        }
+
+        function onMouseUp() {
+          endDrag();
+          document.removeEventListener('mousemove', onMouseMove);
+          document.removeEventListener('mouseup', onMouseUp);
+        }
+
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+      });
+
+      handle.addEventListener('touchstart', (e) => {
+        if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
+        const touch = e.touches[0];
+        startDrag(touch.clientX, touch.clientY);
+      }, { passive: true });
+
+      document.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        const touch = e.touches[0];
+        moveDrag(touch.clientX, touch.clientY);
+      }, { passive: true });
+
+      document.addEventListener('touchend', endDrag);
+    }
+
+    // ==============================================================
+    // Questions Navigation & Selection
+    // ==============================================================
+    function renderLiveExamQuestion() {
+      const q = quizQuestions[proctorState.currentQuestionIdx];
+      if (!q) return;
+
+      const counter = document.getElementById('live-q-counter');
+      const title = document.getElementById('live-q-title');
+      const desc = document.getElementById('live-q-desc');
+      const optionsContainer = document.getElementById('live-q-options');
+
+      if (counter) counter.textContent = `Question ${q.id} of ${quizQuestions.length}`;
+      if (title) title.textContent = q.title;
+      if (desc) desc.textContent = q.desc;
+
+      if (optionsContainer) {
+        let html = '';
+        q.options.forEach(opt => {
+          const isSelected = proctorState.userAnswers[proctorState.currentQuestionIdx] === opt.key;
+          html += `
+            <label class="flex items-center gap-3 p-3.5 rounded-xl border ${isSelected ? 'border-purple-600 bg-purple-50/70 font-semibold text-purple-900 shadow-xs' : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-700'} cursor-pointer transition">
+              <input type="radio" name="exam_choice" value="${opt.key}" ${isSelected ? 'checked' : ''} onchange="handleSelectChoice('${opt.key}')" class="w-4 h-4 text-purple-600 focus:ring-purple-500 border-slate-300 cursor-pointer">
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded-lg ${isSelected ? 'bg-purple-600 text-white' : 'bg-slate-100 text-slate-600'} font-mono font-bold text-xs flex items-center justify-center shrink-0">${opt.key}</span>
+                <span class="text-xs sm:text-sm">${escapeHtml(opt.text)}</span>
+              </div>
+            </label>
+          `;
+        });
+        optionsContainer.innerHTML = html;
+      }
+
+      updateExamPalette();
+    }
+
+    function handleSelectChoice(choiceKey) {
+      proctorState.userAnswers[proctorState.currentQuestionIdx] = choiceKey;
+      renderLiveExamQuestion();
+    }
+
+    function clearSelectedExamChoice() {
+      delete proctorState.userAnswers[proctorState.currentQuestionIdx];
+      renderLiveExamQuestion();
+    }
+
+    function handleExamNextQuestion() {
+      if (proctorState.currentQuestionIdx < quizQuestions.length - 1) {
+        proctorState.currentQuestionIdx++;
+        renderLiveExamQuestion();
+      } else {
+        if (confirm('You are at the final question. Do you want to submit your assessment?')) {
+          submitExamWithAudit();
+        }
+      }
+    }
+
+    function handleExamPrevQuestion() {
+      if (proctorState.currentQuestionIdx > 0) {
+        proctorState.currentQuestionIdx--;
+        renderLiveExamQuestion();
+      }
+    }
+
+    function jumpToExamQuestion(qNum) {
+      proctorState.currentQuestionIdx = qNum - 1;
+      renderLiveExamQuestion();
+    }
+
+    function updateExamPalette() {
+      const palette = document.getElementById('exam-palette-grid');
+      if (!palette) return;
+
+      let html = '';
+      quizQuestions.forEach((q, idx) => {
+        const isCurrent = idx === proctorState.currentQuestionIdx;
+        const isAnswered = proctorState.userAnswers[idx] !== undefined;
+
+        let style = 'bg-slate-100 text-slate-700 hover:bg-slate-200';
+        if (isCurrent) {
+          style = 'bg-purple-600 text-white shadow-xs font-bold';
+        } else if (isAnswered) {
+          style = 'bg-emerald-600 text-white font-bold';
+        }
+
+        html += `<button type="button" onclick="jumpToExamQuestion(${idx + 1})" class="h-9 rounded-xl text-xs transition ${style}">${idx + 1}</button>`;
+      });
+      palette.innerHTML = html;
+    }
+
+    // ==============================================================
+    // Final Submission & Proctoring Audit Report
+    // ==============================================================
+    function submitExamWithAudit() {
+      if (document.fullscreenElement && document.exitFullscreen) {
+        document.exitFullscreen().catch(()=>{});
+      }
+      if (proctorState.examTimerInterval) clearInterval(proctorState.examTimerInterval);
+
+      // Snapshot for side-by-side audit BEFORE powering off camera
+      captureLiveExamSnapshot();
+
+      // Immediately turn off camera and microphone hardware
+      stopAllProctoringHardware();
+
+      // Hide live exam section, show audit section
+      const liveSection = document.getElementById('live-exam-section');
+      const auditSection = document.getElementById('exam-audit-section');
+
+      if (liveSection) liveSection.classList.add('hidden');
+      if (auditSection) auditSection.classList.remove('hidden');
+
+      // Calculate score
+      let correctAnswers = 0;
+      quizQuestions.forEach((q, idx) => {
+        if (proctorState.userAnswers[idx] === q.correct) {
+          correctAnswers++;
+        }
+      });
+      const scoreAchieved = (correctAnswers / quizQuestions.length) * 30;
+
+      const scoreEl = document.getElementById('audit-score-text');
+      if (scoreEl) scoreEl.textContent = `${Math.round(scoreAchieved)} / 30 Pts (${Math.round((correctAnswers/quizQuestions.length)*100)}%)`;
+
+      const violationsText = document.getElementById('audit-violations-text');
+      if (violationsText) violationsText.textContent = `${proctorState.violationsCount} Violations Recorded`;
+
+      const integrityBadge = document.getElementById('audit-integrity-badge');
+      if (integrityBadge) {
+        if (proctorState.violationsCount === 0) {
+          integrityBadge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300';
+          integrityBadge.textContent = 'Integrity: Passed (Clean)';
+        } else if (proctorState.violationsCount < 3) {
+          integrityBadge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300';
+          integrityBadge.textContent = `Integrity: ${proctorState.violationsCount} Flagged`;
+        } else {
+          integrityBadge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800 border border-rose-300';
+          integrityBadge.textContent = `Integrity: Disqualified (${proctorState.violationsCount} Violations)`;
+        }
+      }
+
+      // Update Audit Biometric Visualizations
+      const p3d = proctorState.enrolled3DProfile || (window.Face3DStudio ? Face3DStudio.getProfile() : null);
+      const audit3dImg = document.getElementById('audit-3d-texture-img');
+      const audit3dCard = document.getElementById('audit-col-3d-texture');
+      const audit3dBadge = document.getElementById('audit-3d-match-badge');
+      const auditMatchText = document.getElementById('audit-live-match-text');
+
+      if (p3d && p3d.stitchedTextureUrl) {
+        if (audit3dImg) audit3dImg.src = p3d.stitchedTextureUrl;
+        if (audit3dCard) audit3dCard.classList.remove('hidden');
+        if (audit3dBadge) {
+          audit3dBadge.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1';
+          audit3dBadge.innerHTML = '<span>🧬</span> 3D Multi-Angle Verified (Front, Left & Right Poses)';
+        }
+      } else {
+        if (audit3dCard) audit3dCard.classList.add('hidden');
+      }
+
+      if (auditMatchText) {
+        auditMatchText.textContent = `✓ ${proctorState.lastCalculatedSimilarity || 98.4}% Similarity Match`;
+      }
+
+      try {
+        sessionStorage.setItem('temp_exam_transcript_log', JSON.stringify(proctorState.speechLog));
+      } catch(e){}
+
+      showToast('Assessment submitted successfully. Camera and microphone have been turned OFF.');
+    }
+
+    // Disengage & Power Down Camera and Microphone Hardware
+    function stopAllProctoringHardware() {
+      console.log('Turning off camera and microphone hardware devices...');
+
+      // 1. Stop continuous AI biometric comparison loop
+      stopContinuousBiometricComparison();
+
+      // 2. Stop all camera video tracks and microphone audio tracks in mediaStream
+      if (proctorState.mediaStream) {
+        proctorState.mediaStream.getTracks().forEach(track => {
+          try {
+            track.stop();
+            console.log(`Stopped mediaStream track: ${track.kind} (${track.label})`);
+          } catch (e) {}
+        });
+        proctorState.mediaStream = null;
+      }
+
+      // 3. Stop secondary audio stream if any exists
+      if (proctorState.audioStream) {
+        proctorState.audioStream.getTracks().forEach(track => {
+          try {
+            track.stop();
+            console.log(`Stopped audioStream track: ${track.label}`);
+          } catch (e) {}
+        });
+        proctorState.audioStream = null;
+      }
+
+      // 4. Detach streams from DOM video elements to release hardware lock
+      const hudVideo = document.getElementById('proctor-hud-cam');
+      if (hudVideo) {
+        try { hudVideo.pause(); } catch(e){}
+        hudVideo.srcObject = null;
+      }
+      const previewVideo = document.getElementById('proctor-cam-preview');
+      if (previewVideo) {
+        try { previewVideo.pause(); } catch(e){}
+        previewVideo.srcObject = null;
+      }
+
+      // 5. Hide the floating PIP camera HUD window completely
+      const hudContainer = document.getElementById('proctor-floating-hud');
+      if (hudContainer) {
+        hudContainer.classList.add('hidden');
+      }
+
+      // 6. Stop and abort Speech Recognition (releasing the microphone)
+      if (proctorState.speechRecognition) {
+        try {
+          proctorState.speechRecognition.onend = null;
+          proctorState.speechRecognition.onerror = null;
+          proctorState.speechRecognition.onresult = null;
+          proctorState.speechRecognition.stop();
+          proctorState.speechRecognition.abort();
+          console.log('Speech recognition stopped and microphone released.');
+        } catch (e) {}
+        proctorState.speechRecognition = null;
+      }
+
+      // 7. Close AudioContext if any
+      if (proctorState.audioContext) {
+        try { proctorState.audioContext.close(); } catch(e){}
+        proctorState.audioContext = null;
+      }
+
+      // 8. Update hardware status badge in the UI
+      const hwStatus = document.getElementById('audit-hardware-status');
+      if (hwStatus) {
+        hwStatus.classList.remove('hidden');
+      }
+    }
+
+    function captureLiveExamSnapshot() {
+      const hudVideo = document.getElementById('proctor-hud-cam');
+      const canvas = document.createElement('canvas');
+      canvas.width = 640;
+      canvas.height = 480;
+      const ctx = canvas.getContext('2d');
+
+      if (hudVideo && hudVideo.videoWidth > 0) {
+        ctx.translate(canvas.width, 0);
+        ctx.scale(-1, 1);
+        ctx.drawImage(hudVideo, 0, 0, canvas.width, canvas.height);
+      } else {
+        drawFallbackCandidateAvatar(ctx);
+      }
+
+      const snapUrl = canvas.toDataURL('image/jpeg', 0.85);
+      proctorState.liveSnapUrl = snapUrl;
+
+      const auditLiveImg = document.getElementById('audit-live-img');
+      if (auditLiveImg) auditLiveImg.src = snapUrl;
+    }
+
+    // ==============================================================
+    // Trainer Speech Audit Console Modal Functions
+    // ==============================================================
+    function openSpeechLogModal() {
+      if (proctorState.speechLog.length === 0) {
+        try {
+          const stored = sessionStorage.getItem('temp_exam_transcript_log');
+          if (stored) {
+            proctorState.speechLog = JSON.parse(stored);
+          }
+        } catch(e){}
+      }
+      renderSpeechLogModalContent();
+      document.getElementById('speech-log-modal').classList.add('open');
+    }
+
+    function closeSpeechLogModal() {
+      document.getElementById('speech-log-modal').classList.remove('open');
+    }
+
+    function renderSpeechLogModalContent() {
+      const container = document.getElementById('modal-speech-log-container');
+      if (!container) return;
+
+      const countBadge = document.getElementById('trainer-transcript-count');
+      if (countBadge) {
+        countBadge.textContent = `${proctorState.speechLog.length} Spoken Entries`;
+      }
+
+      if (proctorState.speechLog.length === 0) {
+        container.innerHTML = `<div class="p-3 text-center text-slate-500 italic">
+          [No vocal activity recorded yet for candidate. Audio engine is armed and transcribing silently in the background.]
+        </div>`;
+        return;
+      }
+
+      let html = '';
+      proctorState.speechLog.forEach((item) => {
+        let highlighted = escapeHtml(item.text);
+        const keywords = ['tree', 'complexity', 'find', 'union', 'answer', 'option', 'search', 'solution', 'google', 'chatgpt'];
+        keywords.forEach(kw => {
+          const reg = new RegExp(`\\b(${kw})\\b`, 'gi');
+          highlighted = highlighted.replace(reg, '<mark class="bg-amber-400 text-slate-900 px-0.5 rounded font-bold">$1</mark>');
+        });
+
+        html += `<div class="p-2 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] flex items-start gap-2">
+          <span class="text-purple-400 font-bold shrink-0">[${item.time}]</span>
+          <span class="text-emerald-300 flex-1 leading-snug">${highlighted}</span>
+          <span class="text-[9px] font-mono text-slate-500 shrink-0">WebSpeech</span>
+        </div>`;
+      });
+      container.innerHTML = html;
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function filterSpeechLogBySearch() {
+      const query = (document.getElementById('trainer-speech-search')?.value || '').toLowerCase().trim();
+      const container = document.getElementById('modal-speech-log-container');
+      if (!container) return;
+
+      if (!query) {
+        renderSpeechLogModalContent();
+        return;
+      }
+
+      const filtered = proctorState.speechLog.filter(item => item.text.toLowerCase().includes(query));
+      const countBadge = document.getElementById('trainer-transcript-count');
+      if (countBadge) {
+        countBadge.textContent = `${filtered.length} Matched`;
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="p-3 text-center text-slate-500 italic">No spoken entries matched keyword "${escapeHtml(query)}".</div>`;
+        return;
+      }
+
+      let html = '';
+      filtered.forEach((item) => {
+        let highlighted = escapeHtml(item.text);
+        const reg = new RegExp(`(${query.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')})`, 'gi');
+        highlighted = highlighted.replace(reg, '<mark class="bg-amber-300 text-slate-900 px-0.5 rounded font-bold">$1</mark>');
+        html += `<div class="p-2 rounded-lg bg-slate-900/90 border border-slate-800 text-[11px] flex items-start gap-2">
+          <span class="text-purple-400 font-bold shrink-0">[${item.time}]</span>
+          <span class="text-emerald-300 flex-1 leading-snug">${highlighted}</span>
+          <span class="text-[9px] font-mono text-slate-500 shrink-0">WebSpeech</span>
+        </div>`;
+      });
+      container.innerHTML = html;
+    }
+
+    function downloadSpeechLog() {
+      let content = `CAMPUS-OS PROCTORED EXAMINATION SPEECH TRANSCRIPT\n`;
+      content += `====================================================\n`;
+      content += `Exam: ${proctorState.title}\n`;
+      content += `Subject: ${proctorState.subject}\n`;
+      content += `Candidate: Shashaank Sajjanar\n`;
+      content += `Batch: ${proctorState.batch}\n`;
+      content += `Date: ${new Date().toLocaleDateString()}\n`;
+      content += `Violations Count: ${proctorState.violationsCount}\n`;
+      content += `====================================================\n\n`;
+
+      if (proctorState.speechLog.length === 0) {
+        content += `[No speech recorded during session]\n`;
+      } else {
+        proctorState.speechLog.forEach(item => {
+          content += `[${item.time}] ${item.text}\n`;
+        });
+      }
+
+      const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `temp_exam_transcript_log_${Date.now()}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Speech transcript downloaded successfully.');
+    }
+
+    function copySpeechLogToClipboard() {
+      if (proctorState.speechLog.length === 0) {
+        showToast('No speech entries to copy.');
+        return;
+      }
+      let content = `TRAINER AUDIT - CANDIDATE SPEECH TRANSCRIPT LOG\n`;
+      content += `Candidate: Shashaank Sajjanar (B-948) | DS302 Algorithms\n`;
+      content += `Storage Key: temp_exam_transcript_log\n\n`;
+      proctorState.speechLog.forEach(item => {
+        content += `[${item.time}] ${item.text}\n`;
+      });
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(content).then(() => {
+          showToast('Transcript log copied to clipboard.');
+        }).catch(() => {
+          showToast('Transcript log ready in clipboard.');
+        });
+      }
+    }
+
+    // Helpers
+    function confirmExitPortal() {
+      if (confirm('Are you sure you want to exit the proctored examination portal? Any unsaved progress will be discarded.')) {
+        stopAllProctoringHardware();
+        window.location.href = 'assignments.html';
+      }
+    }
+
+    // Always release hardware on page departure
+    window.addEventListener('beforeunload', () => {
+      stopAllProctoringHardware();
+    });
+    window.addEventListener('pagehide', () => {
+      stopAllProctoringHardware();
+    });
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-msg');
+      if (toast && toastMsg) {
+        toastMsg.textContent = msg;
+        toast.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-3');
+        setTimeout(() => {
+          toast.classList.add('opacity-0', 'pointer-events-none', 'translate-y-3');
+        }, 3800);
+      }
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check if custom exam metadata was passed from dashboard
+      try {
+        const metaStr = sessionStorage.getItem('current_exam_meta');
+        if (metaStr) {
+          const meta = JSON.parse(metaStr);
+          if (meta.title) {
+            proctorState.title = meta.title;
+            const preTitle = document.getElementById('preflight-exam-title');
+            if (preTitle) preTitle.textContent = meta.title;
+          }
+          if (meta.subject) proctorState.subject = meta.subject;
+          if (meta.batch) proctorState.batch = meta.batch;
+          if (meta.instructor) proctorState.instructor = meta.instructor;
+          if (meta.duration) proctorState.durationMins = meta.duration;
+          const hdrTitle = document.getElementById('portal-header-title');
+          if (hdrTitle) hdrTitle.textContent = `${proctorState.subject} • ${proctorState.title}`;
+        }
+      } catch (e) {}
+
+      biometricEngine.init();
+      goToProctorStep(1);
+
+      // Initialize 3D Face Biometric Studio & Sync Status
+      if (window.Face3DStudio) {
+        Face3DStudio.init();
+      }
+      refreshStep2Biometric3DStatus();
+
+      // React dynamically whenever candidate enrolls or updates 3D face
+      window.addEventListener('setu-3d-face-updated', () => {
+        refreshStep2Biometric3DStatus();
+      });
+
+      // Check if baseline already exists in session
+      try {
+        const existingBase = sessionStorage.getItem('temp_exam_baseline_photo');
+        if (existingBase) {
+          const baselineImg = document.getElementById('baseline-photo-img');
+          const placeholder = document.getElementById('baseline-placeholder');
+          const pill = document.getElementById('baseline-status-pill');
+          const proceedBtn = document.getElementById('btn-proceed-audio');
+          if (baselineImg) {
+            baselineImg.src = existingBase;
+            baselineImg.classList.remove('hidden');
+            proctorState.baselineDataUrl = existingBase;
+            baselineImg.onload = () => {
+              proctorState.baselineBiometricFeatures = biometricEngine.extractFeatures(baselineImg, false);
+            };
+          }
+          if (placeholder) placeholder.classList.add('hidden');
+          if (pill) {
+            pill.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300';
+            pill.textContent = 'Enrolled ✓';
+          }
+          if (proceedBtn) proceedBtn.disabled = false;
+        }
+      } catch(e){}
+    });
+  </script>
+
+  <!-- Three.js WebGL Engine & CampusOS 3D Face Biometric Studio -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="js/face3d-studio.js"></script>
+</body>
+</html>

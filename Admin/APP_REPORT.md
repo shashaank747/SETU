@@ -254,4 +254,4 @@ SETU utilizes a reliable client-side state model:
 
 ---
 
-*Report prepared and generated for SETU (SETU CampusOS).*
+*Report prepared and generated for SETU (AppTechno CampusOS).*

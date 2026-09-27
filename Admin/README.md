@@ -1,4 +1,4 @@
-# 🎓 SETU — SETU CampusOS
+# 🎓 SETU — AppTechno CampusOS
 ### *Smarter Campuses, Brighter Futures &bull; 100% Student-Built Institute ERP & LMS*
 
 [![Status](https://img.shields.io/badge/Status-Active%20Production-00d2ff?style=for-the-badge)](https://github.com/shashaank747)
@@ -29,7 +29,7 @@
 
 ## 🌟 About the Project
 
-**SETU (SETU CampusOS)** is an AI-powered, student-built next-generation Campus Enterprise Resource Planning (ERP) and Learning Management System (LMS). Built to empower 700+ learners and educational institutions across India, SETU replaces clunky, obsolete administrative portals with a sleek, ultra-responsive, cyber-themed interface.
+**SETU (AppTechno CampusOS)** is an AI-powered, student-built next-generation Campus Enterprise Resource Planning (ERP) and Learning Management System (LMS). Built to empower 700+ learners and educational institutions across India, SETU replaces clunky, obsolete administrative portals with a sleek, ultra-responsive, cyber-themed interface.
 
 From geofenced biometric punch-in attendance tracking and high-definition classroom recordings to an interactive 3D robot mascot and intelligent AI campus assistant, SETU bridges the gap between academic administration and modern digital student life.
 
@@ -208,7 +208,7 @@ For a complete breakdown of every algorithm, state flow, mathematics behind the 
 ## 👨‍💻 Author & Acknowledgements
 
 - **Lead Architect & Developer**: **Shashaank Sajjanar** ([@shashaank747](https://github.com/shashaank747))
-- **Platform**: SETU CampusOS / SETU
+- **Platform**: AppTechno CampusOS / SETU
 - **Mission**: Designed and developed 100% by students to redefine educational management systems across campuses.
 
 ---
