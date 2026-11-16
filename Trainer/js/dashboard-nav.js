@@ -37,11 +37,15 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('campusos_user_role', role);
   }
   
-  const activeRole = role || localStorage.getItem('campusos_user_role') || 'Student';
+  const isTrainerPortal = window.location.pathname.toLowerCase().includes('/trainer/');
+  const activeRole = role || (isTrainerPortal ? 'Trainer' : (localStorage.getItem('campusos_user_role') || 'Student'));
   const userDisplayRole = document.getElementById('user-display-role');
   if (userDisplayRole) userDisplayRole.textContent = activeRole.toUpperCase();
-  if (window.StudentProfileDB) {
+  if (!isTrainerPortal && window.StudentProfileDB) {
     window.StudentProfileDB.applyToDOM();
+  } else if (isTrainerPortal) {
+    const userDisplayName = document.getElementById('user-display-name');
+    if (userDisplayName && !userDisplayName.textContent) userDisplayName.textContent = 'Alex Johnson';
   }
 
   // 2. Keyboard Shortcut Ctrl+K to trigger CyberBot / search, Escape to close dropdowns
