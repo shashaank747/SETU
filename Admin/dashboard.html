@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Admin ERP | SETU CampusOS</title>
+  <meta name="description" content="CampusOS Modern Institutional Admin ERP & Governance Dashboard">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css?v=9">
+  <link rel="stylesheet" href="css/robot.css?v=1">
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230284c7'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
+</head>
+
+<body class="dashboard-body">
+
+  <!-- Top Navigation Bar -->
+  <header class="dashboard-navbar">
+    <div class="nav-left-group">
+      <!-- AppTechno Brand Logo -->
+      <a href="index.html" class="dash-brand-link" title="SETU Admin ERP Home">
+        <img src="setu.png" alt="SETU" class="dash-brand-img">
+        <span style="font-size:11px;font-weight:800;letter-spacing:0.05em;background:#f0f9ff;color:#0284c7;padding:2px 8px;border-radius:12px;border:1px solid #bae6fd;margin-left:4px;">ADMIN ERP</span>
+      </a>
+
+      <div class="nav-brand-divider"></div>
+
+      <!-- Main Navigation Items matching user reference -->
+      <!-- Main Navigation Items: Dashboard only for Admin ERP -->
+      <ul class="dash-nav-items">
+        <!-- 1. Dashboard (Active Primary Blue Pill) -->
+        <li>
+          <a href="dashboard.html" class="nav-pill-btn active-dashboard">
+            <svg class="nav-item-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+            </svg>
+            <span>Dashboard</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Right Side: Bell + Profile -->
+    <div class="nav-right-group">
+
+      <!-- Notification Bell Menu -->
+      <div class="nav-bell-menu" id="nav-bell-menu">
+        <button type="button" class="nav-bell-btn" id="nav-bell-btn" title="Notifications" aria-label="Notifications">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" />
+          </svg>
+          <span class="bell-badge" id="bell-badge">3</span>
+        </button>
+
+        <!-- Notifications Dropdown Panel -->
+        <div class="nav-notifications-dropdown" id="nav-notifications-dropdown">
+          <div class="notifications-header">
+            <div class="notif-title-row">
+              <span class="notif-heading">Notifications</span>
+              <span class="notif-count-badge" id="notif-count-badge">3 New</span>
+            </div>
+            <button type="button" class="btn-mark-read" id="btn-mark-read">Mark all as read</button>
+          </div>
+
+          <div class="notifications-list" id="notifications-list">
+            <div class="notif-item unread">
+              <div class="notif-indicator dot-green"></div>
+              <div class="notif-content">
+                <span class="notif-text"><strong>Campus Radar Geofence Active:</strong> In range within 14m perimeter
+                  verified.</span>
+                <span class="notif-time">Just now</span>
+              </div>
+            </div>
+
+            <div class="notif-item unread">
+              <div class="notif-indicator dot-blue"></div>
+              <div class="notif-content">
+                <span class="notif-text"><strong>New Lecture Recording:</strong> System Architecture lecture has been
+                  published.</span>
+                <span class="notif-time">25m ago</span>
+              </div>
+            </div>
+
+            <div class="notif-item unread">
+              <div class="notif-indicator dot-orange"></div>
+              <div class="notif-content">
+                <span class="notif-text"><strong>Attendance Milestone:</strong> Attendance index reached 94% Prime
+                  Status!</span>
+                <span class="notif-time">2h ago</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="notifications-footer">
+            <a href="#campus-radar" class="notif-view-all" id="btn-clear-notifications">Clear all alerts</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- User Profile Dropdown -->
+      <div class="user-profile-menu" id="user-profile-menu">
+        <button type="button" class="user-profile-trigger" id="user-profile-trigger" onclick="toggleUserProfileMenu(event)" aria-label="User Profile Menu">
+          <img src="images/user-shashaank.png" alt="Shashaank Sajjanar" class="user-profile-avatar"
+            id="user-avatar-img">
+          <div class="user-profile-info">
+            <span class="user-profile-role" id="user-display-role">ADMIN</span>
+            <span class="user-profile-name" id="user-display-name">System Administrator</span>
+          </div>
+          <svg class="nav-chevron-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2.5">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+
+        <div class="user-dropdown-menu" id="user-dropdown-menu">
+          <div class="user-header-info">
+            <div class="user-card-top">
+              <span class="user-header-name" id="dropdown-user-name">System Administrator</span>
+              <span class="user-badge-online">● Online</span>
+            </div>
+            <span class="user-header-role" id="dropdown-user-role">Admin ERP &bull; ID #2026-ADM</span>
+          </div>
+
+          <div class="dropdown-items-group">
+            <!-- 1. Profile -->
+            <button type="button" onclick="openStudentProfileModal()" class="dropdown-item w-full text-left cursor-pointer flex items-center justify-between" id="btn-dropdown-profile">
+              <div class="flex items-center gap-2.5">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span class="font-bold text-slate-800">Profile</span>
+              </div>
+              <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-sky-100 text-sky-800 border border-sky-300">
+                #2026-ADM
+              </span>
+            </button>
+
+            <div class="dropdown-divider"></div>
+
+            <!-- 2. Logout -->
+            <a href="login.html" class="dropdown-item signout-link" id="btn-signout">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+              <span class="font-bold text-rose-600">Logout</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Layout -->
+  <div class="dashboard-main">
+    <main class="dashboard-content-area">
+      <!-- ===================================================================
+           Campus Radar Hero Section (Matches user reference screenshot)
+           =================================================================== -->
+      <section class="campus-radar-hero" id="campus-radar">
+        <!-- 1. Left Section: Active Radar Badge, Greeting, Motivational Quote, Punch Actions -->
+        <div class="radar-left-col">
+          <div class="radar-status-badge">
+            <span class="radar-pulse-dot" style="background:#00d2ff;box-shadow:0 0 8px #00d2ff;"></span>
+            <span>CAMPUS RADAR &bull; INSTITUTION GATEWAY ONLINE</span>
+          </div>
+
+          <h1 class="radar-greeting">
+            Good Afternoon,<br>
+            <span class="radar-user-name" id="radar-user-name">Administrator</span>
+          </h1>
+
+          <p class="radar-quote">
+            “Institutional excellence and continuous campus integrity.” Geofenced campus perimeter (14m) verified across all terminals.
+          </p>
+
+          <div class="radar-actions">
+            <button type="button" class="btn-punch-out" id="btn-punch-toggle" title="Admin Punch / Terminal Check" style="background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%);">
+              <span id="punch-btn-icon" style="display:inline-flex;align-items:center;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+              </span>
+              <span id="punch-btn-label">AUDIT CHECK-IN</span>
+            </button>
+
+            <button type="button" class="btn-scan-qr" id="btn-scan-terminal" title="Scan Terminal QR">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="#00d2ff">
+                <path
+                  d="M4 4h6v6H4V4zm2 2v2h2V6H6zm8-2h6v6h-6V4zm2 2v2h2V6h-2zM4 14h6v6H4v-6zm2 2v2h2v-2H6zm10-2h2v2h-2v-2zm-2 2h2v2h-2v-2zm4 0h2v2h-2v-2zm-2 2h2v2h-2v-2zm2 2h2v2h-2v-2zm-6-2h2v4h-2v-4z" />
+              </svg>
+              <span>Scan Terminal QR</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. Middle Section: Live Session Elapsed Floating Timer Card -->
+        <div class="session-timer-card">
+          <div class="session-header">
+            <svg class="session-stopwatch-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#00d2ff"
+              stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="13" r="8"></circle>
+              <path d="M12 9v4l2 2"></path>
+              <path d="M5 3L2 6"></path>
+              <path d="M22 6l-3-3"></path>
+              <path d="M12 2v3"></path>
+            </svg>
+            <span>SESSION ELAPSED</span>
+          </div>
+
+          <div class="session-digital-clock" id="session-clock-display">02 : 18 : 16</div>
+
+          <div class="session-punched-in" id="session-punch-status">
+            Punched IN at <span class="punched-time" id="session-punched-time">09:47 AM</span>
+          </div>
+
+          <div class="session-divider"></div>
+
+          <div class="session-footer-meta">
+            <span class="session-range-status">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+              </svg>
+              In Range (14m)
+            </span>
+            <span class="session-autoclose" id="session-autoclose-badge"
+              title="Auto-resets at 11:59 PM (Click to simulate reset)">Auto-close: 23:59</span>
+          </div>
+        </div>
+
+        <!-- 3. Right Section: Attendance Index Radial Gauge -->
+        <div class="attendance-card">
+          <div class="attendance-header">
+            <h3 class="attendance-title">CAMPUS ATTENDANCE</h3>
+            <span class="attendance-semester">Academic Spring 2026</span>
+          </div>
+
+          <div class="attendance-gauge-container">
+            <svg class="gauge-svg" viewBox="0 0 160 160">
+              <defs>
+                <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#00d2ff" />
+                  <stop offset="100%" stop-color="#10b981" />
+                </linearGradient>
+              </defs>
+              <!-- Background Ring Track -->
+              <circle class="gauge-track" cx="80" cy="80" r="62" />
+              <!-- Glowing Gradient Progress Ring (389.56 circumference, 96% filled) -->
+              <circle class="gauge-progress" cx="80" cy="80" r="62" stroke-dasharray="389.56"
+                stroke-dashoffset="15.58" />
+            </svg>
+            <div class="gauge-center-content">
+              <div class="gauge-percentage">96<span class="gauge-percent-sign">%</span></div>
+              <span class="gauge-badge">CAMPUS OPTIMAL</span>
+            </div>
+          </div>
+
+          <div class="attendance-metrics-row">
+            <span class="metric-item">
+              <span class="metric-dot dot-present"></span>
+              <span><strong>48</strong> Batches Active</span>
+            </span>
+            <span class="metric-item">
+              <span class="metric-dot dot-absent"></span>
+              <span><strong>02</strong> Reviews</span>
+            </span>
+            <span class="metric-req">Target: 85%</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quick Academic Shortcuts & Learning Hub -->
+      <div class="dashboard-quick-grid">
+        <!-- User Provisioning Quick Card -->
+        <div onclick="AdminProvisioning.openModal()" class="dash-quick-card cursor-pointer" style="cursor:pointer;border-color:rgba(2,132,199,0.4);background:linear-gradient(135deg,rgba(2,132,199,0.06) 0%,rgba(255,255,255,0.95) 100%);box-shadow:0 4px 14px rgba(2,132,199,0.08);">
+          <div class="dash-card-icon-box" style="background:rgba(2,132,199,0.15);color:#0284c7;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="8.5" cy="7" r="4"></circle>
+              <line x1="20" y1="8" x2="20" y2="14"></line>
+              <line x1="23" y1="11" x2="17" y2="11"></line>
+            </svg>
+          </div>
+          <div class="dash-card-info">
+            <span class="dash-card-title" style="display:flex;align-items:center;gap:6px;">
+              User Provisioning Console
+              <span style="font-size:9px;background:#0284c7;color:#fff;padding:1px 6px;border-radius:6px;font-weight:700;">ADMIN EXCLUSIVE</span>
+            </span>
+            <span class="dash-card-desc">Mandatory Profile Creation for Students &amp; Faculty. Assign batches &amp; authorize login access.</span>
+          </div>
+        </div>
+
+        <a href="Class_recordings.html" class="dash-quick-card">
+          <div class="dash-card-icon-box icon-classroom">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              <line x1="9" y1="9" x2="15" y2="9"></line>
+              <line x1="9" y1="13" x2="13" y2="13"></line>
+            </svg>
+          </div>
+          <div class="dash-card-info">
+            <span class="dash-card-title">Classroom & Recordings</span>
+            <span class="dash-card-desc">Access Class Recordings, live lectures & syllabus</span>
+          </div>
+        </a>
+
+        <a href="#campus-radar" class="dash-quick-card">
+          <div class="dash-card-icon-box icon-attendance">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+          </div>
+          <div class="dash-card-info">
+            <span class="dash-card-title">Biometric Geo-Fence</span>
+            <span class="dash-card-desc">Live radar active &bull; In range within 14m</span>
+          </div>
+        </a>
+
+        <a href="dashboard.html" class="dash-quick-card">
+          <div class="dash-card-icon-box icon-courses">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+          </div>
+          <div class="dash-card-info">
+            <span class="dash-card-title">Spring 2026 Courses</span>
+            <span class="dash-card-desc">6 active enrolled courses & learning modules</span>
+          </div>
+        </a>
+
+        <a href="dashboard.html" class="dash-quick-card">
+          <div class="dash-card-icon-box icon-exams">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+          </div>
+          <div class="dash-card-info">
+            <span class="dash-card-title">Upcoming Schedule</span>
+            <span class="dash-card-desc">Next lecture at 02:30 PM: System Architecture</span>
+          </div>
+        </a>
+      </div>
+    </main>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="dash-toast" id="dash-toast">
+    <span class="toast-icon" id="toast-icon">✓</span>
+    <span class="toast-message" id="toast-message">Campus radar action recorded</span>
+  </div>
+
+  <!-- ===================================================================
+       Institutional User Provisioning & Central Registry Modal (Admin Authority)
+       =================================================================== -->
+  <div class="user-registry-modal" id="user-registry-modal" style="display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;background:rgba(15,23,42,0.45);backdrop-filter:blur(8px);padding:20px;">
+    <div class="user-registry-dialog" style="max-width:1150px;width:100%;max-height:92vh;background:#ffffff;border:1px solid #e2e8f0;border-radius:24px;box-shadow:0 25px 60px -15px rgba(0,0,0,0.25);display:flex;flex-direction:column;overflow:hidden;color:#0f172a;font-family:var(--font-ui,sans-serif);">
+      
+      <!-- Modal Header -->
+      <div style="padding:20px 28px;background:linear-gradient(90deg,#f0f9ff 0%,#ffffff 100%);border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:14px;">
+          <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#0284c7,#0369a1);display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 4px 14px rgba(2,132,199,0.3);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+          </div>
+          <div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <h2 style="font-size:1.15rem;font-weight:800;letter-spacing:0.02em;margin:0;color:#0f172a;">INSTITUTIONAL USER PROVISIONING &amp; CENTRAL REGISTRY</h2>
+              <span style="font-size:10px;font-weight:800;background:rgba(2,132,199,0.12);color:#0284c7;padding:2px 8px;border-radius:12px;border:1px solid rgba(2,132,199,0.3);">ADMIN EXCLUSIVE</span>
+            </div>
+            <p style="font-size:0.8rem;color:#64748b;margin:2px 0 0 0;">Tier 1 Master Authority: Student accounts must be provisioned here before learners can access the portal.</p>
+          </div>
+        </div>
+
+        <button type="button" onclick="AdminProvisioning.closeModal()" style="background:#f1f5f9;border:1px solid #e2e8f0;color:#64748b;border-radius:12px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.color='#0f172a';this.style.background='#e2e8f0'" onmouseout="this.style.color='#64748b';this.style.background='#f1f5f9'" title="Close Console (Esc)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div style="padding:0 28px;background:#f8fafc;border-bottom:1px solid #e2e8f0;display:flex;gap:8px;">
+        <button type="button" id="tab-btn-students" class="registry-tab-btn active" onclick="AdminProvisioning.switchTab('students')" style="padding:14px 18px;background:transparent;border:none;border-bottom:2px solid #0284c7;color:#0284c7;font-size:0.88rem;font-weight:700;display:flex;align-items:center;gap:8px;cursor:pointer;transition:all 0.2s;">
+          <span>👨‍🎓 Student Accounts</span>
+          <span id="admin-student-total-count" style="font-size:10px;background:rgba(2,132,199,0.12);color:#0284c7;padding:2px 7px;border-radius:10px;font-weight:800;">3 Accounts</span>
+        </button>
+        <button type="button" id="tab-btn-trainers" class="registry-tab-btn" onclick="AdminProvisioning.switchTab('trainers')" style="padding:14px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#64748b;font-size:0.88rem;font-weight:700;display:flex;align-items:center;gap:8px;cursor:pointer;transition:all 0.2s;">
+          <span>👨‍🏫 Faculty Trainers</span>
+          <span id="admin-trainer-total-count" style="font-size:10px;background:rgba(147,51,234,0.12);color:#7c3aed;padding:2px 7px;border-radius:10px;font-weight:800;">2 Faculty</span>
+        </button>
+        <button type="button" id="tab-btn-hierarchy" class="registry-tab-btn" onclick="AdminProvisioning.switchTab('hierarchy')" style="padding:14px 18px;background:transparent;border:none;border-bottom:2px solid transparent;color:#64748b;font-size:0.88rem;font-weight:700;display:flex;align-items:center;gap:8px;cursor:pointer;transition:all 0.2s;">
+          <span>🏛️ Hierarchy &amp; Connection Tree</span>
+        </button>
+      </div>
+
+      <!-- Modal Body (Scrollable) -->
+      <div style="flex:1;overflow-y:auto;padding:24px 28px;background:#ffffff;">
+        
+        <!-- ================= TAB 1: STUDENTS ================= -->
+        <div id="tab-content-students" class="registry-tab-content">
+          <!-- Authority Governance Rule Callout -->
+          <div style="padding:14px 18px;border-radius:12px;background:#f0f9ff;border:1px solid #bae6fd;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:12px;">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <span style="font-size:22px;">🛡️</span>
+              <div>
+                <div style="font-size:12px;font-weight:700;color:#0284c7;text-transform:uppercase;letter-spacing:0.04em;">Institutional Security Policy: Provisioning-First Access</div>
+                <div style="font-size:12px;color:#475569;margin-top:2px;">
+                  Students <strong style="color:#0f172a;">cannot self-register</strong>. Basic profile creation must be performed here by the Administrator. Only after an active profile is provisioned will the student be authorized to log in.
+                </div>
+              </div>
+            </div>
+            <button type="button" onclick="AdminProvisioning.toggleNewStudentForm()" style="padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#0284c7,#0369a1);color:#fff;border:none;font-weight:700;font-size:12px;display:inline-flex;align-items:center;gap:6px;cursor:pointer;box-shadow:0 2px 8px rgba(2,132,199,0.25);white-space:nowrap;transition:all 0.2s;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              <span>Provision New Student</span>
+            </button>
+          </div>
+
+          <!-- Provisioning Form (Collapsible) -->
+          <div id="new-student-form-card" style="display:none;background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:20px;margin-bottom:22px;box-shadow:0 4px 16px rgba(0,0,0,0.04);">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid #e2e8f0;">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="font-size:16px;">➕</span>
+                <span style="font-weight:800;font-size:14px;color:#0f172a;">Create &amp; Authorize New Student Learner Account</span>
+              </div>
+              <button type="button" onclick="AdminProvisioning.toggleNewStudentForm()" style="background:transparent;border:none;color:#64748b;cursor:pointer;font-size:12px;">Cancel ✕</button>
+            </div>
+
+            <form id="provision-student-form" onsubmit="AdminProvisioning.handleProvisionSubmit(event)">
+              <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:14px;margin-bottom:16px;">
+                <div>
+                  <label style="display:block;font-size:11px;font-weight:700;color:#475569;margin-bottom:5px;">Full Name *</label>
+                  <input type="text" id="prov-student-name" required placeholder="e.g. Alex Turner" style="width:100%;padding:9px 12px;background:#ffffff;border:1px solid #cbd5e1;border-radius:8px;color:#0f172a;font-size:13px;box-sizing:border-box;">
+                </div>
+                <div>
+                  <label style="display:block;font-size:11px;font-weight:700;color:#475569;margin-bottom:5px;">Assigned Student ID *</label>
+                  <input type="text" id="prov-student-id" required placeholder="e.g. 2026-STU-04" style="width:100%;padding:9px 12px;background:#ffffff;border:1px solid #cbd5e1;border-radius:8px;color:#0284c7;font-weight:700;font-family:monospace;font-size:13px;box-sizing:border-box;">
+                </div>
+                <div>
+                  <label style="display:block;font-size:11px;font-weight:700;color:#475569;margin-bottom:5px;">Institutional Email *</label>
+                  <input type="email" id="prov-student-email" required placeholder="e.g. alex.turner@campusos.edu" style="width:100%;padding:9px 12px;background:#ffffff;border:1px solid #cbd5e1;border-radius:8px;color:#0f172a;font-size:13px;box-sizing:border-box;">
+                </div>
+                <div>
+                  <label style="display:block;font-size:11px;font-weight:700;color:#475569;margin-bottom:5px;">Enrolled Batch *</label>
+                  <select id="prov-student-batch" style="width:100%;padding:9px 12px;background:#ffffff;border:1px solid #cbd5e1;border-radius:8px;color:#0f172a;font-size:13px;box-sizing:border-box;">
+                    <option value="Batch B-948 (2022 - 2026)">Batch B-948 (2022 - 2026)</option>
+                    <option value="Batch B-950 (AI &amp; ML)">Batch B-950 (AI &amp; ML)</option>
+                    <option value="Batch B-952 (2023 - 2027)">Batch B-952 (2023 - 2027)</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="display:block;font-size:11px;font-weight:700;color:#475569;margin-bottom:5px;">Academic Department</label>
+                  <select id="prov-student-dept" style="width:100%;padding:9px 12px;background:#ffffff;border:1px solid #cbd5e1;border-radius:8px;color:#0f172a;font-size:13px;box-sizing:border-box;">
+                    <option value="School of Computer Science &amp; Engineering">School of Computer Science &amp; Engineering</option>
+                    <option value="Department of AI &amp; Data Science">Department of AI &amp; Data Science</option>
+                    <option value="School of Electronics &amp; Communication">School of Electronics &amp; Communication</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="display:block;font-size:11px;font-weight:700;color:#475569;margin-bottom:5px;">Assigned Faculty Trainer</label>
+                  <select id="prov-student-trainer" style="width:100%;padding:9px 12px;background:#ffffff;border:1px solid #cbd5e1;border-radius:8px;color:#7c3aed;font-weight:600;font-size:13px;box-sizing:border-box;">
+                    <option value="2026-TRN-01">Prof. Vikram Rao (Batch B-948 Supervisor)</option>
+                    <option value="2026-TRN-02">Dr. Ananya Sen (Batch B-950 Supervisor)</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="display:block;font-size:11px;font-weight:700;color:#475569;margin-bottom:5px;">Initial Access Status</label>
+                  <select id="prov-student-status" style="width:100%;padding:9px 12px;background:#ffffff;border:1px solid #cbd5e1;border-radius:8px;color:#059669;font-weight:700;font-size:13px;box-sizing:border-box;">
+                    <option value="active">Active (Immediate Login Granted)</option>
+                    <option value="pending">Pending Admin Approval</option>
+                    <option value="suspended">Suspended (Blocked Access)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style="display:flex;justify-content:flex-end;gap:10px;">
+                <button type="button" onclick="AdminProvisioning.toggleNewStudentForm()" style="padding:9px 16px;background:#ffffff;border:1px solid #cbd5e1;color:#64748b;border-radius:8px;font-weight:600;font-size:12px;cursor:pointer;">Cancel</button>
+                <button type="submit" style="padding:9px 20px;background:linear-gradient(135deg,#0284c7,#0369a1);border:none;color:#fff;border-radius:8px;font-weight:700;font-size:12px;cursor:pointer;box-shadow:0 2px 8px rgba(2,132,199,0.3);">Authorize &amp; Provision Student Account ✓</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Search & Filter Controls -->
+          <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;">
+            <div style="display:flex;align-items:center;gap:10px;flex:1;max-width:480px;">
+              <div style="position:relative;width:100%;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);">
+                  <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="admin-student-search" oninput="AdminProvisioning.handleSearch()" placeholder="Search student name, email, ID, or batch..." style="width:100%;padding:8px 12px 8px 36px;background:#ffffff;border:1px solid #cbd5e1;border-radius:10px;color:#0f172a;font-size:12px;box-sizing:border-box;">
+              </div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:10px;">
+              <select id="admin-student-batch-filter" onchange="AdminProvisioning.handleSearch()" style="padding:8px 12px;background:#ffffff;border:1px solid #cbd5e1;border-radius:10px;color:#475569;font-size:12px;">
+                <option value="all">All Batches</option>
+                <option value="B-948">Batch B-948</option>
+                <option value="B-950">Batch B-950</option>
+                <option value="B-952">Batch B-952</option>
+              </select>
+
+              <select id="admin-student-status-filter" onchange="AdminProvisioning.handleSearch()" style="padding:8px 12px;background:#ffffff;border:1px solid #cbd5e1;border-radius:10px;color:#475569;font-size:12px;">
+                <option value="all">All Statuses</option>
+                <option value="active">Active ✓</option>
+                <option value="pending">Pending</option>
+                <option value="suspended">Suspended</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Students Registry Table -->
+          <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.02);">
+            <table style="width:100%;border-collapse:collapse;text-align:left;font-size:12px;">
+              <thead>
+                <tr style="background:#f8fafc;border-bottom:1px solid #e2e8f0;color:#64748b;font-size:11px;text-transform:uppercase;letter-spacing:0.04em;">
+                  <th style="padding:12px 14px;">Learner Account</th>
+                  <th style="padding:12px 14px;">Contact &amp; Dept</th>
+                  <th style="padding:12px 14px;">Enrolled Batch</th>
+                  <th style="padding:12px 14px;">Assigned Trainer</th>
+                  <th style="padding:12px 14px;text-align:center;">Account Access</th>
+                  <th style="padding:12px 14px;text-align:center;">3D Face Mesh</th>
+                  <th style="padding:12px 14px;text-align:right;">Admin Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-student-table-body">
+                <!-- Dynamically populated by AdminProvisioning.renderStudentTable() -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ================= TAB 2: FACULTY TRAINERS ================= -->
+        <div id="tab-content-trainers" class="registry-tab-content" style="display:none;">
+          <div style="padding:14px 18px;border-radius:12px;background:#faf5ff;border:1px solid #e9d5ff;margin-bottom:20px;display:flex;align-items:center;gap:12px;">
+            <span style="font-size:22px;">👨‍🏫</span>
+            <div>
+              <div style="font-size:12px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:0.04em;">Tier 2: Faculty Trainer Supervision</div>
+              <div style="font-size:12px;color:#475569;margin-top:2px;">
+                Faculty trainers supervise and evaluate students in their assigned batches. They review assignments, monitor live proctored sessions, and audit candidate speech telemetry.
+              </div>
+            </div>
+          </div>
+
+          <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.02);">
+            <table style="width:100%;border-collapse:collapse;text-align:left;font-size:12px;">
+              <thead>
+                <tr style="background:#f8fafc;border-bottom:1px solid #e2e8f0;color:#64748b;font-size:11px;text-transform:uppercase;letter-spacing:0.04em;">
+                  <th style="padding:12px 14px;">Faculty Member</th>
+                  <th style="padding:12px 14px;">Contact</th>
+                  <th style="padding:12px 14px;">Department &amp; Specialization</th>
+                  <th style="padding:12px 14px;">Assigned Batches</th>
+                  <th style="padding:12px 14px;text-align:center;">Status</th>
+                </tr>
+              </thead>
+              <tbody id="admin-trainer-table-body">
+                <!-- Dynamically populated by AdminProvisioning.renderTrainerTable() -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ================= TAB 3: HIERARCHY TREE ================= -->
+        <div id="tab-content-hierarchy" class="registry-tab-content" style="display:none;">
+          <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:18px;padding:24px;">
+            <h3 style="margin:0 0 8px 0;font-size:1.05rem;color:#0f172a;font-weight:800;">Campus Authority &amp; Access Tree</h3>
+            <p style="font-size:0.85rem;color:#64748b;margin:0 0 20px 0;">Structural relationship between Institutional Administrator, Faculty Trainers, and Student Learners.</p>
+            
+            <div style="display:flex;flex-direction:column;gap:18px;">
+              <!-- Tier 1: Admin -->
+              <div style="background:#f0f9ff;border:2px solid #0284c7;border-radius:14px;padding:16px 20px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <span style="font-size:20px;">🏛️</span>
+                    <strong style="font-size:15px;color:#0284c7;">TIER 1: INSTITUTIONAL ADMINISTRATOR (Master Authority)</strong>
+                  </div>
+                  <span style="font-size:10px;font-weight:800;background:#0284c7;color:#fff;padding:2px 8px;border-radius:12px;">FULL ACCESS TO EVERYTHING</span>
+                </div>
+                <ul style="font-size:12px;color:#334155;margin:0;padding-left:20px;line-height:1.6;">
+                  <li><strong>Sole Account Creation Authority:</strong> Student &amp; trainer basic profiles CAN ONLY be created from Admin ERP.</li>
+                  <li><strong>Complete Global Access:</strong> Unrestricted oversight across academic policies, biometric vaults, faculty schedules, and radar geo-fencing.</li>
+                  <li><strong>Access Gatekeeper:</strong> Suspends, revokes, or activates student access in real-time.</li>
+                </ul>
+              </div>
+
+              <!-- Connecting Branch 1 -->
+              <div style="display:flex;align-items:center;gap:12px;padding-left:28px;">
+                <div style="width:2px;height:24px;background:#0284c7;"></div>
+                <span style="font-size:11px;color:#0284c7;font-weight:600;">▼ Connected to Faculty Trainers &amp; All Students</span>
+              </div>
+
+              <!-- Tier 2: Trainer -->
+              <div style="margin-left:24px;background:#faf5ff;border:1.5px solid #9333ea;border-radius:14px;padding:16px 20px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <span style="font-size:20px;">👨‍🏫</span>
+                    <strong style="font-size:15px;color:#7c3aed;">TIER 2: FACULTY TRAINERS (Batch Supervisors &amp; Evaluators)</strong>
+                  </div>
+                  <span style="font-size:10px;font-weight:800;background:#9333ea;color:#fff;padding:2px 8px;border-radius:12px;">CONNECTED TO STUDENTS</span>
+                </div>
+                <ul style="font-size:12px;color:#334155;margin:0;padding-left:20px;line-height:1.6;">
+                  <li><strong>Supervises Enrolled Learners:</strong> Evaluates assignments, grades projects, and guides curriculum.</li>
+                  <li><strong>Candidate Audio Telemetry:</strong> Real-time proctoring speech detection during examinations to prevent malpractice.</li>
+                  <li><strong>Assigned Batches:</strong> Prof. Vikram Rao oversees Batch B-948 (2022 - 2026).</li>
+                </ul>
+              </div>
+
+              <!-- Connecting Branch 2 -->
+              <div style="display:flex;align-items:center;gap:12px;padding-left:52px;">
+                <div style="width:2px;height:24px;background:#9333ea;"></div>
+                <span style="font-size:11px;color:#9333ea;font-weight:600;">▼ Connected to Enrolled Learners</span>
+              </div>
+
+              <!-- Tier 3: Student -->
+              <div style="margin-left:48px;background:#f0fdf4;border:1.5px solid #10b981;border-radius:14px;padding:16px 20px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <span style="font-size:20px;">👨‍🎓</span>
+                    <strong style="font-size:15px;color:#059669;">TIER 3: STUDENT LEARNERS (Provisioned Portal Users)</strong>
+                  </div>
+                  <span style="font-size:10px;font-weight:800;background:#059669;color:#fff;padding:2px 8px;border-radius:12px;">LOGIN RESTRICTED UNTIL ADMIN CREATES PROFILE</span>
+                </div>
+                <ul style="font-size:12px;color:#334155;margin:0;padding-left:20px;line-height:1.6;">
+                  <li><strong>Strict Login Gate:</strong> Cannot log in until provisioned by Administrator.</li>
+                  <li><strong>Assigned Evaluator:</strong> Guided and evaluated by their designated faculty trainer.</li>
+                  <li><strong>Learning Modules:</strong> Access recordings, course syllabus, mock interviews, and code labs.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div style="padding:14px 28px;background:#f8fafc;border-top:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;font-size:11px;color:#64748b;">
+        <div>
+          <span>Institutional Authority: <strong style="color:#0f172a;">AppTechno Institute of Technology</strong></span> &bull; 
+          <span>Registry Key: <code style="color:#0284c7;font-weight:700;">setu_provisioned_accounts_registry</code></span>
+        </div>
+        <button type="button" onclick="AdminProvisioning.closeModal()" style="padding:6px 14px;background:#ffffff;border:1px solid #cbd5e1;color:#475569;border-radius:6px;font-weight:600;font-size:11px;cursor:pointer;">Close Console</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Terminal QR Scanner Modal -->
+  <div class="terminal-modal" id="terminal-modal">
+    <div class="terminal-modal-backdrop" id="terminal-modal-backdrop"></div>
+    <div class="terminal-modal-dialog">
+      <div class="terminal-modal-header">
+        <div class="terminal-modal-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#00d2ff">
+            <path
+              d="M4 4h6v6H4V4zm2 2v2h2V6H6zm8-2h6v6h-6V4zm2 2v2h2V6h-2zM4 14h6v6H4v-6zm2 2v2h2v-2H6zm10-2h2v2h-2v-2zm-2 2h2v2h-2v-2zm4 0h2v2h-2v-2zm-2 2h2v2h-2v-2zm2 2h2v2h-2v-2zm-6-2h2v4h-2v-4z" />
+          </svg>
+          <span>Terminal Biometric Scanner</span>
+        </div>
+        <button type="button" class="terminal-modal-close" id="terminal-modal-close">&times;</button>
+      </div>
+      <div class="terminal-modal-body">
+        <div class="qr-viewfinder">
+          <div class="qr-laser"></div>
+          <div class="qr-corner top-left"></div>
+          <div class="qr-corner top-right"></div>
+          <div class="qr-corner bottom-left"></div>
+          <div class="qr-corner bottom-right"></div>
+          <div class="qr-center-target">
+            <svg width="56" height="56" viewBox="0 0 24 24" fill="rgba(0, 210, 255, 0.7)">
+              <path
+                d="M4 4h6v6H4V4zm2 2v2h2V6H6zm8-2h6v6h-6V4zm2 2v2h2V6h-2zM4 14h6v6H4v-6zm2 2v2h2v-2H6zm10-2h2v2h-2v-2zm-2 2h2v2h-2v-2zm4 0h2v2h-2v-2zm-2 2h2v2h-2v-2zm2 2h2v2h-2v-2zm-6-2h2v4h-2v-4z" />
+            </svg>
+          </div>
+        </div>
+        <div class="qr-status-text">
+          <span class="qr-status-dot"></span>
+          <span>Optical Geo-Radar Scanning Campus Terminal...</span>
+        </div>
+        <div class="qr-info-meta">
+          <span>Terminal: <strong>BLR-GATE-04B</strong></span>
+          <span>Distance: <strong>14.2 meters</strong></span>
+        </div>
+      </div>
+      <div class="terminal-modal-footer">
+        <button type="button" class="btn-terminal-confirm" id="btn-terminal-confirm">Simulate Radar Check-In</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating ZUNO AI Assistant (Bottom-Right) -->
+  <div class="floating-cyberbot-dock" id="nav-robot-trigger" role="button" tabindex="0"
+    title="Chat with ZUNO AI (or press Ctrl+K)">
+    <div class="robot-stage robot-mini" id="robot-stage">
+      <div class="robot-body-wrapper">
+        <div class="robot-ground-shadow"></div>
+        <!-- 3D Antenna Assembly -->
+        <div class="robot-antenna-assembly">
+          <div class="robot-antenna-orb" id="antenna-orb">
+            <div class="antenna-glass-shine"></div>
+            <div class="antenna-plasma-core"></div>
+          </div>
+          <div class="robot-antenna-stalk"></div>
+          <div class="robot-antenna-base"></div>
+        </div>
+        <!-- 3D Cylindrical Ear Nodes -->
+        <div class="robot-ear left">
+          <div class="ear-bevel"></div>
+          <div class="ear-core-light"></div>
+        </div>
+        <div class="robot-ear right">
+          <div class="ear-bevel"></div>
+          <div class="ear-core-light"></div>
+        </div>
+        <!-- 3D Sculpted Robot Head -->
+        <div class="robot-head" id="robot-head">
+          <div class="head-specular-sheen"></div>
+          <div class="head-rim-highlight"></div>
+          <!-- 3D Visor Recessed Socket -->
+          <div class="robot-visor-frame">
+            <div class="robot-visor">
+              <div class="visor-curved-glare"></div>
+              <!-- Left 3D Eye -->
+              <div class="robot-eye left">
+                <div class="robot-eyelid"></div>
+                <div class="robot-pupil">
+                  <div class="pupil-glint-main"></div>
+                  <div class="pupil-glint-sub"></div>
+                </div>
+              </div>
+              <!-- Right 3D Eye -->
+              <div class="robot-eye right">
+                <div class="robot-eyelid"></div>
+                <div class="robot-pupil">
+                  <div class="pupil-glint-main"></div>
+                  <div class="pupil-glint-sub"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="floating-bot-pill">
+      <span class="robot-status-pulse"></span>
+      <span class="floating-bot-label">Ask ZUNO</span>
+      <kbd class="floating-bot-kbd">Ctrl K</kbd>
+    </div>
+  </div>
+
+  <!-- ZUNO AI Chatbot Card & Backdrop -->
+  <div class="cyberbot-backdrop" id="cyberbot-backdrop"></div>
+  <aside class="cyberbot-drawer" id="cyberbot-drawer" role="dialog" aria-label="ZUNO AI Assistant">
+    <!-- Drawer Header -->
+    <div class="cyberbot-header">
+      <div class="cyberbot-header-left">
+        <div class="cyberbot-avatar-badge" aria-label="ZUNO 3D Avatar">
+          <div class="robot-stage robot-avatar-mini">
+            <div class="robot-body-wrapper">
+              <!-- 3D Antenna Assembly -->
+              <div class="robot-antenna-assembly">
+                <div class="robot-antenna-orb">
+                  <div class="antenna-glass-shine"></div>
+                  <div class="antenna-plasma-core"></div>
+                </div>
+                <div class="robot-antenna-stalk"></div>
+                <div class="robot-antenna-base"></div>
+              </div>
+              <!-- 3D Cylindrical Ear Nodes -->
+              <div class="robot-ear left">
+                <div class="ear-bevel"></div>
+                <div class="ear-core-light"></div>
+              </div>
+              <div class="robot-ear right">
+                <div class="ear-bevel"></div>
+                <div class="ear-core-light"></div>
+              </div>
+              <!-- 3D Sculpted Robot Head -->
+              <div class="robot-head">
+                <div class="head-specular-sheen"></div>
+                <div class="head-rim-highlight"></div>
+                <!-- 3D Visor Recessed Socket -->
+                <div class="robot-visor-frame">
+                  <div class="robot-visor">
+                    <div class="visor-curved-glare"></div>
+                    <!-- Left 3D Eye -->
+                    <div class="robot-eye left">
+                      <div class="robot-eyelid"></div>
+                      <div class="robot-pupil">
+                        <div class="pupil-glint-main"></div>
+                        <div class="pupil-glint-sub"></div>
+                      </div>
+                    </div>
+                    <!-- Right 3D Eye -->
+                    <div class="robot-eye right">
+                      <div class="robot-eyelid"></div>
+                      <div class="robot-pupil">
+                        <div class="pupil-glint-main"></div>
+                        <div class="pupil-glint-sub"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <span class="cyberbot-online-orb"></span>
+        </div>
+        <div>
+          <h3 class="cyberbot-title">ZUNO AI <span class="cyberbot-ai-tag">GUIDE</span></h3>
+          <p class="cyberbot-subtitle">Full setu Knowledge & Smart Navigation</p>
+        </div>
+      </div>
+      <div class="cyberbot-header-actions">
+        <button type="button" class="btn-cyberbot-tool" id="cyberbot-clear-btn" title="Clear Chat History">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          </svg>
+        </button>
+        <button type="button" class="btn-cyberbot-tool" id="cyberbot-close-btn" title="Close ZUNO (Esc)">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Message Stream -->
+    <div class="cyberbot-body" id="cyberbot-messages">
+      <!-- Welcome Message -->
+      <div class="chat-msg bot">
+        <div class="chat-msg-avatar">
+          <svg class="bot-avatar-svg" width="20" height="20" viewBox="0 0 48 48" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <line x1="24" y1="4" x2="24" y2="12" stroke="#94A3B8" stroke-width="2.5" stroke-linecap="round" />
+            <circle cx="24" cy="5" r="4" fill="#00D2FF" />
+            <rect x="5" y="18" width="4" height="12" rx="2" fill="#334155" stroke="#38BDF8" stroke-width="1" />
+            <rect x="39" y="18" width="4" height="12" rx="2" fill="#334155" stroke="#38BDF8" stroke-width="1" />
+            <rect x="8" y="11" width="32" height="27" rx="10" fill="#1E293B" stroke="#00D2FF" stroke-width="2" />
+            <rect x="13" y="18" width="22" height="13" rx="5" fill="#030712" stroke="#0284C7" stroke-width="1" />
+            <ellipse cx="19" cy="24.5" rx="3.5" ry="3.5" fill="#00D2FF" />
+            <ellipse cx="29" cy="24.5" rx="3.5" ry="3.5" fill="#00D2FF" />
+          </svg>
+        </div>
+        <div class="chat-bubble">
+          <p>👋 <strong>Greetings, Administrator!</strong> I'm <strong>ZUNO Admin AI</strong>, your campus operations co-pilot.</p>
+          <p>I have complete oversight of institutional batches, 3D biometric security audits, faculty schedules, and radar telemetry.</p>
+
+          <div class="cyberbot-quick-chips">
+            <button type="button" class="chip-btn" data-prompt="Campus Attendance Overview">📊 Campus Attendance</button>
+            <button type="button" class="chip-btn" data-prompt="Check Biometric Vault">🛡️ Biometric Vault</button>
+            <button type="button" class="chip-btn" data-prompt="Go to Class Recordings">🎬 Lecture Archive</button>
+            <button type="button" class="chip-btn" data-prompt="Check Campus Radar">📍 Campus Radar</button>
+            <button type="button" class="chip-btn" data-prompt="Show Contributors">👥 Contributors</button>
+            <button type="button" class="chip-btn" data-prompt="Scan Terminal QR">📲 Scan QR</button>
+            <button type="button" class="chip-btn" data-prompt="Go to Login Page">🔐 Admin Login</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Input Area -->
+    <div class="cyberbot-footer">
+      <div class="cyberbot-input-box">
+        <input type="text" id="cyberbot-input" class="cyberbot-text-input"
+          placeholder="Ask ZUNO anything or say 'take me to recordings'..." autocomplete="off">
+        <button type="button" class="btn-cyberbot-send" id="cyberbot-send-btn" title="Send Message">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </div>
+      <div class="cyberbot-hints-row">
+        <span>Press <kbd>↵ Enter</kbd> to ask</span>
+        <span>Toggle anytime with <kbd>Ctrl + K</kbd></span>
+      </div>
+    </div>
+  </aside>
+
+  <script src="js/dashboard-nav.js?v=5"></script>
+  <script src="js/cyberbot.js?v=3"></script>
+  <script src="js/campus-registry.js"></script>
+  <script src="js/admin-provisioning.js"></script>
+</body>
+
+</html>
