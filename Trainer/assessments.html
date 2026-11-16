@@ -95,46 +95,412 @@
       100% { height: 20px; }
     }
   </style>
+
+  <!-- SETU Unified Navbar Dropdown Styles -->
+  <style>
+    .nav-dropdown-content {
+      display: none !important;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.12s ease, transform 0.12s ease;
+      pointer-events: none;
+    }
+    .nav-dropdown.open > .nav-dropdown-content,
+    .user-profile-menu.open > .nav-dropdown-content,
+    .nav-bell-menu.open > .nav-dropdown-content {
+      display: block !important;
+      opacity: 1 !important;
+      transform: translateY(0) !important;
+      pointer-events: auto !important;
+    }
+    .nav-dropdown.open .nav-dropdown-toggle {
+      background-color: #1E60E8 !important;
+      color: #FFFFFF !important;
+      box-shadow: 0 4px 12px -2px rgba(30, 96, 232, 0.35);
+    }
+    .nav-dropdown.open .nav-dropdown-toggle svg,
+    .user-profile-menu.open > #user-profile-trigger svg {
+      transform: rotate(180deg);
+      color: #FFFFFF !important;
+    }
+    .user-profile-menu.open > #user-profile-trigger svg.profile-chevron {
+      color: #1E60E8 !important;
+    }
+  </style>
+
 </head>
 <body class="bg-[#F8F9FD] text-[#1E293B] min-h-screen flex flex-col antialiased">
 
   <!-- ====================================================================== -->
   <!-- TOP PORTAL HEADER -->
   <!-- ====================================================================== -->
-  <header class="bg-white border-b border-slate-200 px-4 sm:px-8 py-3.5 flex items-center justify-between sticky top-0 z-40 shadow-xs">
-    <div class="flex items-center gap-3">
-      <a href="assignments.html" class="flex items-center gap-2 group">
-        <img src="setu.png" alt="SETU" class="h-8 w-auto object-contain">
-      </a>
-      <div class="h-5 w-[1px] bg-slate-200"></div>
-      <div>
-        <div class="flex items-center gap-2">
-          <span class="text-xs font-extrabold uppercase tracking-wider text-purple-700 bg-purple-50 px-2 py-0.5 rounded border border-purple-200">Trainer ERP Proctoring Console</span>
-          <h1 class="text-sm font-bold text-slate-900 hidden sm:inline" id="portal-header-title">DS302 &bull; Mid-Term Diagnostic Quiz & Coding Assessment</h1>
-        </div>
-        <p class="text-[11px] text-slate-500">
-          Evaluator: <strong class="text-slate-800">Prof. Vikram Rao (Lead Trainer)</strong> &bull; Batch: <span class="text-slate-700 font-medium">B-948 Computer Science</span>
-        </p>
+  <header class="dashboard-navbar sticky top-0 z-50 bg-white border-b border-slate-200/90 shadow-xs px-4 lg:px-7 py-2.5" id="main-dashboard-navbar">
+    <div class="max-w-[1400px] mx-auto flex items-center justify-between gap-4">
+
+      <!-- Brand Logo + Left Navigation Menu -->
+      <div class="flex items-center gap-6">
+        <!-- SETU Logo (Replaced CareerSuite with SETU) -->
+        <a href="dashboard.html" class="flex items-center gap-2.5 group shrink-0" title="SETU Trainer ERP">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-700 via-indigo-600 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-blue-500/25 group-hover:scale-105 transition">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+            </svg>
+          </div>
+          <span class="text-xl font-extrabold text-slate-900 tracking-tight">SETU</span>
+        </a>
+
+        <!-- Main Nav Pills & Dropdowns (Dashboard, Tasks, Assessments, Teaching Hub) -->
+        <nav class="flex items-center gap-1.5 text-xs font-semibold text-slate-600">
+
+          <!-- 1. Dashboard (Active Primary Blue Pill) -->
+          <a href="dashboard.html"
+            class="bg-[#1E60E8] text-white px-3.5 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm shadow-blue-500/25 font-bold transition">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+            </svg>
+            <span>Dashboard</span>
+          </a>
+
+                    <!-- 2. Tasks Dropdown (Matches Image 1) -->
+          <div class="relative nav-dropdown" id="nav-dropdown-tasks">
+            <button type="button"
+              class="nav-dropdown-toggle px-3 py-1.5 rounded-full hover:bg-slate-100 flex items-center gap-1 transition cursor-pointer">
+              <span>Tasks</span>
+              <svg class="w-3 h-3 text-slate-400 transition-transform duration-200 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </button>
+            <div class="nav-dropdown-content absolute left-0 top-full mt-2.5 w-[300px] bg-white rounded-2xl shadow-2xl border border-slate-200/90 p-4 z-50">
+              <div class="absolute -top-1.5 left-7 w-3 h-3 bg-[#1E60E8] rotate-45"></div>
+              <!-- Card Header -->
+              <div class="flex items-center gap-2 pb-2.5 border-b border-slate-100 mb-2">
+                <span class="text-[11px] font-black text-[#1E60E8] uppercase tracking-wider">TASKS</span>
+                <span class="w-4 h-1 rounded-full bg-[#EAB308]"></span>
+              </div>
+              <!-- 1-Column List of 3 items -->
+              <div class="flex flex-col gap-1">
+                <a href="assignments.html" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div class="w-9 h-9 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-blue-600 text-base shrink-0 group-hover:scale-105 transition">
+                    📋
+                  </div>
+                  <div class="min-w-0">
+                    <div class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">Task Manager</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Create, edit &amp; assign tasks</div>
+                  </div>
+                </a>
+                <a href="assignments.html#calendar" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div class="w-9 h-9 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-blue-600 text-base shrink-0 group-hover:scale-105 transition">
+                    📅
+                  </div>
+                  <div class="min-w-0">
+                    <div class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">Task Calendar</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Schedule &amp; deadlines</div>
+                  </div>
+                </a>
+                <a href="assignments.html#analytics" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div class="w-9 h-9 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-blue-600 text-base shrink-0 group-hover:scale-105 transition">
+                    📈
+                  </div>
+                  <div class="min-w-0">
+                    <div class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">Task Analytics</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Submission &amp; performance</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+                    <!-- 3. Assessments Dropdown (Matches Image 2) -->
+          <div class="relative nav-dropdown" id="nav-dropdown-assessments">
+            <button type="button"
+              class="nav-dropdown-toggle px-3 py-1.5 rounded-full hover:bg-slate-100 flex items-center gap-1 transition cursor-pointer">
+              <span>Assessments</span>
+              <svg class="w-3 h-3 text-slate-400 transition-transform duration-200 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </button>
+            <div class="nav-dropdown-content absolute left-0 top-full mt-2.5 w-[300px] bg-white rounded-2xl shadow-2xl border border-slate-200/90 p-4 z-50">
+              <div class="absolute -top-1.5 left-7 w-3 h-3 bg-[#1E60E8] rotate-45"></div>
+              <!-- Card Header -->
+              <div class="flex items-center gap-2 pb-2.5 border-b border-slate-100 mb-2">
+                <span class="text-[11px] font-black text-[#1E60E8] uppercase tracking-wider">ASSESSMENTS</span>
+                <span class="w-4 h-1 rounded-full bg-[#EAB308]"></span>
+              </div>
+              <!-- 1-Column List of 3 items -->
+              <div class="flex flex-col gap-1">
+                <a href="assessments.html" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div class="w-9 h-9 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-amber-500 text-base shrink-0 group-hover:scale-105 transition">
+                    📝
+                  </div>
+                  <div class="min-w-0">
+                    <div class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">Assessments</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Manage quizzes &amp; tests</div>
+                  </div>
+                </a>
+                <a href="assessments.html#bank" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div class="w-9 h-9 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-emerald-600 text-base shrink-0 group-hover:scale-105 transition">
+                    📚
+                  </div>
+                  <div class="min-w-0">
+                    <div class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">Question Bank</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Centralized question repository</div>
+                  </div>
+                </a>
+                <a href="assessments.html#create" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div class="w-9 h-9 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-700 text-base shrink-0 group-hover:scale-105 transition">
+                    ➕
+                  </div>
+                  <div class="min-w-0">
+                    <div class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">Create Assessment</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Build a new assessment</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+                    <!-- 4. Teaching Hub Dropdown (Matches Image 3) -->
+          <div class="relative nav-dropdown" id="nav-dropdown-teaching">
+            <button type="button"
+              class="nav-dropdown-toggle px-3 py-1.5 rounded-full hover:bg-slate-100 flex items-center gap-1 transition cursor-pointer">
+              <span>Teaching Hub</span>
+              <svg class="w-3 h-3 text-slate-400 transition-transform duration-200 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </button>
+            <div class="nav-dropdown-content absolute left-0 top-full mt-2.5 w-[560px] bg-white rounded-2xl shadow-2xl border border-slate-200/90 p-4 z-50">
+              <div class="absolute -top-1.5 left-7 w-3 h-3 bg-[#1E60E8] rotate-45"></div>
+              <!-- Card Header -->
+              <div class="flex items-center gap-2 pb-2.5 border-b border-slate-100 mb-2">
+                <span class="text-[11px] font-black text-[#1E60E8] uppercase tracking-wider">TEACHING HUB</span>
+                <span class="w-4 h-1 rounded-full bg-[#EAB308]"></span>
+              </div>
+              <!-- 2-Column Grid (7 Left, 7 Right) -->
+              <div class="grid grid-cols-2 gap-x-2 gap-y-1">
+                <!-- Col 1, Item 1 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">📘</div>
+                  <div class="min-w-0">
+                    <div class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">My Courses</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Assigned courses &amp; materials</div>
+                  </div>
+                </a>
+                <!-- Col 2, Item 1 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">💻</div>
+                  <div class="min-w-0">
+                    <div class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">SETU CodeStudio</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Live code demonstrations &amp; broadcast</div>
+                  </div>
+                </a>
+
+                <!-- Col 1, Item 2 -->
+                <a href="Class_recordings.html" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">🎬</div>
+                  <div class="min-w-0">
+                    <div class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">Recordings</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Upload &amp; manage recordings</div>
+                  </div>
+                </a>
+                <!-- Col 2, Item 2 -->
+                <a href="#notes" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">📓</div>
+                  <div class="min-w-0">
+                    <div class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">My Notes</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Notes on student progress</div>
+                  </div>
+                </a>
+
+                <!-- Col 1, Item 3 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">🗣️</div>
+                  <div class="min-w-0">
+                    <div class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">Language Tutor</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Student English progress</div>
+                  </div>
+                </a>
+                <!-- Col 2, Item 3 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">🎙️</div>
+                  <div class="min-w-0">
+                    <div class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">AI Mock Interviews</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">View student mock interview history</div>
+                  </div>
+                </a>
+
+                <!-- Col 1, Item 4 -->
+                <a href="#daily-console" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">📅</div>
+                  <div class="min-w-0">
+                    <div class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">Schedule</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">My teaching timetable</div>
+                  </div>
+                </a>
+                <!-- Col 2, Item 4 -->
+                <a href="#attendance-rules" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">🔄</div>
+                  <div class="min-w-0">
+                    <div class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">Attendance</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Class attendance records</div>
+                  </div>
+                </a>
+
+                <!-- Col 1, Item 5 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">📢</div>
+                  <div class="min-w-0">
+                    <div class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">Bulletins</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Important notices</div>
+                  </div>
+                </a>
+                <!-- Col 2, Item 5 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">⏱️</div>
+                  <div class="min-w-0">
+                    <div class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">Institute Hours</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Track hours at institute</div>
+                  </div>
+                </a>
+
+                <!-- Col 1, Item 6 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">📣</div>
+                  <div class="min-w-0">
+                    <div class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">Notifications</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Personal alerts</div>
+                  </div>
+                </a>
+                <!-- Col 2, Item 6 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">💵</div>
+                  <div class="min-w-0">
+                    <div class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">My Salary</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Salary &amp; payslips</div>
+                  </div>
+                </a>
+
+                <!-- Col 1, Item 7 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">🏖️</div>
+                  <div class="min-w-0">
+                    <div class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">Leave</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Request absence</div>
+                  </div>
+                </a>
+                <!-- Col 2, Item 7 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">💡</div>
+                  <div class="min-w-0">
+                    <div class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">Suggestion Box</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Share feedback</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </nav>
       </div>
-    </div>
 
-    <!-- Right Side Actions -->
-    <div class="flex items-center gap-2 sm:gap-3">
-      <button type="button" onclick="Face3DStudio.open()" class="px-3 py-1.5 rounded-xl bg-purple-950/80 hover:bg-purple-900 text-purple-200 border border-purple-700/60 text-xs font-bold shadow-xs flex items-center gap-1.5 transition" title="Open Permanent 3D Biometric Face Database Studio">
-        <span class="text-sm">🧬</span>
-        <span class="hidden sm:inline">3D Face Studio</span>
-        <span id="nav-3d-badge" class="badge-3d-face text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-300">Setup 3D</span>
-      </button>
+      <!-- Right Side: Bell Icon & User Profile Pill -->
+      <div class="flex items-center gap-3 shrink-0">
 
-      <button type="button" onclick="openSpeechLogModal()" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-purple-300 hover:text-white border border-slate-700 text-xs font-bold shadow-xs flex items-center gap-1.5 transition" title="Trainer Audit: Inspect Candidate Background Speech Logs">
-        <svg class="w-3.5 h-3.5 text-purple-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
-        <span>Trainer Audit Log</span>
-      </button>
+        <!-- Bell Notification Button & Dropdown -->
+        <div class="relative nav-bell-menu" id="nav-bell-menu">
+          <button type="button" id="nav-bell-btn"
+            class="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center relative transition cursor-pointer border border-slate-200/60 shadow-xs"
+            title="Notifications">
+            <svg class="w-4 h-4 text-slate-700" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" />
+            </svg>
+            <span class="absolute top-0.5 right-0.5 w-2.5 h-2.5 rounded-full bg-rose-500 ring-2 ring-white"></span>
+          </button>
 
-      <button type="button" onclick="confirmExitPortal()" class="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center gap-1.5 transition">
-        <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-        <span>Exit to Dashboard</span>
-      </button>
+          <!-- Notifications Dropdown -->
+          <div class="nav-dropdown-content absolute right-0 top-full mt-2.5 w-[300px] bg-white rounded-2xl shadow-2xl border border-slate-200/90 p-3.5 z-50" id="nav-notifications-box">
+            <div class="absolute -top-1.5 right-4 w-3 h-3 bg-white border-t border-l border-slate-200/90 rotate-45"></div>
+            <div class="flex items-center justify-between pb-2 border-b border-slate-100 mb-2">
+              <span class="text-xs font-extrabold text-slate-900">Faculty Notifications</span>
+              <span class="text-[10px] text-[#1E60E8] font-bold cursor-pointer hover:underline">Mark all read</span>
+            </div>
+            <div class="flex flex-col gap-2 py-1">
+              <div class="flex items-start gap-2.5 p-2 rounded-xl bg-purple-50/50 border border-purple-100/80">
+                <span class="text-base shrink-0">👥</span>
+                <div class="min-w-0">
+                  <p class="text-xs font-bold text-slate-900 leading-tight">Batch B-948 Synced</p>
+                  <p class="text-[10px] text-slate-500 mt-0.5">Central admin provisioned active learners.</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-2.5 p-2 rounded-xl hover:bg-slate-50">
+                <span class="text-base shrink-0">📝</span>
+                <div class="min-w-0">
+                  <p class="text-xs font-bold text-slate-900 leading-tight">5 Pending Evaluations</p>
+                  <p class="text-[10px] text-slate-500 mt-0.5">Distributed Tx lab code submissions.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- User Profile Pill & Dropdown (Image 1 reference) -->
+        <div class="relative user-profile-menu" id="user-profile-menu">
+          <button type="button" id="user-profile-trigger" onclick="toggleUserProfileMenu(event)"
+            class="flex items-center gap-2 bg-[#EEF5FF] hover:bg-[#E2EEFF] border border-[#D1E2FB] rounded-full pl-1.5 pr-3 py-1 transition cursor-pointer shadow-xs">
+            <!-- Royal Blue Avatar Circle -->
+            <div class="w-7 h-7 rounded-full bg-[#1351D8] text-white font-black text-xs flex items-center justify-center shadow-xs shrink-0">
+              <span id="user-avatar-letter">A</span>
+            </div>
+            <!-- Role + Name Column -->
+            <div class="flex flex-col text-left leading-none">
+              <span class="text-[9px] uppercase tracking-wide text-[#0C4FC7] font-black leading-tight" id="user-display-role">TRAINER</span>
+              <span class="text-[12px] font-extrabold text-[#0F172A] mt-0.5 whitespace-nowrap leading-tight" id="user-display-name">Alex Johnson</span>
+            </div>
+            <!-- Down Chevron Icon -->
+            <svg class="w-3.5 h-3.5 text-slate-500 transition-transform duration-200 shrink-0 profile-chevron ml-0.5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </button>
+
+          <!-- Profile Dropdown Box -->
+          <div class="nav-dropdown-content absolute right-0 top-full mt-2.5 w-[240px] bg-white rounded-2xl shadow-2xl border border-slate-200/90 p-3.5 z-50" id="user-dropdown-box">
+            <div class="absolute -top-1.5 right-6 w-3 h-3 bg-white border-t border-l border-slate-200/90 rotate-45"></div>
+            <!-- User Header -->
+            <div class="flex items-center gap-3 pb-2.5 border-b border-slate-100">
+              <div class="w-10 h-10 rounded-xl bg-[#1351D8] text-white font-extrabold text-base flex items-center justify-center shadow-md shrink-0">
+                <span>A</span>
+              </div>
+              <div class="min-w-0">
+                <h4 class="text-xs font-extrabold text-slate-900 leading-tight truncate">Alex Johnson</h4>
+                <span class="text-[10px] text-slate-400 font-medium leading-tight block mt-0.5">Faculty ID: #165 • Active</span>
+              </div>
+            </div>
+
+            <!-- Profile Links List -->
+            <div class="flex flex-col gap-0.5 py-1.5">
+              <a href="javascript:void(0)" onclick="TrainerBatch.openModal()" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                <div class="text-sm shrink-0">👥</div>
+                <span class="text-xs font-bold text-slate-800 group-hover:text-[#1E60E8] transition">My Batch Learners</span>
+              </a>
+              <a href="assignments.html" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                <div class="text-sm shrink-0">📋</div>
+                <span class="text-xs font-bold text-slate-800 group-hover:text-[#1E60E8] transition">Task Evaluations</span>
+              </a>
+              <a href="../Student/dashboard.html" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-blue-50/60 transition group">
+                <div class="text-sm shrink-0">🎓</div>
+                <span class="text-xs font-bold text-[#1E60E8] transition">Switch to Student ERP</span>
+              </a>
+            </div>
+
+            <div class="border-t border-slate-100 my-1"></div>
+
+            <!-- Logout Button -->
+            <a href="login.html" id="btn-signout" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-rose-50 transition group">
+              <div class="text-sm shrink-0 text-rose-600">🚪</div>
+              <span class="text-xs font-extrabold text-rose-600 transition">Logout</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
     </div>
   </header>
 
@@ -2463,5 +2829,6 @@
   <!-- Three.js WebGL Engine & CampusOS 3D Face Biometric Studio -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="js/face3d-studio.js"></script>
+  <script src="js/dashboard-nav.js"></script>
 </body>
 </html>
