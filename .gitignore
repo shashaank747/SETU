@@ -12,3 +12,11 @@ Desktop.ini
 
 # Logs and temp files
 *.log
+
+# Temporary MCP / Testing files
+.playwright-mcp/
+.gemini/
+__pycache__/
+*.pyc
+cert.pem
+key.pem

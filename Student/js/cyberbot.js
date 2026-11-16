@@ -1,5 +1,5 @@
 /**
- * AppTechno CampusOS - ZUNO AI Assistant & 3D Interactive Mascot
+ * SETU CampusOS - ZUNO AI Assistant & 3D Interactive Mascot
  * Features:
  * - 3D Mouse & Physics tracking for miniature mascot in the navbar
  * - Complete knowledge base of all CampusOS modules & features
@@ -368,7 +368,7 @@ document.addEventListener('DOMContentLoaded', () => {
       appendMessage(
         'bot',
         `<p>👥 <strong>Project Contributors</strong>:</p>
-         <p>Discover the talented developers, designers, and engineers behind AppTechno CampusOS!</p>`,
+         <p>Discover the talented developers, designers, and engineers behind SETU CampusOS!</p>`,
         [
           {
             label: '👥 View Contributors Page ➔',
@@ -473,10 +473,12 @@ document.addEventListener('DOMContentLoaded', () => {
       appendMessage(
         'bot',
         `<p>🗓️ <strong>Today's Schedule (Monday)</strong>:</p>
-         <p>• <strong>09:30 AM - 11:30 AM:</strong> Web Development Lecture (Hall B-02)</p>
-         <p>• <strong>11:45 AM - 01:00 PM:</strong> AI & Python Lab (BLR-LAB-3)</p>
-         <p>• <strong>01:00 PM - 02:00 PM:</strong> Cafeteria Lunch Break</p>
-         <p>• <strong>02:00 PM - 04:30 PM:</strong> Data Structures Hands-on Coding</p>`
+         <p>• <strong>09:00 AM - 10:30 AM:</strong> CS-601 Distributed Systems (Hall B-02)</p>
+         <p>• <strong>10:45 AM - 12:15 PM:</strong> CS-602 Deep Learning & AI (Hall B-02)</p>
+         <p>• <strong>12:15 PM - 01:15 PM:</strong> Lunch Recess</p>
+         <p>• <strong>01:15 PM - 03:15 PM:</strong> CS-603P Cloud & DevOps Lab (Cloud Lab 04)</p>
+         <p>• <strong>03:30 PM - 04:45 PM:</strong> CS-604 System Design Workshop</p>
+         <div style="margin-top: 8px;"><a href="timetable.html" style="display:inline-flex; align-items:center; gap:4px; padding:6px 12px; background:#2563eb; color:#fff; border-radius:8px; font-weight:700; text-decoration:none; font-size:12px;">📅 Open Full Timetable Tab →</a></div>`
       );
       return;
     }

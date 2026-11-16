@@ -1,5 +1,5 @@
 /**
- * AppTechno CampusOS - Matrix Digital Rain Canvas Animation
+ * SETU CampusOS - Matrix Digital Rain Canvas Animation
  */
 
 (function () {
@@ -12,8 +12,8 @@
   let height = (canvas.height = window.innerHeight);
 
   // Futuristic tech character pool: katakana, latin, numbers, binary & campus symbols
-  const characters = '01 CampusOS AI ERP 2026 ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ ﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇﾍ 010101 <>{}[]/*+=~';
-  const fontSize = 14;
+  const characters = '01CampusOSAIERP2026SETUΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇﾍ010101<>{}[]/*+=~#%$&@';
+  const fontSize = 15;
   let columns = Math.floor(width / fontSize);
 
   // An array of drops - one per column
@@ -22,7 +22,7 @@
     columns = Math.floor(width / fontSize);
     drops = [];
     for (let i = 0; i < columns; i++) {
-      drops[i] = Math.floor(Math.random() * -height / fontSize); // Stagger initial starts
+      drops[i] = Math.floor((Math.random() * -height) / fontSize); // Stagger initial starts
     }
   }
   initDrops();
@@ -35,7 +35,7 @@
 
   // Render loop
   let lastTime = 0;
-  const fps = 28; // Perfect retro digital speed
+  const fps = 30; // Smooth digital rain speed
   const frameInterval = 1000 / fps;
 
   function draw(currentTime) {
@@ -45,11 +45,11 @@
     if (delta < frameInterval) return;
     lastTime = currentTime - (delta % frameInterval);
 
-    // Translucent black fade to create trailing effect
+    // Translucent dark fade to create iconic trailing effect on dark cyber canvas
     ctx.fillStyle = 'rgba(3, 7, 18, 0.08)';
     ctx.fillRect(0, 0, width, height);
 
-    ctx.font = `${fontSize}px monospace`;
+    ctx.font = `bold ${fontSize}px "Courier New", Courier, monospace`;
 
     for (let i = 0; i < drops.length; i++) {
       // Pick random character
@@ -59,13 +59,15 @@
       const x = i * fontSize;
       const y = drops[i] * fontSize;
 
-      // Leading character glows in bright cyan/white, trailing in cyber blue
+      // Leading character glows in bright white/cyan spark, trailing in electric cyber cyan & matrix green
       if (Math.random() > 0.88) {
-        ctx.fillStyle = '#ffffff'; // Occasional spark
-      } else if (drops[i] < 3 || Math.random() > 0.7) {
-        ctx.fillStyle = '#38bdf8'; // Glowing cyan
+        ctx.fillStyle = '#ffffff'; // Bright white leading spark
+      } else if (drops[i] < 3 || Math.random() > 0.75) {
+        ctx.fillStyle = '#38bdf8'; // Electric Cyan Blue
+      } else if (Math.random() > 0.45) {
+        ctx.fillStyle = '#00ff66'; // Glowing Matrix Green
       } else {
-        ctx.fillStyle = '#1d4ed8'; // Deeper royal blue
+        ctx.fillStyle = '#10b981'; // Emerald Green
       }
 
       ctx.fillText(text, x, y);

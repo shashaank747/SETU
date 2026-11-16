@@ -5,6 +5,9 @@ import sys
 import mimetypes
 import threading
 import time
+import json
+import socket
+import urllib.parse
 
 # Set correct MIME types for Windows
 mimetypes.init()
@@ -17,19 +20,34 @@ mimetypes.add_type('image/jpeg', '.jpg')
 mimetypes.add_type('image/jpeg', '.jpeg')
 
 PORT_STUDENT = 5500
-PORT_TRAINER = 5501
-PORT_ADMIN = 5502
 
 ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
 STUDENT_DIR = os.path.join(ROOT_DIR, 'Student')
-TRAINER_DIR = os.path.join(ROOT_DIR, 'Trainer')
-ADMIN_DIR = os.path.join(ROOT_DIR, 'Admin')
+
+# In-memory session store for dual-cam proctoring telemetry and signals
+PROCTOR_SESSIONS = {}
+PROCTOR_FRAMES = {}
+
+def get_lan_ip():
+    """Detect LAN IP address for QR code mobile phone scanning on the same Wi-Fi."""
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.settimeout(0.5)
+        s.connect(('8.8.8.8', 80))
+        ip = s.getsockname()[0]
+        s.close()
+        return ip
+    except Exception:
+        try:
+            return socket.gethostbyname(socket.gethostname())
+        except Exception:
+            return '127.0.0.1'
 
 class ReusableTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     allow_reuse_address = True
     daemon_threads = True
 
-# 1. Main Unified & Student Handler
+# Main Student Portal Handler
 class StudentPortalHandler(http.server.SimpleHTTPRequestHandler):
     protocol_version = "HTTP/1.0"
 
@@ -38,43 +56,134 @@ class StudentPortalHandler(http.server.SimpleHTTPRequestHandler):
         self.send_header('Pragma', 'no-cache')
         self.send_header('Expires', '0')
         self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
         super().end_headers()
+
+    def do_OPTIONS(self):
+        self.send_response(200)
+        self.end_headers()
+
+    def do_GET(self):
+        parsed = urllib.parse.urlparse(self.path)
+        clean_path = parsed.path
+
+        # API: Get LAN IP & protocol for dynamic QR code rendering
+        if clean_path == '/api/lan-ip':
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.end_headers()
+            data = {'ip': get_lan_ip(), 'port': PORT_STUDENT, 'protocol': 'http'}
+            self.wfile.write(json.dumps(data).encode('utf-8'))
+            return
+
+        # API: Get Proctoring Session Telemetry / Status
+        if clean_path == '/api/proctor/status':
+            query = urllib.parse.parse_qs(parsed.query)
+            session_id = query.get('session', [''])[0]
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.end_headers()
+            session_data = PROCTOR_SESSIONS.get(session_id, {'status': 'WAITING', 'connected': False})
+            self.wfile.write(json.dumps(session_data).encode('utf-8'))
+            return
+
+        # API: Get Latest Mobile Video Frame
+        if clean_path == '/api/proctor/frame':
+            query = urllib.parse.parse_qs(parsed.query)
+            session_id = query.get('session', [''])[0]
+            frame_data = PROCTOR_FRAMES.get(session_id, '')
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.end_headers()
+            self.wfile.write(json.dumps({'frame': frame_data, 'time': time.time()}).encode('utf-8'))
+            return
+
+        # Standard static file handling
+        return super().do_GET()
+
+    def do_POST(self):
+        parsed = urllib.parse.urlparse(self.path)
+        clean_path = parsed.path
+
+        # API: Stream video frame from mobile
+        if clean_path == '/api/proctor/frame':
+            try:
+                content_len = int(self.headers.get('Content-Length', 0))
+                body = self.rfile.read(content_len).decode('utf-8')
+                payload = json.loads(body) if body else {}
+                session_id = payload.get('sessionId', 'default')
+                frame = payload.get('frame', '')
+                if frame:
+                    PROCTOR_FRAMES[session_id] = frame
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({'success': True}).encode('utf-8'))
+                return
+            except Exception as e:
+                self.send_response(500)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({'error': str(e)}).encode('utf-8'))
+                return
+
+        # API: Receive Proctoring Signals & Telemetry from Mobile / Desktop
+        if clean_path == '/api/proctor/signal':
+            try:
+                content_len = int(self.headers.get('Content-Length', 0))
+                body = self.rfile.read(content_len).decode('utf-8')
+                payload = json.loads(body) if body else {}
+
+                session_id = payload.get('sessionId', 'default')
+                if session_id not in PROCTOR_SESSIONS:
+                    PROCTOR_SESSIONS[session_id] = {
+                        'sessionId': session_id,
+                        'connected': True,
+                        'status': 'CONNECTED',
+                        'lastSeen': time.time(),
+                        'events': []
+                    }
+
+                curr = PROCTOR_SESSIONS[session_id]
+                curr['lastSeen'] = time.time()
+                curr['status'] = payload.get('status', payload.get('type', curr.get('status')))
+                curr['lastEvent'] = payload
+                curr['events'].append({'time': time.time(), 'event': payload})
+
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({'success': True, 'session': curr}).encode('utf-8'))
+                return
+            except Exception as e:
+                self.send_response(500)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({'error': str(e)}).encode('utf-8'))
+                return
+
+        return super().do_GET()
 
     def translate_path(self, path):
         clean_path = path.split('?', 1)[0].split('#', 1)[0]
 
-        # Root '/' -> serve Student/index.html
         if clean_path in ('/', ''):
-            return os.path.join(STUDENT_DIR, 'index.html')
+            return os.path.join(STUDENT_DIR, 'dashboard.html')
 
-        # /gateway or /portal -> serve root index.html
-        if clean_path in ('/gateway', '/gateway.html', '/portal', '/portal.html'):
-            return os.path.join(ROOT_DIR, 'index.html')
-
-        # /Admin or /Admin/ -> serve Admin/index.html
-        if clean_path in ('/Admin', '/Admin/'):
-            return os.path.join(ADMIN_DIR, 'index.html')
-
-        # /Trainer or /Trainer/ -> serve Trainer/index.html
-        if clean_path in ('/Trainer', '/Trainer/'):
-            return os.path.join(TRAINER_DIR, 'index.html')
-
-        # If path explicitly starts with /Student/
         if clean_path.startswith('/Student/'):
             sub_path = clean_path[len('/Student/'):]
             if not sub_path or sub_path == 'index.html':
-                return os.path.join(STUDENT_DIR, 'index.html')
+                return os.path.join(STUDENT_DIR, 'dashboard.html')
             target = os.path.join(STUDENT_DIR, sub_path.replace('/', os.sep))
             if os.path.exists(target):
                 return target
 
-        # If requested relative path exists in Student/
         rel = clean_path.lstrip('/')
         student_target = os.path.join(STUDENT_DIR, rel.replace('/', os.sep))
         if os.path.exists(student_target):
             return student_target
 
-        # Fallback to root directory (for Admin, Trainer, root assets, etc.)
         root_target = os.path.join(ROOT_DIR, rel.replace('/', os.sep))
         if os.path.exists(root_target):
             return root_target
@@ -88,62 +197,8 @@ class StudentPortalHandler(http.server.SimpleHTTPRequestHandler):
             pass
 
     def log_message(self, format, *args):
-        sys.stdout.write(f"[PORTAL {self.log_date_time_string()}] {format % args}\n")
+        sys.stdout.write(f"[SETU {self.log_date_time_string()}] {format % args}\n")
         sys.stdout.flush()
-
-# 2. Dedicated Portal Handler Factory (for Trainer ERP and Admin ERP)
-def make_dedicated_handler(portal_name, portal_dir):
-    class DedicatedPortalHandler(http.server.SimpleHTTPRequestHandler):
-        protocol_version = "HTTP/1.0"
-
-        def end_headers(self):
-            self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')
-            self.send_header('Pragma', 'no-cache')
-            self.send_header('Expires', '0')
-            self.send_header('Access-Control-Allow-Origin', '*')
-            super().end_headers()
-
-        def translate_path(self, path):
-            clean_path = path.split('?', 1)[0].split('#', 1)[0]
-
-            # Root '/' -> serve portal's index.html
-            if clean_path in ('/', ''):
-                return os.path.join(portal_dir, 'index.html')
-
-            # If path prefixed with self folder name e.g. /Trainer/ or /Admin/
-            prefix = f'/{portal_name}/'
-            if clean_path.startswith(prefix):
-                sub = clean_path[len(prefix):]
-                if not sub or sub == 'index.html':
-                    return os.path.join(portal_dir, 'index.html')
-                target = os.path.join(portal_dir, sub.replace('/', os.sep))
-                if os.path.exists(target):
-                    return target
-
-            # Check inside portal dir
-            rel = clean_path.lstrip('/')
-            target = os.path.join(portal_dir, rel.replace('/', os.sep))
-            if os.path.exists(target):
-                return target
-
-            # Fallback to root dir
-            root_target = os.path.join(ROOT_DIR, rel.replace('/', os.sep))
-            if os.path.exists(root_target):
-                return root_target
-
-            return target
-
-        def copyfile(self, source, outputfile):
-            try:
-                super().copyfile(source, outputfile)
-            except (ConnectionResetError, ConnectionAbortedError, BrokenPipeError, OSError):
-                pass
-
-        def log_message(self, format, *args):
-            sys.stdout.write(f"[{portal_name.upper()} {self.log_date_time_string()}] {format % args}\n")
-            sys.stdout.flush()
-
-    return DedicatedPortalHandler
 
 def start_server_thread(host, port, handler, label):
     try:
@@ -162,56 +217,28 @@ if __name__ == '__main__':
     except Exception:
         pass
 
-    # Start Unified Server on 5500
-    unified_server, p_unified = start_server_thread('127.0.0.1', PORT_STUDENT, StudentPortalHandler, 'Student & Gateway')
+    lan_ip = get_lan_ip()
 
-    # Start Dedicated Trainer ERP Server on 5501
-    trainer_handler = make_dedicated_handler('Trainer', TRAINER_DIR)
-    trainer_server, p_trainer = start_server_thread('127.0.0.1', PORT_TRAINER, trainer_handler, 'Trainer ERP')
+    # Start Student ERP Server on 0.0.0.0 (Port 5500)
+    student_server, p_student = start_server_thread('0.0.0.0', PORT_STUDENT, StudentPortalHandler, 'SETU Student Portal')
 
-    # Start Dedicated Admin ERP Server on 5502
-    admin_handler = make_dedicated_handler('Admin', ADMIN_DIR)
-    admin_server, p_admin = start_server_thread('127.0.0.1', PORT_ADMIN, admin_handler, 'Admin ERP')
-
-    print("=======================================================")
-    print("  SETU CampusOS - Multi-ERP Local Development Servers")
-    print("=======================================================")
-    if p_trainer:
-        print(f"  [TRAINER ERP] (Dedicated Server: Port {p_trainer})")
-        print(f"     Dashboard:   http://localhost:{p_trainer}/dashboard.html")
-        print(f"     Portal Home: http://localhost:{p_trainer}/")
-        print(f"     Login:       http://localhost:{p_trainer}/login.html")
-        print(f"     Proctoring:  http://localhost:{p_trainer}/assessments.html")
-        print(f"     Grading:     http://localhost:{p_trainer}/assignments.html")
-        print(f"     Studio:      http://localhost:{p_trainer}/Class_recordings.html")
-        print("-------------------------------------------------------")
-    if p_admin:
-        print(f"  [ADMIN ERP] (Dedicated Server: Port {p_admin})")
-        print(f"     Dashboard:   http://localhost:{p_admin}/dashboard.html")
-        print(f"     Portal Home: http://localhost:{p_admin}/")
-        print(f"     Login:       http://localhost:{p_admin}/login.html")
-        print(f"     Bio-Vault:   http://localhost:{p_admin}/assessments.html")
-        print(f"     Governance:  http://localhost:{p_admin}/assignments.html")
-        print(f"     Archive:     http://localhost:{p_admin}/Class_recordings.html")
-        print("-------------------------------------------------------")
-    if p_unified:
-        print(f"  [STUDENT ERP & GATEWAY] (Port {p_unified})")
-        print(f"     Student Dash: http://localhost:{p_unified}/dashboard.html")
-        print(f"     Multi-Gateway:http://localhost:{p_unified}/gateway.html")
-        print("-------------------------------------------------------")
-        print(f"  [ALL ERPs UNIFIED ROUTING ON PORT {p_unified}]")
-        print(f"     Trainer ERP: http://localhost:{p_unified}/Trainer/dashboard.html")
-        print(f"     Admin ERP:   http://localhost:{p_unified}/Admin/dashboard.html")
-        print(f"     Student ERP: http://localhost:{p_unified}/Student/dashboard.html")
-    print("=======================================================")
-    print(f"All servers running. Listening on ports 5500, 5501, 5502...")
+    print("==================================================================")
+    print("  SETU CampusOS - Student ERP Server Running")
+    print("==================================================================")
+    print(f"  🌐 [LOCAL WI-FI IP] : http://{lan_ip}:{PORT_STUDENT}")
+    print("------------------------------------------------------------------")
+    if p_student:
+        print(f"  [STUDENT ERP] (Port {p_student})")
+        print(f"     Dashboard   : http://localhost:{p_student}/Student/dashboard.html")
+        print(f"     Timetable   : http://localhost:{p_student}/Student/timetable.html")
+        print(f"     Assessments : http://localhost:{p_student}/Student/assessments.html")
+        print(f"     Mobile Link : http://{lan_ip}:{p_student}/Student/mobile_proctor.html")
+    print("==================================================================")
     sys.stdout.flush()
 
     try:
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
-        print("\nShutting down all servers...")
-        if unified_server: unified_server.shutdown()
-        if trainer_server: trainer_server.shutdown()
-        if admin_server: admin_server.shutdown()
+        print("\nShutting down server...")
+        if student_server: student_server.shutdown()

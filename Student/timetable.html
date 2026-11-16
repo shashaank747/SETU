@@ -1,0 +1,2671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timetable - SETU</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css?v=17">
+  <link rel="stylesheet" href="css/robot.css?v=1">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232563eb'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/%3E%3C/svg%3E">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .nav-dropdown-content {
+      display: none;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      pointer-events: none;
+    }
+    .nav-dropdown.open > .nav-dropdown-content,
+    .user-profile-menu.open > .nav-dropdown-content {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .nav-dropdown.open > .nav-dropdown-toggle svg,
+    .user-profile-menu.open > #user-profile-trigger svg {
+      transform: rotate(180deg);
+    }
+    .custom-select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.6rem center;
+      background-size: 0.9em;
+      padding-right: 2rem;
+    }
+    /* Invisible Scrollbar */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none !important;
+      scrollbar-width: none !important;
+    }
+    /* Horizontal Timeline Fill & Left-to-Right Flow Animations */
+    @keyframes horizontalFillProgress {
+      0% {
+        width: 0%;
+      }
+      100% {
+        width: var(--fill-width, 100%);
+      }
+    }
+    .animate-timeline-fill {
+      animation: horizontalFillProgress 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes flowLeftToRight {
+      0% {
+        transform: translateX(-150%);
+      }
+      100% {
+        transform: translateX(300%);
+      }
+    }
+    .timeline-shimmer {
+      position: relative;
+      overflow: hidden;
+    }
+    .timeline-shimmer::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 60%;
+      background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.85) 50%, transparent 100%);
+      transform: translateX(-150%);
+      animation: flowLeftToRight 1.6s infinite ease-in-out;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body class="dashboard-body bg-[#F8F9FD] text-[#1E293B] min-h-screen">
+
+  <!-- Top Navigation Bar -->
+  <header class="dashboard-navbar sticky top-0 z-50 bg-white border-b border-slate-200/90 shadow-sm px-4 lg:px-7 py-2.5" id="main-dashboard-navbar">
+    <div class="max-w-[1400px] mx-auto flex items-center justify-between gap-4">
+
+      <!-- Brand Logo + Left Navigation Menu -->
+      <div class="flex items-center gap-6">
+        <!-- SETU Logo (Replaced CareerSuite with SETU) -->
+        <a href="dashboard.html" class="flex items-center gap-2.5 group shrink-0" title="SETU Home">
+          <div
+            class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-700 via-indigo-600 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-blue-500/25 group-hover:scale-105 transition">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+            </svg>
+          </div>
+          <span class="text-xl font-extrabold text-slate-900 tracking-tight">SETU</span>
+        </a>
+
+        <!-- Main Nav Pills & Dropdowns -->
+        <nav class="flex items-center gap-1 text-xs font-semibold text-slate-600">
+
+          <!-- 1. Dashboard (Active Primary Blue Pill) -->
+          <a href="dashboard.html"
+            class="bg-[#1E60E8] text-white px-3.5 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm shadow-blue-500/25 font-bold transition">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+            </svg>
+            <span>Dashboard</span>
+          </a>
+
+          <!-- 2. Learning Dropdown (Image 1) -->
+          <div class="relative nav-dropdown" id="nav-dropdown-learning">
+            <button type="button"
+              class="nav-dropdown-toggle px-3 py-1.5 rounded-full hover:bg-slate-100 flex items-center gap-1 transition cursor-pointer">
+              <span>Learning</span>
+              <svg class="w-3 h-3 text-slate-400 transition-transform duration-200" viewBox="0 0 20 20"
+                fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clip-rule="evenodd" />
+              </svg>
+            </button>
+            <div
+              class="nav-dropdown-content absolute left-0 top-full mt-2.5 w-[510px] bg-white rounded-2xl shadow-2xl border border-slate-200/90 p-4 z-50">
+              <div class="absolute -top-1.5 left-7 w-3 h-3 bg-[#1E60E8] rotate-45"></div>
+              <!-- Card Header -->
+              <div class="flex items-center gap-2 pb-2.5 border-b border-slate-100 mb-2">
+                <span class="text-[11px] font-black text-[#1E60E8] uppercase tracking-wider">LEARNING</span>
+                <span class="w-4 h-1 rounded-full bg-[#EAB308]"></span>
+              </div>
+              <!-- 2-Column Grid -->
+              <div class="grid grid-cols-2 gap-x-2 gap-y-1">
+                <!-- Col 1 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    📘</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      My Courses</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Active courses
+                      &amp; batches</div>
+                  </div>
+                </a>
+                <!-- Col 2 -->
+                <a href="timetable.html"
+                  class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    📅</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Timetable</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Daily learning
+                      schedule</div>
+                  </div>
+                </a>
+                <!-- Col 1 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    📢</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Bulletins</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Important updates
+                    </div>
+                  </div>
+                </a>
+                <!-- Col 2 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    📣</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Notifications</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Personal alerts
+                    </div>
+                  </div>
+                </a>
+                <!-- Col 1 -->
+                <a href="Class_recordings.html"
+                  class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    🎬</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Class Recordings</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Revisit sessions
+                    </div>
+                  </div>
+                </a>
+                <!-- Col 2 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    📓</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Trainer Notes</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Notes from your
+                      trainer</div>
+                  </div>
+                </a>
+                <!-- Col 1 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    ⌨️</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Live Typing Lab</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Touch typing,
+                      speed &amp; computer terms</div>
+                  </div>
+                </a>
+                <!-- Col 2 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    💻</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      SETU CodeStudio</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Python, MySQL, JS
+                      In-Browser IDE</div>
+                  </div>
+                </a>
+                <!-- Col 1 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    🗣️</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      AI Language Tutor</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Practice English
+                      with AI</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Assessments Dropdown (Image 2) -->
+          <div class="relative nav-dropdown" id="nav-dropdown-assessments">
+            <button type="button"
+              class="nav-dropdown-toggle px-3 py-1.5 rounded-full hover:bg-slate-100 flex items-center gap-1 transition cursor-pointer">
+              <span>Assessments</span>
+              <svg class="w-3 h-3 text-slate-400 transition-transform duration-200" viewBox="0 0 20 20"
+                fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clip-rule="evenodd" />
+              </svg>
+            </button>
+            <div
+              class="nav-dropdown-content absolute left-0 top-full mt-2.5 w-[280px] bg-white rounded-2xl shadow-2xl border border-slate-200/90 p-4 z-50">
+              <div class="absolute -top-1.5 left-8 w-3 h-3 bg-[#1E60E8] rotate-45"></div>
+              <!-- Card Header -->
+              <div class="flex items-center gap-2 pb-2.5 border-b border-slate-100 mb-2">
+                <span class="text-[11px] font-black text-[#1E60E8] uppercase tracking-wider">ASSESSMENTS</span>
+                <span class="w-4 h-1 rounded-full bg-[#EAB308]"></span>
+              </div>
+              <!-- 1-Column List -->
+              <div class="flex flex-col gap-1">
+                <a href="assignments.html"
+                  class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    📝</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      My Assessments</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Take quizzes &amp;
+                      skill tests</div>
+                  </div>
+                </a>
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    🧠</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      My Skill Profile</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Strengths, weak
+                      topics &amp; AI practice</div>
+                  </div>
+                </a>
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    🏅</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      My Badges</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Skill-mastery
+                      badges &amp; certificates</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Tasks Dropdown (Image 3) -->
+          <div class="relative nav-dropdown" id="nav-dropdown-tasks">
+            <button type="button"
+              class="nav-dropdown-toggle px-3 py-1.5 rounded-full hover:bg-slate-100 flex items-center gap-1 transition cursor-pointer">
+              <span>Tasks</span>
+              <svg class="w-3 h-3 text-slate-400 transition-transform duration-200" viewBox="0 0 20 20"
+                fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clip-rule="evenodd" />
+              </svg>
+            </button>
+            <div
+              class="nav-dropdown-content absolute left-0 top-full mt-2.5 w-[280px] bg-white rounded-2xl shadow-2xl border border-slate-200/90 p-4 z-50">
+              <div class="absolute -top-1.5 left-6 w-3 h-3 bg-[#1E60E8] rotate-45"></div>
+              <!-- Card Header -->
+              <div class="flex items-center gap-2 pb-2.5 border-b border-slate-100 mb-2">
+                <span class="text-[11px] font-black text-[#1E60E8] uppercase tracking-wider">TASKS</span>
+                <span class="w-4 h-1 rounded-full bg-[#EAB308]"></span>
+              </div>
+              <!-- 1-Column List -->
+              <div class="flex flex-col gap-1">
+                <a href="assignments.html"
+                  class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    💻</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      My Tasks</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Coding tasks &amp;
+                      challenges</div>
+                  </div>
+                </a>
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    📈</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      My Scores</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Score history
+                    </div>
+                  </div>
+                </a>
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    👥</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Peer Reviews</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Review peers &amp;
+                      get feedback</div>
+                  </div>
+                </a>
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    🎮</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Achievements</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">XP, badges &amp;
+                      rewards</div>
+                  </div>
+                </a>
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    🏆</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Leaderboard</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Batch &amp; global
+                      rankings</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. Career Dropdown (Image 4) -->
+          <div class="relative nav-dropdown" id="nav-dropdown-career">
+            <button type="button"
+              class="nav-dropdown-toggle px-3 py-1.5 rounded-full hover:bg-slate-100 flex items-center gap-1 transition cursor-pointer">
+              <span>Career</span>
+              <svg class="w-3 h-3 text-slate-400 transition-transform duration-200" viewBox="0 0 20 20"
+                fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clip-rule="evenodd" />
+              </svg>
+            </button>
+            <div
+              class="nav-dropdown-content absolute left-0 lg:-left-20 top-full mt-2.5 w-[520px] bg-white rounded-2xl shadow-2xl border border-slate-200/90 p-4 z-50">
+              <div class="absolute -top-1.5 left-6 lg:left-24 w-3 h-3 bg-[#1E60E8] rotate-45"></div>
+              <!-- Card Header -->
+              <div class="flex items-center gap-2 pb-2.5 border-b border-slate-100 mb-2">
+                <span class="text-[11px] font-black text-[#1E60E8] uppercase tracking-wider">CAREER</span>
+                <span class="w-4 h-1 rounded-full bg-[#EAB308]"></span>
+              </div>
+              <!-- 2-Column Grid -->
+              <div class="grid grid-cols-2 gap-x-2 gap-y-1">
+                <!-- Col 1 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    📄</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Resume Builder</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">AI-powered resume
+                      &amp; ATS score</div>
+                  </div>
+                </a>
+                <!-- Col 2 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    🎙️</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      AI Mock Interview</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Practice real
+                      company interviews with AI</div>
+                  </div>
+                </a>
+                <!-- Col 1 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    🎖️</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Certificates</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Download earned
+                      certs</div>
+                  </div>
+                </a>
+                <!-- Col 2 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    📊</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      My Analytics</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Student
+                      performance report</div>
+                  </div>
+                </a>
+                <!-- Col 1 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    💼</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Jobs</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Browse &amp; apply
+                      to jobs</div>
+                  </div>
+                </a>
+                <!-- Col 2 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    💻</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Internships</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Browse &amp; apply
+                      to internships</div>
+                  </div>
+                </a>
+                <!-- Col 1 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    🚀</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      My Applications</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Track your
+                      applications</div>
+                  </div>
+                </a>
+                <!-- Col 2 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    👤</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Career Profile</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Resumes &amp;
+                      preferences</div>
+                  </div>
+                </a>
+                <!-- Col 1 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    📜</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Offer Letter</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">View your training
+                      offer</div>
+                  </div>
+                </a>
+                <!-- Col 2 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    🎁</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Refer &amp; Earn</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Earn rewards by
+                      referring</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 6. Account & Support Dropdown (Image 5) -->
+          <div class="relative nav-dropdown" id="nav-dropdown-support">
+            <button type="button"
+              class="nav-dropdown-toggle px-3 py-1.5 rounded-full hover:bg-slate-100 flex items-center gap-1 transition cursor-pointer">
+              <span>Account &amp; Support</span>
+              <svg class="w-3 h-3 text-slate-400 transition-transform duration-200" viewBox="0 0 20 20"
+                fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clip-rule="evenodd" />
+              </svg>
+            </button>
+            <div
+              class="nav-dropdown-content absolute right-0 lg:-right-12 top-full mt-2.5 w-[500px] bg-white rounded-2xl shadow-2xl border border-slate-200/90 p-4 z-50">
+              <div class="absolute -top-1.5 right-20 lg:right-32 w-3 h-3 bg-[#1E60E8] rotate-45"></div>
+              <!-- Card Header -->
+              <div class="flex items-center gap-2 pb-2.5 border-b border-slate-100 mb-2">
+                <span class="text-[11px] font-black text-[#1E60E8] uppercase tracking-wider">ACCOUNT &amp;
+                  SUPPORT</span>
+                <span class="w-4 h-1 rounded-full bg-[#EAB308]"></span>
+              </div>
+              <!-- 2-Column Grid -->
+              <div class="grid grid-cols-2 gap-x-2 gap-y-1">
+                <!-- Col 1 -->
+                <a href="#campus-radar"
+                  class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    ⏱️</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Attendance Log</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Historical
+                      presence</div>
+                  </div>
+                </a>
+                <!-- Col 2 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    🏛️</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Institute Hours</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Track hours at
+                      institute</div>
+                  </div>
+                </a>
+                <!-- Col 1 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    💳</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      My Fee</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Pay course fee
+                      &amp; receipts</div>
+                  </div>
+                </a>
+                <!-- Col 2 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    📅</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      My Leaves</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Request leave
+                    </div>
+                  </div>
+                </a>
+                <!-- Col 1 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    ❤️</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Wellness</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Connect with
+                      counselors</div>
+                  </div>
+                </a>
+                <!-- Col 2 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    ⚖️</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Disputes</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Attendance/grade
+                      disputes</div>
+                  </div>
+                </a>
+                <!-- Col 1 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    ⚠️</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      My Violations</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Violation records
+                    </div>
+                  </div>
+                </a>
+                <!-- Col 2 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    💻</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Laptops</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Available laptops
+                    </div>
+                  </div>
+                </a>
+                <!-- Col 1 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    💡</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Suggestion Box</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Share feedback
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
+
+      <!-- Right Side: Bell Icon & User Profile Pill -->
+      <div class="flex items-center gap-2.5 shrink-0">
+
+        <!-- Bell Notification Button & Dropdown -->
+        <div class="relative nav-bell-menu" id="nav-bell-menu">
+          <button type="button" id="nav-bell-btn"
+            class="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center relative transition cursor-pointer border border-slate-200/60 shadow-xs"
+            title="Notifications">
+            <svg class="w-4 h-4 text-slate-700" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" />
+            </svg>
+            <span class="absolute top-0.5 right-0.5 w-2.5 h-2.5 rounded-full bg-rose-500 ring-2 ring-white"></span>
+          </button>
+
+          <!-- Notifications Dropdown -->
+          <div class="nav-dropdown-content absolute right-0 top-full mt-2.5 w-[300px] bg-white rounded-2xl shadow-2xl border border-slate-200/90 p-3.5 z-50" id="nav-notifications-box">
+            <div class="absolute -top-1.5 right-4 w-3 h-3 bg-[#1E60E8] rotate-45"></div>
+            <div class="flex items-center justify-between pb-2 border-b border-slate-100 mb-2">
+              <span class="text-xs font-extrabold text-slate-900">Notifications</span>
+              <span class="text-[10px] text-[#1E60E8] font-bold cursor-pointer hover:underline">Mark all read</span>
+            </div>
+            <div class="flex flex-col gap-2 py-1">
+              <a href="assignments.html" class="flex items-start gap-2.5 p-2 rounded-xl bg-blue-50/50 border border-blue-100/80 hover:bg-blue-50 transition group">
+                <span class="text-base shrink-0">⚡</span>
+                <div class="min-w-0">
+                  <p class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] leading-tight">3 Pending Assessments</p>
+                  <p class="text-[10px] text-slate-500 mt-0.5">Coding and theory tests are now live.</p>
+                </div>
+              </a>
+              <a href="timetable.html" class="flex items-start gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                <span class="text-base shrink-0">📅</span>
+                <div class="min-w-0">
+                  <p class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] leading-tight">Class at 10:00 AM</p>
+                  <p class="text-[10px] text-slate-500 mt-0.5">Python Full Stack batch session.</p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- User Profile Pill & Dropdown (Image 9 & Image 5) -->
+        <div class="relative user-profile-menu" id="user-profile-menu">
+          <button type="button" id="user-profile-trigger" onclick="toggleUserProfileMenu(event)"
+            class="flex items-center gap-1.5 bg-[#EEF5FF] hover:bg-[#E2EEFF] border border-[#D1E2FB] rounded-full pl-1 pr-2.5 py-1 transition cursor-pointer shadow-xs">
+            <!-- Vibrant Royal Blue Avatar Circle -->
+            <div class="w-7 h-7 rounded-full bg-[#1351D8] text-white font-black text-xs flex items-center justify-center shadow-xs shrink-0">
+              <span id="user-avatar-letter">A</span>
+            </div>
+            <!-- Down Chevron Icon -->
+            <svg class="w-3.5 h-3.5 text-slate-600 transition-transform duration-200 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </button>
+
+          <!-- Profile Dropdown Box -->
+          <div class="nav-dropdown-content absolute right-0 top-full mt-2.5 w-[230px] bg-white rounded-2xl shadow-2xl border border-slate-200/90 p-3.5 z-50" id="user-dropdown-box">
+            <div class="absolute -top-1.5 right-4 w-3 h-3 bg-[#1E60E8] rotate-45"></div>
+            <!-- User Header -->
+            <div class="flex items-center gap-3 pb-2.5 border-b border-slate-100">
+              <div class="w-10 h-10 rounded-xl bg-[#1E60E8] text-white font-extrabold text-base flex items-center justify-center shadow-md shrink-0">
+                <span>A</span>
+              </div>
+              <div class="min-w-0">
+                <h4 class="text-xs font-extrabold text-slate-900 leading-tight truncate" id="dropdown-user-name">Alex Johnson</h4>
+                <span class="text-[10px] text-slate-400 font-medium leading-tight block mt-0.5" id="dropdown-user-role">Student Portal • Active</span>
+              </div>
+            </div>
+
+            <!-- Profile Links List -->
+            <div class="flex flex-col gap-0.5 py-1.5">
+              <a href="student_registration_portal.html" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                <div class="text-sm shrink-0">👤</div>
+                <span class="text-xs font-bold text-slate-800 group-hover:text-[#1E60E8] transition">Profile</span>
+              </a>
+              <a href="assignments.html" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                <div class="text-sm shrink-0">📈</div>
+                <span class="text-xs font-bold text-slate-800 group-hover:text-[#1E60E8] transition">My Assessments</span>
+              </a>
+              <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-amber-50/60 transition group">
+                <div class="text-sm shrink-0 text-amber-500">⭐</div>
+                <span class="text-xs font-bold text-amber-600 transition">App Review</span>
+              </a>
+            </div>
+
+            <div class="border-t border-slate-100 my-1"></div>
+
+            <!-- Logout Button -->
+            <a href="login.html" id="btn-signout" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-rose-50 transition group">
+              <div class="text-sm shrink-0 text-rose-600">🚪</div>
+              <span class="text-xs font-extrabold text-rose-600 transition">Logout</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+</header>
+
+  <!-- MAIN FULL-WIDTH TIMETABLE LAYOUT (COMPACT & SPACE-OPTIMIZED) -->
+  <main class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 space-y-3.5 flex-1">
+
+    <!-- Unified Compact Header & Navigation Toolbar -->
+    <div class="bg-white rounded-xl border border-slate-200 px-4 py-3 shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+      
+      <!-- Left: Title, Semester Badge, Month/Year Dropdowns & Chips -->
+      <div class="flex flex-wrap items-center gap-3">
+        <!-- Title & Badge -->
+        <div class="flex items-center gap-2 border-r border-slate-200 pr-3 mr-1">
+          <a href="dashboard.html" class="text-slate-400 hover:text-blue-600 transition" title="Back to Dashboard">
+            <i class="fa-solid fa-arrow-left text-xs"></i>
+          </a>
+          <h1 class="text-base font-extrabold text-slate-900 tracking-tight">
+            Timetable
+          </h1>
+        </div>
+
+        <!-- Month & Year Selector -->
+        <div class="flex items-center gap-2">
+          <!-- Month Dropdown -->
+          <div class="relative">
+            <select id="monthSelect" class="custom-select appearance-none bg-slate-50 border border-slate-200 hover:border-blue-400 text-slate-800 text-xs font-bold rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:bg-white cursor-pointer shadow-2xs transition">
+              <option value="0">January</option>
+              <option value="1">February</option>
+              <option value="2">March</option>
+              <option value="3">April</option>
+              <option value="4">May</option>
+              <option value="5">June</option>
+              <option value="6">July</option>
+              <option value="7">August</option>
+              <option value="8" selected>September</option>
+              <option value="9">October</option>
+              <option value="10">November</option>
+              <option value="11">December</option>
+            </select>
+          </div>
+
+          <!-- Year Dropdown -->
+          <div class="relative">
+            <select id="yearSelect" class="custom-select appearance-none bg-slate-50 border border-slate-200 hover:border-blue-400 text-slate-800 text-xs font-bold rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:bg-white cursor-pointer shadow-2xs transition">
+              <option value="2024">2024</option>
+              <option value="2025">2025</option>
+              <option value="2026" selected>2026</option>
+              <option value="2027">2027</option>
+              <option value="2028">2028</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Quick Month Jump Shortcuts -->
+        <div class="hidden sm:flex items-center gap-1 text-xs border-l border-slate-200 pl-2" id="quickMonthChips">
+          <button type="button" onclick="setMonthAndYear(7, 2026)" class="month-quick-chip px-2 py-1 rounded-md text-slate-600 hover:bg-slate-100 transition font-medium" data-month="7">Aug</button>
+          <button type="button" onclick="setMonthAndYear(8, 2026)" class="month-quick-chip px-2 py-1 rounded-md bg-blue-50 text-blue-600 font-bold transition" data-month="8">Sep</button>
+          <button type="button" onclick="setMonthAndYear(9, 2026)" class="month-quick-chip px-2 py-1 rounded-md text-slate-600 hover:bg-slate-100 transition font-medium" data-month="9">Oct</button>
+          <button type="button" onclick="setMonthAndYear(10, 2026)" class="month-quick-chip px-2 py-1 rounded-md text-slate-600 hover:bg-slate-100 transition font-medium" data-month="10">Nov</button>
+          <button type="button" onclick="setMonthAndYear(11, 2026)" class="month-quick-chip px-2 py-1 rounded-md text-slate-600 hover:bg-slate-100 transition font-medium" data-month="11">Dec</button>
+        </div>
+
+        <!-- Export / Sync Calendar Dropdown -->
+        <div class="relative inline-block text-left" id="syncCalendarDropdownWrapper">
+          <button type="button" onclick="toggleSyncDropdown(event)" id="syncCalendarBtn" class="inline-flex items-center gap-1.5 bg-slate-50 hover:bg-slate-100 text-slate-700 hover:text-blue-700 border border-slate-200 hover:border-blue-300 text-xs font-bold rounded-lg px-2.5 py-1.5 transition shadow-2xs cursor-pointer">
+            <i class="fa-solid fa-cloud-arrow-down text-blue-600"></i>
+            <span>Sync / Export</span>
+            <i class="fa-solid fa-chevron-down text-[9px] text-slate-400 ml-0.5"></i>
+          </button>
+
+          <!-- Dropdown Menu -->
+          <div id="syncCalendarMenu" class="hidden absolute left-0 mt-1.5 w-64 bg-white rounded-xl border border-slate-200 shadow-xl py-1.5 z-50 divide-y divide-slate-100">
+            <div class="px-3 py-1.5">
+              <p class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">Calendar Sync</p>
+              <p class="text-[11px] text-slate-600 font-medium">Export timetable to external calendars</p>
+            </div>
+            <div class="py-1">
+              <!-- Google Calendar -->
+              <button type="button" onclick="exportToGoogleCalendar()" class="w-full text-left px-3 py-2 text-xs text-slate-700 hover:bg-blue-50 hover:text-blue-700 flex items-center gap-2.5 transition">
+                <i class="fa-brands fa-google text-red-500 w-4 text-center text-sm"></i>
+                <div>
+                  <div class="font-bold text-slate-800">Add to Google Calendar</div>
+                  <div class="text-[10px] text-slate-400">Direct sync for Gmail / Android</div>
+                </div>
+              </button>
+              <!-- Apple iCal / Outlook .ics -->
+              <button type="button" onclick="downloadICSFile()" class="w-full text-left px-3 py-2 text-xs text-slate-700 hover:bg-blue-50 hover:text-blue-700 flex items-center gap-2.5 transition">
+                <i class="fa-brands fa-apple text-slate-800 w-4 text-center text-base"></i>
+                <div>
+                  <div class="font-bold text-slate-800">Download .ICS Calendar File</div>
+                  <div class="text-[10px] text-slate-400">For Apple Calendar, Outlook & iOS</div>
+                </div>
+              </button>
+              <!-- Outlook Web -->
+              <button type="button" onclick="exportToOutlookWeb()" class="w-full text-left px-3 py-2 text-xs text-slate-700 hover:bg-blue-50 hover:text-blue-700 flex items-center gap-2.5 transition">
+                <i class="fa-brands fa-microsoft text-blue-500 w-4 text-center text-sm"></i>
+                <div>
+                  <div class="font-bold text-slate-800">Outlook Web Calendar</div>
+                  <div class="text-[10px] text-slate-400">Import into Microsoft 365</div>
+                </div>
+              </button>
+            </div>
+            <div class="py-1">
+              <!-- Copy Subscription URL -->
+              <button type="button" onclick="copyCalendarSubscriptionURL()" class="w-full text-left px-3 py-2 text-xs text-slate-700 hover:bg-slate-50 flex items-center gap-2.5 transition">
+                <i class="fa-solid fa-link text-slate-400 w-4 text-center"></i>
+                <div>
+                  <div class="font-bold text-slate-800">Copy Live WebCal Link</div>
+                  <div class="text-[10px] text-slate-400">Subscribe for automatic class updates</div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: View Switcher, Nav Arrows, Today Button & Print -->
+      <div class="flex flex-wrap items-center gap-2">
+        <!-- Month Heading (Accessible for scripts) -->
+        <span id="currentMonthYearHeading" class="hidden">September 2026</span>
+
+        <!-- View Switcher -->
+        <div class="bg-slate-100 border border-slate-200 rounded-lg p-0.5 flex text-xs font-semibold text-slate-600 shadow-2xs">
+          <button type="button" id="viewMonthBtn" onclick="switchView('month')" class="bg-white text-blue-600 px-2.5 py-1 rounded-md font-bold shadow-xs transition">Month</button>
+          <button type="button" id="viewWeekBtn" onclick="switchView('week')" class="px-2.5 py-1 text-slate-600 hover:text-slate-900 transition font-medium">Week</button>
+          <button type="button" id="viewListBtn" onclick="switchView('list')" class="px-2.5 py-1 text-slate-600 hover:text-slate-900 transition font-medium">List</button>
+        </div>
+
+        <!-- Month/Week Navigation Arrows -->
+        <div class="flex items-center bg-white border border-slate-200 rounded-lg shadow-2xs overflow-hidden">
+          <button type="button" id="prevMonthBtn" title="Previous" class="px-2.5 py-1.5 text-xs text-slate-600 hover:bg-slate-50 border-r border-slate-200 transition">
+            <i class="fa-solid fa-chevron-left text-[10px]"></i>
+          </button>
+          <button type="button" id="nextMonthBtn" title="Next" class="px-2.5 py-1.5 text-xs text-slate-600 hover:bg-slate-50 transition">
+            <i class="fa-solid fa-chevron-right text-[10px]"></i>
+          </button>
+        </div>
+
+        <!-- Always-Visible Today Button -->
+        <button type="button" id="todayBadgeDisplay" onclick="goToToday()" class="text-xs px-3 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold border border-blue-200 cursor-pointer transition flex items-center gap-1.5 shadow-2xs" title="Click to jump to Today (29 Sep 2026)">
+          <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+          <span>Today: 29 Sep 2026</span>
+        </button>
+
+        <!-- Export / Print Icon Button -->
+        <button type="button" onclick="window.print()" class="inline-flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow-xs">
+          <i class="fa-solid fa-print text-xs"></i>
+          <span class="hidden sm:inline">Print</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Calendar Grid and Details 2-Column Split -->
+    <div class="flex flex-col lg:flex-row gap-5 items-stretch">
+      
+      <!-- Left: Main Calendar Column (Month / Week / List) -->
+      <div class="w-full lg:flex-1 min-w-0 space-y-3 overflow-hidden">
+        <!-- 1. MONTH VIEW -->
+        <div id="monthViewWrapper" class="space-y-3">
+          <div class="bg-white rounded-xl border border-slate-300 shadow-sm overflow-hidden">
+            <!-- Day of Week Header -->
+            <div class="grid grid-cols-7 border-b border-slate-300 bg-slate-100/90 text-center py-2.5 text-xs font-extrabold text-slate-700 uppercase tracking-wider divide-x divide-slate-300">
+              <div>Sun</div>
+              <div>Mon</div>
+              <div>Tue</div>
+              <div>Wed</div>
+              <div>Thu</div>
+              <div>Fri</div>
+              <div>Sat</div>
+            </div>
+
+            <!-- Calendar Days Grid (Dynamic 35 or 42 cells with crisp 1px borders) -->
+            <div id="calendarGrid" class="grid grid-cols-7 gap-[1px] bg-slate-300 text-xs">
+              <!-- Dynamic calendar tiles rendered by JavaScript -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. WEEK VIEW -->
+        <div id="weekViewWrapper" class="hidden space-y-3 w-full min-w-0 overflow-hidden">
+          <div id="weekGrid" class="space-y-3 w-full min-w-0">
+            <!-- Dynamic Week columns rendered by JavaScript -->
+          </div>
+        </div>
+
+        <!-- 3. LIST VIEW -->
+        <div id="listViewWrapper" class="hidden space-y-3 w-full min-w-0">
+          <div id="listGrid" class="space-y-3 w-full min-w-0">
+            <!-- Dynamic Agenda List rendered by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Shared Persistent Legend (Visible in Month, Week, and List Views) -->
+        <div class="flex flex-wrap items-center justify-between gap-3 text-xs text-slate-600 bg-white px-3.5 py-2.5 rounded-xl border border-slate-300 shadow-2xs">
+          <div class="flex flex-wrap items-center gap-4">
+            <div class="flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-[#1e68d7]"></span>
+              <span class="font-medium text-slate-700">Upcoming Class</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-[#0bb864]"></span>
+              <span class="font-medium text-slate-700">Completed</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-[#8b5cf6]"></span>
+              <span class="font-medium text-slate-700">Task / Assignment</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-[#ef4444]"></span>
+              <span class="font-medium text-slate-700">Holiday</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-[#f59e0b]"></span>
+              <span class="font-medium text-slate-700">Exam / Deadline</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-slate-300"></span>
+              <span class="font-medium text-slate-500">No Events</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Side Schedule Detail Panel (Clean & Perfectly Proportioned) -->
+      <aside class="w-full lg:w-[350px] xl:w-[380px] bg-white rounded-2xl border border-slate-300 p-4 shadow-sm flex flex-col flex-shrink-0">
+        
+        <!-- Selected Date Header Card -->
+        <div class="flex items-center justify-between border-b border-slate-200 pb-3 mb-3">
+          <div>
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Selected Day Schedule</span>
+            <h2 id="selectedDateTitle" class="text-sm font-black text-slate-900 mt-0.5">Tuesday, 29 September 2026</h2>
+          </div>
+          <div class="flex items-center gap-1">
+            <button type="button" id="prevDayBtn" class="w-7 h-7 flex items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:text-blue-600 hover:border-blue-300 hover:bg-blue-50/50 transition cursor-pointer" title="Previous Day">
+              <i class="fa-solid fa-chevron-left text-[11px]"></i>
+            </button>
+            <button type="button" id="nextDayBtn" class="w-7 h-7 flex items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:text-blue-600 hover:border-blue-300 hover:bg-blue-50/50 transition cursor-pointer" title="Next Day">
+              <i class="fa-solid fa-chevron-right text-[11px]"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Schedule Items Container -->
+        <div id="scheduleContainer" class="space-y-2.5 flex-1 overflow-y-auto no-scrollbar">
+          <!-- Dynamic details filled by JS -->
+        </div>
+
+      </aside>
+
+    </div>
+
+  </main>
+
+  <!-- Terminal QR Scanner Modal -->
+  <div class="terminal-modal" id="terminal-modal">
+    <div class="terminal-modal-backdrop" id="terminal-modal-backdrop"></div>
+    <div class="terminal-modal-dialog">
+      <div class="terminal-modal-header">
+        <div class="terminal-modal-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#00d2ff">
+            <path d="M4 4h6v6H4V4zm2 2v2h2V6H6zm8-2h6v6h-6V4zm2 2v2h2V6h-2zM4 14h6v6H4v-6zm2 2v2h2v-2H6zm10-2h2v2h-2v-2zm-2 2h2v2h-2v-2zm4 0h2v2h-2v-2zm-2 2h2v2h-2v-2zm2 2h2v2h-2v-2zm-6-2h2v4h-2v-4z" />
+          </svg>
+          <span>Terminal Biometric Scanner</span>
+        </div>
+        <button type="button" class="terminal-modal-close" id="terminal-modal-close">&times;</button>
+      </div>
+      <div class="terminal-modal-body">
+        <div class="qr-viewfinder">
+          <div class="qr-laser"></div>
+          <div class="qr-corner top-left"></div>
+          <div class="qr-corner top-right"></div>
+          <div class="qr-corner bottom-left"></div>
+          <div class="qr-corner bottom-right"></div>
+          <div class="qr-center-target">
+            <svg width="56" height="56" viewBox="0 0 24 24" fill="rgba(0, 210, 255, 0.7)">
+              <path d="M4 4h6v6H4V4zm2 2v2h2V6H6zm8-2h6v6h-6V4zm2 2v2h2V6h-2zM4 14h6v6H4v-6zm2 2v2h2v-2H6zm10-2h2v2h-2v-2zm-2 2h2v2h-2v-2zm4 0h2v2h-2v-2zm-2 2h2v2h-2v-2zm2 2h2v2h-2v-2zm-6-2h2v4h-2v-4z" />
+            </svg>
+          </div>
+        </div>
+        <div class="qr-status-text">
+          <span class="qr-status-dot"></span>
+          <span>Optical Geo-Radar Scanning Campus Terminal...</span>
+        </div>
+        <div class="qr-info-meta">
+          <span>Terminal: <strong>BLR-GATE-04B</strong></span>
+          <span>Distance: <strong>14.2 meters</strong></span>
+        </div>
+      </div>
+      <div class="terminal-modal-footer">
+        <button type="button" class="btn-terminal-confirm" id="btn-terminal-confirm">Simulate Radar Check-In</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating ZUNO AI Assistant -->
+  <div class="floating-cyberbot-dock" id="nav-robot-trigger" role="button" tabindex="0" title="Chat with ZUNO AI (or press Ctrl+K)">
+    <div class="robot-stage robot-mini" id="robot-stage">
+      <div class="robot-body-wrapper">
+        <div class="robot-ground-shadow"></div>
+        <div class="robot-antenna-assembly">
+          <div class="robot-antenna-orb" id="antenna-orb">
+            <div class="antenna-glass-shine"></div>
+            <div class="antenna-plasma-core"></div>
+          </div>
+          <div class="robot-antenna-stalk"></div>
+          <div class="robot-antenna-base"></div>
+        </div>
+        <div class="robot-ear left">
+          <div class="ear-bevel"></div>
+          <div class="ear-core-light"></div>
+        </div>
+        <div class="robot-ear right">
+          <div class="ear-bevel"></div>
+          <div class="ear-core-light"></div>
+        </div>
+        <div class="robot-head" id="robot-head">
+          <div class="head-specular-sheen"></div>
+          <div class="head-rim-highlight"></div>
+          <div class="robot-visor-frame">
+            <div class="robot-visor-screen">
+              <div class="eye-matrix left-eye" id="left-eye"><div class="eye-pupil-glow"></div></div>
+              <div class="eye-matrix right-eye" id="right-eye"><div class="eye-pupil-glow"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/dashboard-nav.js?v=7"></script>
+  <script src="js/cyberbot.js?v=3"></script>
+
+  <!-- Calendar Logic Engine -->
+  <script>
+    const monthNames = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+
+    // Multi-Month Academic Events Database
+    const academicDatabase = {
+      // September 2026 Special Overrides
+      "2026-8": {
+        4: {
+          type: 'holiday',
+          title: 'Eid / Regional Holiday',
+          note: 'College campus closed for students'
+        },
+        15: {
+          type: 'task',
+          title: 'EDA & Data Wrangling Assignment',
+          code: 'TASK-07 Excel & Power BI Cleansing',
+          subject: 'Excel & Data Analytics',
+          batch: 'Batch B-949 • Ravi Sir',
+          time: '09:00 AM - 11:59 PM',
+          startTime: '09:00 AM',
+          deadline: '11:59 PM',
+          progress: 100,
+          status: 'completed',
+          note: 'Perform exploratory data analysis on Superstore dataset using Pivot Tables and Power Query.',
+          items: [
+            { time: '10:30 AM - 11:30 AM', code: 'Excel', instructor: 'Ravi Sir', room: 'Room B-949' },
+            { time: '11:30 AM - 12:30 PM', code: 'Statistics', instructor: 'Ravi Sir', room: 'Room B-954' },
+            { time: '12:30 PM - 01:30 PM', code: 'Python', instructor: 'Gauthami Ma\'am', room: 'Lab 4' }
+          ]
+        },
+        22: {
+          type: 'exam',
+          title: 'Mid-Term Assessment',
+          code: 'EXAM-04 Statistics & Python Programming',
+          subject: 'Statistics & Python Programming',
+          batch: 'Semester VI Core',
+          time: '09:30 AM - 12:30 PM',
+          startTime: '09:30 AM',
+          deadline: '12:30 PM',
+          room: 'Examination Hall 1',
+          progress: 100,
+          status: 'completed'
+        },
+        24: {
+          type: 'task',
+          title: 'NumPy & Pandas Analysis Problem Set',
+          code: 'TASK-08 Python Array Manipulation & DataFrames',
+          subject: 'Python Programming',
+          batch: 'Lab 4 • Gauthami Ma\'am',
+          time: '10:00 AM - 06:00 PM',
+          startTime: '10:00 AM',
+          deadline: '06:00 PM',
+          progress: 100,
+          status: 'completed',
+          note: 'Implement vectorized NumPy operations and group-by aggregations in Pandas.',
+          items: [
+            { time: '10:30 AM - 11:30 AM', code: 'Excel', instructor: 'Ravi Sir', room: 'Room B-949' },
+            { time: '11:30 AM - 12:30 PM', code: 'Statistics', instructor: 'Ravi Sir', room: 'Room B-954' },
+            { time: '12:30 PM - 01:30 PM', code: 'Python', instructor: 'Gauthami Ma\'am', room: 'Lab 4' }
+          ]
+        },
+        30: {
+          type: 'task',
+          title: 'Statistical Hypothesis Testing Case Study',
+          code: 'TASK-09 Inferential Statistics & ANOVA',
+          subject: 'Advanced Statistics',
+          batch: 'Room B-954 • Ravi Sir',
+          time: '09:00 AM - 05:00 PM',
+          startTime: '09:00 AM',
+          deadline: '05:00 PM',
+          progress: 65,
+          status: 'in_progress',
+          note: 'Submit Jupyter Notebook conducting two-sample t-tests and one-way ANOVA with p-value analysis.',
+          items: [
+            { time: '10:30 AM - 11:30 AM', code: 'Excel', instructor: 'Ravi Sir', room: 'Room B-949' },
+            { time: '11:30 AM - 12:30 PM', code: 'Statistics', instructor: 'Ravi Sir', room: 'Room B-954' },
+            { time: '12:30 PM - 01:30 PM', code: 'Python', instructor: 'Gauthami Ma\'am', room: 'Lab 4' }
+          ]
+        }
+      },
+
+      // October 2026 Special Overrides
+      "2026-9": {
+        2: {
+          type: 'holiday',
+          title: 'Gandhi Jayanti',
+          note: 'National Holiday'
+        },
+        15: {
+          type: 'task',
+          title: 'Machine Learning Regression Model Lab Task',
+          code: 'TASK-10 Scikit-Learn Linear & Logistic Regression',
+          subject: 'Python & Machine Learning',
+          batch: 'Lab 4 • Gauthami Ma\'am',
+          time: '10:00 AM - 06:00 PM',
+          startTime: '10:00 AM',
+          deadline: '06:00 PM',
+          progress: 30,
+          status: 'upcoming',
+          note: 'Train and evaluate Multiple Linear Regression models on housing dataset.'
+        },
+        20: {
+          type: 'holiday',
+          title: 'Dussehra / Vijayadashami',
+          note: 'Campus closed'
+        },
+        28: {
+          type: 'exam',
+          title: 'Semester Mid-Term 2',
+          code: 'EXAM-05 Advanced Statistics & Machine Learning',
+          subject: 'Statistics & ML',
+          batch: 'All Batches (Semester VI)',
+          time: '10:00 AM - 01:00 PM',
+          startTime: '10:00 AM',
+          deadline: '01:00 PM',
+          room: 'Examination Hall 2',
+          progress: 0,
+          status: 'upcoming'
+        }
+      },
+
+      // November 2026 Special Overrides
+      "2026-10": {
+        1: {
+          type: 'holiday',
+          title: 'Kannada Rajyotsava / State Day',
+          note: 'State Holiday'
+        },
+        9: {
+          type: 'holiday',
+          title: 'Diwali / Deepavali Break',
+          note: 'Festival Holidays'
+        },
+        10: {
+          type: 'holiday',
+          title: 'Diwali / Deepavali Break',
+          note: 'Festival Holidays'
+        },
+        18: {
+          type: 'task',
+          title: 'Power BI Executive Sales Dashboard',
+          code: 'TASK-11 Interactive BI Storytelling',
+          subject: 'Power BI & Visual Analytics',
+          batch: 'Room B-953 • Suresh Sir',
+          time: '09:00 AM - 11:59 PM',
+          startTime: '09:00 AM',
+          deadline: '11:59 PM',
+          progress: 0,
+          status: 'upcoming',
+          note: 'Publish DAX calculated metrics and cross-filtering dashboard report.'
+        },
+        25: {
+          type: 'classes',
+          status: 'upcoming',
+          items: [
+            { time: '10:30 AM - 01:30 PM', code: 'Capstone Project Review & Code Walkthrough', instructor: 'Ravi Sir & Gauthami Ma\'am', room: 'Innovation Lab 4' }
+          ]
+        }
+      },
+
+      // December 2026 Special Overrides
+      "2026-11": {
+        12: {
+          type: 'exam',
+          title: 'Final Practical Viva Examination',
+          code: 'VIVA-06 Python, Statistics & Power BI',
+          subject: 'Comprehensive Viva',
+          batch: 'All Batches',
+          time: '09:30 AM - 01:30 PM',
+          startTime: '09:30 AM',
+          deadline: '01:30 PM',
+          room: 'Lab 04 & Room B-954',
+          progress: 0,
+          status: 'upcoming'
+        },
+        20: {
+          type: 'exam',
+          title: 'End-Semester Theory Exam',
+          code: 'EXAM-06 Comprehensive Data Science & Analytics',
+          subject: 'Data Science & Analytics',
+          batch: 'All Batches',
+          time: '10:00 AM - 01:00 PM',
+          startTime: '10:00 AM',
+          deadline: '01:00 PM',
+          room: 'Main Examination Center',
+          progress: 0,
+          status: 'upcoming'
+        },
+        25: {
+          type: 'holiday',
+          title: 'Christmas Day',
+          note: 'Winter Break Begins'
+        }
+      }
+    };
+
+    // Current State
+    let currentYear = 2026;
+    let currentMonth = 8; // September (0=Jan, 8=Sep)
+    let selectedDay = 29;
+    let currentView = 'month'; // 'month' | 'week' | 'list'
+
+    // DOM Elements
+    const monthSelect = document.getElementById('monthSelect');
+    const yearSelect = document.getElementById('yearSelect');
+    const calendarGrid = document.getElementById('calendarGrid');
+    const weekGrid = document.getElementById('weekGrid');
+    const listGrid = document.getElementById('listGrid');
+    const monthViewWrapper = document.getElementById('monthViewWrapper');
+    const weekViewWrapper = document.getElementById('weekViewWrapper');
+    const listViewWrapper = document.getElementById('listViewWrapper');
+    const viewMonthBtn = document.getElementById('viewMonthBtn');
+    const viewWeekBtn = document.getElementById('viewWeekBtn');
+    const viewListBtn = document.getElementById('viewListBtn');
+    const scheduleContainer = document.getElementById('scheduleContainer');
+    const selectedDateTitle = document.getElementById('selectedDateTitle');
+    const currentMonthYearHeading = document.getElementById('currentMonthYearHeading');
+    const todayBadgeDisplay = document.getElementById('todayBadgeDisplay');
+
+    function getDayOfWeekName(year, month, day) {
+      const date = new Date(year, month, day);
+      return date.toLocaleDateString('en-US', { weekday: 'long' });
+    }
+
+    function getDayOfWeekShort(year, month, day) {
+      const date = new Date(year, month, day);
+      return date.toLocaleDateString('en-US', { weekday: 'short' });
+    }
+
+    function getEventsForDate(year, month, day) {
+      const key = `${year}-${month}`;
+      if (academicDatabase[key] && academicDatabase[key][day]) {
+        return academicDatabase[key][day];
+      }
+
+      const d = new Date(year, month, day);
+      const dayOfWeek = d.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+
+      // Sunday: No classes
+      if (dayOfWeek === 0) {
+        return null;
+      }
+
+      // Check if date is in past compared to 29 Sep 2026
+      const isPast = (year < 2026) || (year === 2026 && month < 8) || (year === 2026 && month === 8 && day < 29);
+      const defaultStatus = isPast ? 'completed' : 'upcoming';
+
+      // Monday to Friday: Excel (10:30-11:30), Statistics (11:30-12:30), Python (12:30-1:30)
+      if (dayOfWeek >= 1 && dayOfWeek <= 5) {
+        return {
+          type: 'classes',
+          status: defaultStatus,
+          items: [
+            { time: '10:30 AM - 11:30 AM', code: 'Excel', instructor: 'Ravi Sir', room: 'Room B-949' },
+            { time: '11:30 AM - 12:30 PM', code: 'Statistics', instructor: 'Ravi Sir', room: 'Room B-954' },
+            { time: '12:30 PM - 01:30 PM', code: 'Python', instructor: 'Gauthami Ma\'am', room: 'Lab 4' }
+          ]
+        };
+      }
+
+      // Saturday: Power BI (09:30-11:30), Statistics (11:30-12:30), Python (12:30-1:30)
+      if (dayOfWeek === 6) {
+        return {
+          type: 'classes',
+          status: defaultStatus,
+          items: [
+            { time: '09:30 AM - 11:30 AM', code: 'Power BI', instructor: 'Suresh Sir', room: 'Room B-953' },
+            { time: '11:30 AM - 12:30 PM', code: 'Statistics', instructor: 'Ravi Sir', room: 'Room B-954' },
+            { time: '12:30 PM - 01:30 PM', code: 'Python', instructor: 'Gauthami Ma\'am', room: 'Lab 4' }
+          ]
+        };
+      }
+
+      return null;
+    }
+
+    // Dynamic Timeline Progress & Countdown Metrics Calculator
+    function getEventProgressMetrics(eventData) {
+      if (!eventData) return { progress: 100, timeRemainingText: 'Completed', statusBadge: 'Done', startTime: '09:00 AM', deadline: '05:00 PM' };
+
+      let progress = typeof eventData.progress === 'number' ? eventData.progress : 100;
+      let timeRemainingText = '';
+      let statusBadge = '';
+
+      const parseMinutes = (tStr) => {
+        if (!tStr) return 0;
+        const m = tStr.trim().match(/(\d+):(\d+)\s*(AM|PM)/i);
+        if (!m) return 0;
+        let [_, h, min, mod] = m;
+        let hours = parseInt(h, 10);
+        const mins = parseInt(min, 10);
+        if (mod.toUpperCase() === 'PM' && hours < 12) hours += 12;
+        if (mod.toUpperCase() === 'AM' && hours === 12) hours = 0;
+        return hours * 60 + mins;
+      };
+
+      const startStr = eventData.startTime || (eventData.time ? eventData.time.split('-')[0].trim() : '09:00 AM');
+      const deadStr = eventData.deadline || (eventData.time && eventData.time.includes('-') ? eventData.time.split('-')[1].trim() : '05:00 PM');
+      
+      const startMins = parseMinutes(startStr);
+      const deadMins = parseMinutes(deadStr);
+      const totalWindowMins = Math.max(30, deadMins > startMins ? deadMins - startMins : 480);
+
+      if (eventData.status === 'completed' || progress >= 100) {
+        progress = 100;
+        timeRemainingText = 'Deadline Passed';
+        statusBadge = 'Completed';
+      } else if (eventData.status === 'in_progress' || (progress > 0 && progress < 100)) {
+        const remainingMins = Math.max(0, Math.round(totalWindowMins * (1 - progress / 100)));
+        const remHours = Math.floor(remainingMins / 60);
+        const remM = remainingMins % 60;
+        timeRemainingText = remHours > 0 ? `${remHours}h ${remM}m left` : `${remM}m left`;
+        statusBadge = `${remHours > 0 ? remHours + 'h ' : ''}${remM}m left`;
+      } else if (eventData.status === 'upcoming') {
+        const totalHrs = Math.floor(totalWindowMins / 60);
+        timeRemainingText = `${totalHrs}h window`;
+        statusBadge = 'Upcoming';
+      } else {
+        timeRemainingText = `${progress}% elapsed`;
+        statusBadge = 'Active';
+      }
+
+      return {
+        progress: Math.min(100, Math.max(0, progress)),
+        timeRemainingText,
+        statusBadge,
+        startTime: startStr,
+        deadline: deadStr
+      };
+    }
+
+    function switchView(view) {
+      currentView = view;
+
+      // Update switcher buttons style
+      const activeClass = "bg-white text-blue-600 px-2.5 py-1 rounded-md font-bold shadow-xs transition";
+      const inactiveClass = "px-2.5 py-1 text-slate-600 hover:text-slate-900 transition font-medium";
+
+      if (viewMonthBtn) viewMonthBtn.className = (view === 'month') ? activeClass : inactiveClass;
+      if (viewWeekBtn) viewWeekBtn.className = (view === 'week') ? activeClass : inactiveClass;
+      if (viewListBtn) viewListBtn.className = (view === 'list') ? activeClass : inactiveClass;
+
+      // Toggle views visibility
+      if (monthViewWrapper) monthViewWrapper.classList.toggle('hidden', view !== 'month');
+      if (weekViewWrapper) weekViewWrapper.classList.toggle('hidden', view !== 'week');
+      if (listViewWrapper) listViewWrapper.classList.toggle('hidden', view !== 'list');
+
+      renderMainView();
+    }
+
+    function setMonthAndYear(month, year, day) {
+      currentMonth = parseInt(month, 10);
+      currentYear = parseInt(year, 10);
+
+      const daysInCurrentMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      if (day !== undefined) {
+        selectedDay = Math.min(day, daysInCurrentMonth);
+      } else if (selectedDay > daysInCurrentMonth) {
+        selectedDay = daysInCurrentMonth;
+      }
+
+      if (monthSelect) monthSelect.value = currentMonth;
+      if (yearSelect) yearSelect.value = currentYear;
+
+      renderMainView();
+    }
+
+    function renderMainView() {
+      const monthLabel = monthNames[currentMonth];
+      if (currentMonthYearHeading) {
+        currentMonthYearHeading.textContent = `${monthLabel} ${currentYear}`;
+      }
+
+      // Update quick month chips
+      document.querySelectorAll('.month-quick-chip').forEach(chip => {
+        const m = parseInt(chip.getAttribute('data-month'), 10);
+        if (m === currentMonth && currentYear === 2026) {
+          chip.className = "month-quick-chip px-2.5 py-1 rounded-lg bg-blue-50 text-blue-600 font-bold transition";
+        } else {
+          chip.className = "month-quick-chip px-2.5 py-1 rounded-lg text-slate-600 hover:bg-slate-100 transition font-semibold";
+        }
+      });
+
+      // Update today badge
+      if (todayBadgeDisplay) {
+        todayBadgeDisplay.style.display = 'inline-flex';
+        const isActualCurrentMonth = (currentYear === 2026 && currentMonth === 8);
+        if (isActualCurrentMonth) {
+          todayBadgeDisplay.className = "text-xs px-3 py-1.5 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold border border-blue-200 cursor-pointer transition-all flex items-center gap-1.5 shadow-2xs";
+          todayBadgeDisplay.innerHTML = `<span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span><span>Today: 29 Sep 2026</span>`;
+          todayBadgeDisplay.title = "Viewing Current Month • Click to select today";
+        } else {
+          todayBadgeDisplay.className = "text-xs px-3 py-1.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold cursor-pointer transition-all flex items-center gap-1.5 shadow-sm";
+          todayBadgeDisplay.innerHTML = `<i class="fa-regular fa-calendar-check text-[11px]"></i><span>Today: 29 Sep 2026 ➔</span>`;
+          todayBadgeDisplay.title = "Click to return to today (29 Sep 2026)";
+        }
+      }
+
+      // Render active view
+      if (currentView === 'month') {
+        renderCalendar();
+      } else if (currentView === 'week') {
+        renderWeekView();
+      } else if (currentView === 'list') {
+        renderListView();
+      }
+
+      renderRightPanel();
+    }
+
+    function renderCalendar() {
+      if (!calendarGrid) return;
+      calendarGrid.innerHTML = '';
+
+      const firstDayDate = new Date(currentYear, currentMonth, 1);
+      const startDayOffset = firstDayDate.getDay(); 
+      const daysInCurrentMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      const daysInPrevMonth = new Date(currentYear, currentMonth, 0).getDate();
+
+      const totalCellsNeeded = (startDayOffset + daysInCurrentMonth > 35) ? 42 : 35;
+      const isActualCurrentMonth = (currentYear === 2026 && currentMonth === 8);
+
+      for (let i = 0; i < totalCellsNeeded; i++) {
+        const cell = document.createElement('div');
+
+        let dayNumber;
+        let isCurrentMonth = true;
+
+        if (i < startDayOffset) {
+          dayNumber = daysInPrevMonth - (startDayOffset - 1 - i);
+          isCurrentMonth = false;
+        } else if (i >= startDayOffset + daysInCurrentMonth) {
+          dayNumber = i - (startDayOffset + daysInCurrentMonth) + 1;
+          isCurrentMonth = false;
+        } else {
+          dayNumber = i - startDayOffset + 1;
+        }
+
+        const isTodayDate = (isActualCurrentMonth && isCurrentMonth && dayNumber === 29);
+        const isSelected = (isCurrentMonth && dayNumber === selectedDay);
+        const eventData = isCurrentMonth ? getEventsForDate(currentYear, currentMonth, dayNumber) : null;
+        const isHoliday = (eventData && eventData.type === 'holiday');
+        const isExam = (eventData && eventData.type === 'exam');
+        const isTask = (eventData && eventData.type === 'task');
+
+        let baseBg = isCurrentMonth ? "bg-white" : "bg-slate-50/80";
+        if (isHoliday) {
+          baseBg = isSelected ? "bg-red-100 ring-2 ring-red-500 ring-inset" : "bg-[#fee2e2] hover:bg-red-200/80";
+        } else if (isExam) {
+          baseBg = isSelected ? "bg-[#fde68a] ring-2 ring-amber-500 ring-inset" : "bg-[#fef3c7] hover:bg-[#fde68a]/80";
+        } else if (isTask) {
+          baseBg = isSelected ? "bg-[#ede9fe] ring-2 ring-purple-600 ring-inset" : "bg-[#f5f3ff] hover:bg-[#ede9fe]/80";
+        } else if (isSelected) {
+          baseBg = "bg-blue-50/70 ring-2 ring-blue-600 ring-inset";
+        }
+
+        cell.className = `min-h-[64px] sm:min-h-[70px] p-2 flex flex-col justify-between cursor-pointer transition-all relative group ${baseBg}`;
+
+        const topRow = document.createElement('div');
+        topRow.className = "flex items-center justify-between gap-1";
+
+        const numSpan = document.createElement('span');
+        numSpan.textContent = dayNumber;
+
+        if (isCurrentMonth) {
+          if (isHoliday) {
+            numSpan.className = "font-black text-red-800 text-xs";
+          } else if (isExam) {
+            numSpan.className = "font-black text-amber-900 text-xs";
+          } else if (isTask) {
+            numSpan.className = "font-black text-purple-900 text-xs";
+          } else if (isTodayDate) {
+            numSpan.className = "font-black text-blue-600 text-xs";
+          } else {
+            numSpan.className = "font-bold text-slate-800 group-hover:text-blue-600 transition text-xs";
+          }
+        } else {
+          numSpan.className = "font-medium text-slate-400 text-xs";
+        }
+        topRow.appendChild(numSpan);
+
+        if (isHoliday) {
+          const holidayBadge = document.createElement('span');
+          holidayBadge.className = "text-[8px] bg-red-600 text-white px-1.5 py-0.5 rounded-full font-extrabold uppercase tracking-tight shadow-2xs";
+          holidayBadge.textContent = "Holiday";
+          topRow.appendChild(holidayBadge);
+        } else if (isTodayDate) {
+          const todayBadge = document.createElement('span');
+          todayBadge.className = "text-[9px] bg-blue-100 text-blue-700 px-1.5 py-0.2 rounded font-bold";
+          todayBadge.textContent = "Today";
+          topRow.appendChild(todayBadge);
+        } else if (isExam) {
+          const examBadge = document.createElement('span');
+          examBadge.className = "text-[8px] bg-amber-500 text-white px-2 py-0.5 rounded-full font-extrabold uppercase tracking-tight shadow-2xs";
+          examBadge.textContent = "EXAM";
+          topRow.appendChild(examBadge);
+        } else if (isTask) {
+          const taskBadge = document.createElement('span');
+          taskBadge.className = "text-[8px] bg-purple-600 text-white px-1.5 py-0.5 rounded-full font-extrabold uppercase tracking-tight shadow-2xs";
+          taskBadge.textContent = "TASK";
+          topRow.appendChild(taskBadge);
+        }
+
+        cell.appendChild(topRow);
+
+        const bottomContainer = document.createElement('div');
+        bottomContainer.className = "mt-auto pt-1 w-full";
+
+        if (isCurrentMonth && eventData) {
+          if (eventData.type === 'holiday') {
+            bottomContainer.innerHTML = `
+              <div class="text-[9.5px] font-bold text-red-700 truncate leading-tight flex items-center gap-1">
+                <i class="fa-solid fa-umbrella-beach text-[8.5px] text-red-500"></i>
+                <span class="truncate">${eventData.title}</span>
+              </div>
+            `;
+          } else if (eventData.type === 'task') {
+            const metrics = getEventProgressMetrics(eventData);
+            // Task with dynamic horizontal filling animation representing time elapsed till deadline
+            bottomContainer.innerHTML = `
+              <div class="text-[9px] font-bold text-purple-950 truncate leading-tight flex items-center justify-between gap-1">
+                <div class="truncate flex items-center gap-1">
+                  <i class="fa-solid fa-list-check text-[7.5px] text-purple-600 flex-shrink-0"></i>
+                  <span class="truncate">${eventData.title}</span>
+                </div>
+                <span class="text-[7.5px] font-extrabold ${metrics.progress >= 100 ? 'text-emerald-700' : 'text-purple-700'} flex-shrink-0">${metrics.progress}%</span>
+              </div>
+              <div class="mt-1 w-full bg-purple-100 border border-purple-200/80 rounded-full h-2 overflow-hidden relative shadow-2xs" title="${metrics.timeRemainingText} (Window: ${metrics.startTime} - ${metrics.deadline})">
+                <div class="h-full rounded-full bg-gradient-to-r from-purple-600 via-indigo-600 to-fuchsia-500 animate-timeline-fill timeline-shimmer shadow-xs" style="--fill-width: ${metrics.progress}%; width: ${metrics.progress}%;"></div>
+              </div>
+              <div class="flex items-center justify-between text-[7px] font-bold text-purple-800 mt-0.5 leading-none">
+                <span>${metrics.startTime}</span>
+                <span class="text-[6.5px] ${metrics.progress >= 100 ? 'text-emerald-700 bg-emerald-100/80' : 'text-purple-700 bg-purple-200/70'} font-black px-1 py-0.2 rounded">${metrics.timeRemainingText}</span>
+                <span>${metrics.deadline}</span>
+              </div>
+            `;
+          } else if (eventData.type === 'exam') {
+            const metrics = getEventProgressMetrics(eventData);
+            // Exam with dynamic horizontal filling animation representing exam duration timeline
+            bottomContainer.innerHTML = `
+              <div class="text-[9px] font-bold text-amber-950 truncate leading-tight flex items-center justify-between gap-1">
+                <div class="truncate flex items-center gap-1">
+                  <i class="fa-solid fa-graduation-cap text-[7.5px] text-amber-600 flex-shrink-0"></i>
+                  <span class="truncate">${eventData.title || eventData.code}</span>
+                </div>
+                <span class="text-[7.5px] font-extrabold ${metrics.progress >= 100 ? 'text-emerald-700' : 'text-amber-800'} flex-shrink-0">${metrics.progress}%</span>
+              </div>
+              <div class="mt-1 w-full bg-amber-100 border border-amber-200/80 rounded-full h-2 overflow-hidden relative shadow-2xs" title="${metrics.timeRemainingText} (Window: ${metrics.startTime} - ${metrics.deadline})">
+                <div class="h-full rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 animate-timeline-fill timeline-shimmer shadow-xs" style="--fill-width: ${metrics.progress}%; width: ${metrics.progress}%;"></div>
+              </div>
+              <div class="flex items-center justify-between text-[7px] font-bold text-amber-900 mt-0.5 leading-none">
+                <span>${metrics.startTime}</span>
+                <span class="text-[6.5px] ${metrics.progress >= 100 ? 'text-emerald-700 bg-emerald-100/80' : 'text-amber-800 bg-amber-200/70'} font-black px-1 py-0.2 rounded">${metrics.timeRemainingText}</span>
+                <span>${metrics.deadline}</span>
+              </div>
+            `;
+          } else if (eventData.type === 'classes' && Array.isArray(eventData.items)) {
+            const dotsContainer = document.createElement('div');
+            dotsContainer.className = "flex items-center gap-1";
+            eventData.items.forEach(() => {
+              const dot = document.createElement('span');
+              dot.className = "w-2 h-2 rounded-full " + (eventData.status === 'completed' ? "bg-[#0bb864]" : "bg-[#1e68d7]");
+              dotsContainer.appendChild(dot);
+            });
+            bottomContainer.appendChild(dotsContainer);
+          }
+        }
+
+        cell.appendChild(bottomContainer);
+
+        if (isCurrentMonth) {
+          const currentDayNum = dayNumber;
+          cell.addEventListener('click', () => {
+            selectedDay = currentDayNum;
+            renderCalendar();
+            renderRightPanel();
+          });
+        }
+
+        calendarGrid.appendChild(cell);
+      }
+    }
+
+    function renderWeekView() {
+      if (!weekGrid) return;
+      weekGrid.innerHTML = '';
+
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      const monthLabel = monthNames[currentMonth];
+
+      // Horizontally scrollable day track with invisible scrollbar
+      const trackWrapper = document.createElement('div');
+      trackWrapper.className = "w-full overflow-x-auto no-scrollbar scroll-smooth py-1";
+      trackWrapper.id = "weekScrollTrack";
+
+      const gridContainer = document.createElement('div');
+      gridContainer.className = "flex items-stretch gap-3 min-w-max pb-2";
+
+      for (let dayNum = 1; dayNum <= daysInMonth; dayNum++) {
+        const d = new Date(currentYear, currentMonth, dayNum);
+        const dayYear = d.getFullYear();
+        const dayMonth = d.getMonth();
+        const dayName = d.toLocaleDateString('en-US', { weekday: 'short' });
+
+        const isToday = (dayYear === 2026 && dayMonth === 8 && dayNum === 29);
+        const isSelected = (dayNum === selectedDay);
+        const eventData = getEventsForDate(dayYear, dayMonth, dayNum);
+
+        const isHoliday = (eventData && eventData.type === 'holiday');
+        const isExam = (eventData && eventData.type === 'exam');
+        const isTask = (eventData && eventData.type === 'task');
+        const isClasses = (eventData && eventData.type === 'classes');
+        const isClassesCompleted = (isClasses && !isToday && eventData.status === 'completed');
+        const isClassesUpcoming = (isClasses && !isToday && eventData.status === 'upcoming');
+
+        const col = document.createElement('div');
+        let colBg = "bg-white border-slate-200 hover:border-blue-300";
+        if (isSelected) {
+          if (isToday) {
+            colBg = "bg-white border-blue-600 ring-2 ring-blue-500/80 shadow-md is-selected-day";
+          } else if (isTask) {
+            colBg = "bg-purple-50/70 border-purple-500 ring-2 ring-purple-500/80 shadow-md is-selected-day";
+          } else if (isClassesCompleted) {
+            colBg = "bg-emerald-50/40 border-emerald-500 ring-2 ring-emerald-500/80 shadow-md is-selected-day";
+          } else if (isClassesUpcoming) {
+            colBg = "bg-blue-50/40 border-blue-500 ring-2 ring-blue-500/80 shadow-md is-selected-day";
+          } else {
+            colBg = "bg-blue-50/40 border-blue-500 ring-2 ring-blue-500/80 shadow-md is-selected-day";
+          }
+        } else if (isToday) {
+          colBg = "bg-white border-slate-300 hover:border-slate-400 shadow-xs";
+        } else if (isTask) {
+          colBg = "bg-purple-50/30 border-purple-300 hover:border-purple-400 shadow-2xs";
+        } else if (isClassesCompleted) {
+          colBg = "bg-emerald-50/20 border-emerald-500 hover:border-emerald-600 shadow-2xs";
+        } else if (isClassesUpcoming) {
+          colBg = "bg-blue-50/20 border-blue-400 hover:border-blue-500 shadow-2xs";
+        } else if (isHoliday) {
+          colBg = "bg-red-50/50 border-red-200 hover:border-red-300";
+        } else if (isExam) {
+          colBg = "bg-amber-50/50 border-amber-200 hover:border-amber-300";
+        }
+
+        col.className = `w-[130px] min-w-[130px] flex-shrink-0 rounded-xl border p-2 flex flex-col justify-start cursor-pointer transition-all ${colBg} shadow-2xs space-y-1.5`;
+        if (isSelected) {
+          col.classList.add('is-selected-day');
+        }
+
+        // Column Day Header
+        let headerBadgeHtml = '';
+        if (isToday) {
+          headerBadgeHtml = `<span class="text-[8.5px] bg-blue-600 text-white px-1.5 py-0.2 rounded-md font-extrabold shadow-2xs">Today</span>`;
+        } else if (isTask) {
+          headerBadgeHtml = `<span class="text-[8px] bg-purple-600 text-white px-1.5 py-0.2 rounded-full font-extrabold uppercase shadow-2xs flex items-center gap-0.5"><i class="fa-solid fa-list-check text-[6.5px]"></i> Task</span>`;
+        } else if (isClassesCompleted) {
+          headerBadgeHtml = `<span class="text-[8px] bg-emerald-100 text-emerald-800 px-1.5 py-0.2 rounded-full font-extrabold shadow-2xs flex items-center gap-0.5"><i class="fa-solid fa-check text-[6.5px]"></i> Done</span>`;
+        } else if (isClassesUpcoming) {
+          headerBadgeHtml = `<span class="text-[8px] bg-blue-100 text-blue-800 px-1.5 py-0.2 rounded-full font-extrabold shadow-2xs flex items-center gap-0.5">Upcoming</span>`;
+        } else if (isHoliday) {
+          headerBadgeHtml = `<span class="text-[8px] bg-red-600 text-white px-1.5 py-0.2 rounded-full font-extrabold uppercase shadow-2xs">Holiday</span>`;
+        } else if (isExam) {
+          headerBadgeHtml = `<span class="text-[8px] bg-amber-500 text-white px-1.5 py-0.2 rounded-full font-extrabold uppercase shadow-2xs">EXAM</span>`;
+        }
+
+        let dayNameColor = 'text-slate-400';
+        let dayNumColor = 'text-slate-800';
+
+        if (isToday) {
+          dayNameColor = 'text-blue-600';
+          dayNumColor = 'text-blue-600';
+        } else if (isTask) {
+          dayNameColor = 'text-purple-700';
+          dayNumColor = 'text-purple-900';
+        } else if (isClassesCompleted) {
+          dayNameColor = 'text-emerald-700';
+          dayNumColor = 'text-emerald-900';
+        } else if (isClassesUpcoming) {
+          dayNameColor = 'text-blue-700';
+          dayNumColor = 'text-blue-900';
+        } else if (isHoliday) {
+          dayNameColor = 'text-red-600';
+          dayNumColor = 'text-red-700';
+        } else if (isExam) {
+          dayNameColor = 'text-amber-700';
+          dayNumColor = 'text-amber-800';
+        }
+
+        col.innerHTML = `
+          <div class="flex items-center justify-between border-b border-slate-100 pb-1">
+            <div>
+              <span class="text-[9.5px] uppercase tracking-wider font-extrabold ${dayNameColor}">${dayName}</span>
+              <div class="text-xs font-black ${dayNumColor}">${dayNum} <span class="text-[9.5px] font-normal text-slate-400">${monthNames[dayMonth].slice(0,3)}</span></div>
+            </div>
+            <div>${headerBadgeHtml}</div>
+          </div>
+        `;
+
+        // Column Body: Scheduled classes / holidays / exams / tasks
+        const bodyContent = document.createElement('div');
+        bodyContent.className = "space-y-1.5 flex-1 flex flex-col justify-start text-xs";
+
+        if (!eventData) {
+          bodyContent.innerHTML = `
+            <div class="my-auto py-6 text-center text-slate-400">
+              <i class="fa-regular fa-sun text-base text-slate-300 mb-0.5"></i>
+              <p class="text-[9.5px] font-bold text-slate-400">No classes</p>
+              <p class="text-[8.5px] text-slate-400">Self-study</p>
+            </div>
+          `;
+        } else if (eventData.type === 'holiday') {
+          bodyContent.innerHTML = `
+            <div class="bg-red-100/90 border border-red-200 rounded-lg p-1.5 text-red-900 space-y-0.5">
+              <div class="flex items-center gap-1 text-[9px] font-bold text-red-700">
+                <i class="fa-solid fa-umbrella-beach text-red-500"></i>
+                <span>Holiday</span>
+              </div>
+              <p class="text-[11px] font-black tracking-tight leading-tight">${eventData.title}</p>
+              <p class="text-[9px] text-red-600">${eventData.note || 'Campus Closed'}</p>
+            </div>
+          `;
+        } else if (eventData.type === 'exam') {
+          const metrics = getEventProgressMetrics(eventData);
+          bodyContent.innerHTML = `
+            <div class="bg-amber-100/90 border border-amber-200 rounded-lg p-1.5 text-amber-900 space-y-1">
+              <div class="flex items-center justify-between text-[9px] font-bold text-amber-700">
+                <span class="flex items-center gap-1"><i class="fa-solid fa-graduation-cap text-amber-600"></i> Exam</span>
+                <span class="text-[7.5px] ${metrics.progress >= 100 ? 'bg-emerald-600 text-white' : 'bg-amber-500 text-white'} px-1.5 py-0.2 rounded font-extrabold">${metrics.progress >= 100 ? 'Done' : metrics.progress + '%'}</span>
+              </div>
+              <p class="text-[11px] font-black tracking-tight leading-tight">${eventData.code || eventData.title}</p>
+              <p class="text-[9px] text-amber-700"><i class="fa-regular fa-clock mr-0.5"></i> ${eventData.time || '09:30 AM'}</p>
+              <p class="text-[9px] text-amber-700"><i class="fa-solid fa-location-dot mr-0.5"></i> ${eventData.room || 'Exam Hall'}</p>
+              <div class="w-full bg-amber-200/90 border border-amber-300/80 rounded-full h-1.5 overflow-hidden relative shadow-2xs">
+                <div class="h-full rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 animate-timeline-fill timeline-shimmer shadow-xs" style="--fill-width: ${metrics.progress}%; width: ${metrics.progress}%;"></div>
+              </div>
+              <div class="flex justify-between items-center text-[7px] text-amber-800 font-bold leading-none mt-0.5">
+                <span>${metrics.startTime}</span>
+                <span class="text-[6.5px] bg-amber-200/70 text-amber-900 font-black px-1 rounded">${metrics.timeRemainingText}</span>
+                <span>${metrics.deadline}</span>
+              </div>
+            </div>
+          `;
+        } else if (eventData.type === 'task') {
+          const metrics = getEventProgressMetrics(eventData);
+          const taskCard = document.createElement('div');
+          taskCard.className = "bg-white border border-purple-200 border-l-[3px] border-l-purple-600 rounded-lg p-1.5 space-y-1 shadow-2xs";
+          taskCard.innerHTML = `
+            <div class="flex items-center justify-between gap-1">
+              <span class="text-[8px] bg-purple-100 text-purple-800 font-bold px-1 rounded uppercase truncate">${eventData.subject || 'Task'}</span>
+              <span class="text-[7.5px] ${metrics.progress >= 100 ? 'bg-emerald-100 text-emerald-800' : 'bg-purple-100 text-purple-700'} font-black px-1.5 py-0.2 rounded">${metrics.progress >= 100 ? 'Done' : metrics.progress + '%'}</span>
+            </div>
+            <p class="text-[10px] font-extrabold text-slate-900 leading-tight">${eventData.title}</p>
+            <div class="text-[8.5px] text-purple-700 font-semibold flex items-center gap-1">
+              <i class="fa-regular fa-clock text-[7.5px]"></i>
+              <span>${eventData.time}</span>
+            </div>
+            <div class="w-full bg-purple-100 border border-purple-200/80 rounded-full h-1.5 overflow-hidden relative shadow-2xs">
+              <div class="h-full rounded-full bg-gradient-to-r from-purple-600 via-indigo-600 to-fuchsia-500 animate-timeline-fill timeline-shimmer shadow-xs" style="--fill-width: ${metrics.progress}%; width: ${metrics.progress}%;"></div>
+            </div>
+            <div class="flex justify-between items-center text-[7px] text-purple-700 font-bold leading-none mt-0.5">
+              <span>${metrics.startTime}</span>
+              <span class="text-[6.5px] bg-purple-100 text-purple-900 font-black px-1 rounded">${metrics.timeRemainingText}</span>
+              <span>${metrics.deadline}</span>
+            </div>
+          `;
+          bodyContent.appendChild(taskCard);
+
+          if (Array.isArray(eventData.items)) {
+            eventData.items.forEach(cls => {
+              const card = document.createElement('div');
+              card.className = "border border-l-[3px] border-l-slate-300 bg-white border-slate-200 rounded-lg p-1 text-[10px] space-y-0.5 shadow-2xs opacity-80";
+              card.innerHTML = `
+                <div class="flex items-center justify-between font-bold text-slate-800 truncate">${cls.code}</div>
+                <div class="text-[8px] text-slate-400">${cls.time.split('-')[0].trim()} • ${cls.room}</div>
+              `;
+              bodyContent.appendChild(card);
+            });
+          }
+        } else if (eventData.type === 'classes' && Array.isArray(eventData.items)) {
+          eventData.items.forEach((cls, idx) => {
+            const card = document.createElement('div');
+            
+            let leftBorder = 'border-l-slate-300 bg-white border-slate-200';
+            let batchStatusBadge = '';
+
+            if (isToday) {
+              if (idx === 0) {
+                leftBorder = 'border-l-emerald-500 bg-emerald-50/30 border-slate-200';
+                batchStatusBadge = `<span class="text-[7.5px] bg-emerald-100 text-emerald-800 px-1 py-0.2 rounded font-bold flex items-center gap-0.5"><i class="fa-solid fa-check text-[6px]"></i> Done</span>`;
+              } else if (idx === 1) {
+                leftBorder = 'border-l-blue-600 bg-blue-50/40 border-blue-200 ring-1 ring-blue-300';
+                batchStatusBadge = `<span class="text-[7.5px] bg-blue-600 text-white px-1.5 py-0.2 rounded font-bold">Active</span>`;
+              } else {
+                leftBorder = 'border-l-blue-600 bg-blue-50/30 border-blue-300';
+                batchStatusBadge = `<span class="text-[7.5px] bg-blue-600 text-white px-1.5 py-0.2 rounded-full font-extrabold flex items-center gap-0.5 shadow-2xs"><i class="fa-solid fa-video text-[5.5px]"></i> Join class</span>`;
+              }
+            } else if (isClassesCompleted) {
+              leftBorder = 'border-l-emerald-500 bg-white border-slate-200';
+            } else if (isClassesUpcoming) {
+              leftBorder = 'border-l-blue-500 bg-white border-slate-200';
+            }
+
+            card.className = `border border-l-[3px] ${leftBorder} rounded-lg p-1.5 text-[11px] space-y-0.5 transition shadow-2xs hover:shadow-xs hover:border-blue-300 cursor-pointer group`;
+            card.title = `Click to open Class Recordings for ${cls.code}`;
+            card.addEventListener('click', (e) => {
+              e.stopPropagation();
+              window.location.href = 'Class_recordings.html';
+            });
+            card.innerHTML = `
+              <div class="flex items-center justify-between gap-1">
+                <span class="font-extrabold text-slate-900 group-hover:text-blue-600 transition tracking-tight text-[11px] truncate flex items-center gap-1">
+                  ${cls.code}
+                  <i class="fa-solid fa-video text-[7.5px] text-blue-500 opacity-60 group-hover:opacity-100 transition"></i>
+                </span>
+                ${batchStatusBadge}
+              </div>
+              <div class="text-[9.5px] text-slate-500 font-semibold flex items-center gap-1">
+                <i class="fa-regular fa-clock text-[8px] text-slate-400"></i>
+                <span>${cls.time.split('-')[0].trim()}</span>
+              </div>
+              <div class="text-[9px] text-slate-600 truncate flex items-center gap-1">
+                <i class="fa-regular fa-user text-[7.5px] text-slate-400"></i>
+                <span class="truncate">${cls.instructor}</span>
+              </div>
+              <div class="text-[8.5px] text-slate-400 truncate flex items-center gap-1">
+                <i class="fa-solid fa-location-dot text-[7.5px] text-slate-400"></i>
+                <span class="truncate">${cls.room}</span>
+              </div>
+            `;
+            bodyContent.appendChild(card);
+          });
+        }
+
+        col.appendChild(bodyContent);
+
+        // Click handler to select this day
+        const currentTargetDay = dayNum;
+        col.addEventListener('click', () => {
+          selectedDay = currentTargetDay;
+          renderMainView();
+        });
+
+        gridContainer.appendChild(col);
+      }
+
+      trackWrapper.appendChild(gridContainer);
+      weekGrid.appendChild(trackWrapper);
+
+      // Auto-scroll track smoothly to center the selected day
+      setTimeout(() => {
+        const selectedEl = gridContainer.querySelector('.is-selected-day');
+        if (selectedEl && trackWrapper) {
+          const scrollLeftPos = selectedEl.offsetLeft - (trackWrapper.clientWidth / 2) + (selectedEl.clientWidth / 2);
+          trackWrapper.scrollTo({ left: Math.max(0, scrollLeftPos), behavior: 'smooth' });
+        }
+      }, 60);
+    }
+
+    function renderListView() {
+      if (!listGrid) return;
+      listGrid.innerHTML = '';
+
+      const daysInCurrentMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      const monthLabel = monthNames[currentMonth];
+
+      const itemsWrapper = document.createElement('div');
+      itemsWrapper.className = "space-y-2.5 max-h-[420px] overflow-y-auto no-scrollbar scroll-smooth pr-1";
+      itemsWrapper.id = "listScrollWrapper";
+
+      for (let day = 1; day <= daysInCurrentMonth; day++) {
+        const d = new Date(currentYear, currentMonth, day);
+        const dayOfWeek = d.getDay();
+        const dayName = getDayOfWeekName(currentYear, currentMonth, day);
+        const dayNameShort = getDayOfWeekShort(currentYear, currentMonth, day);
+        const isToday = (currentYear === 2026 && currentMonth === 8 && day === 29);
+        const isSelected = (day === selectedDay);
+        const eventData = getEventsForDate(currentYear, currentMonth, day);
+
+        const row = document.createElement('div');
+        let rowBorder = isSelected ? "border-blue-500 ring-2 ring-blue-500/80 bg-blue-50/40 is-selected-row" : "border-slate-200 bg-white hover:border-blue-300";
+        if (eventData && eventData.type === 'holiday' && !isSelected) {
+          rowBorder = "border-red-200 bg-red-50/40 hover:bg-red-50";
+        } else if (eventData && eventData.type === 'exam' && !isSelected) {
+          rowBorder = "border-amber-200 bg-amber-50/40 hover:bg-amber-50";
+        } else if (eventData && eventData.type === 'task' && !isSelected) {
+          rowBorder = "border-purple-200 bg-purple-50/40 hover:bg-purple-50/70";
+        }
+
+        row.className = `border rounded-xl p-3 flex flex-col md:flex-row md:items-center justify-between gap-3 cursor-pointer transition shadow-2xs ${rowBorder}`;
+        if (isSelected) {
+          row.classList.add('is-selected-row');
+        }
+
+        // Left: Date Badge
+        const dateBadge = document.createElement('div');
+        dateBadge.className = "flex items-center gap-3 min-w-[170px]";
+
+        let badgeDateNumberColor = isToday ? "text-blue-600 font-black" : "text-slate-800 font-extrabold";
+        let todayBadgePill = isToday ? `<span class="text-[9px] bg-blue-600 text-white px-2 py-0.5 rounded-full font-bold shadow-2xs">Today</span>` : '';
+
+        dateBadge.innerHTML = `
+          <div class="w-10 h-10 rounded-xl ${isToday ? 'bg-blue-50 border border-blue-200' : 'bg-slate-100 border border-slate-200'} flex flex-col items-center justify-center flex-shrink-0">
+            <span class="text-[9px] font-bold text-slate-500 uppercase">${dayNameShort}</span>
+            <span class="text-sm ${badgeDateNumberColor}">${day}</span>
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-xs font-bold text-slate-800">${dayName}</span>
+              ${todayBadgePill}
+            </div>
+            <span class="text-[11px] text-slate-400 font-medium">${day} ${monthLabel} ${currentYear}</span>
+          </div>
+        `;
+        row.appendChild(dateBadge);
+
+        // Center / Right: Event Content
+        const eventContent = document.createElement('div');
+        eventContent.className = "flex-1 flex flex-wrap items-center gap-2 justify-between";
+
+        if (!eventData) {
+          eventContent.innerHTML = `
+            <div class="text-xs text-slate-400 italic flex items-center gap-1.5">
+              <i class="fa-regular fa-calendar-xmark text-slate-300"></i>
+              <span>No scheduled classes / Sunday</span>
+            </div>
+          `;
+        } else if (eventData.type === 'holiday') {
+          eventContent.innerHTML = `
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="text-[10px] bg-red-600 text-white px-2.5 py-0.5 rounded-full font-bold uppercase tracking-tight shadow-2xs flex items-center gap-1">
+                <i class="fa-solid fa-umbrella-beach text-[9px]"></i> Holiday
+              </span>
+              <span class="text-xs font-bold text-red-800">${eventData.title}</span>
+              <span class="text-[11px] text-slate-500">• ${eventData.note || 'Campus Closed'}</span>
+            </div>
+          `;
+        } else if (eventData.type === 'exam') {
+          const metrics = getEventProgressMetrics(eventData);
+          eventContent.innerHTML = `
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="text-[10px] bg-amber-500 text-white px-2.5 py-0.5 rounded-full font-bold uppercase tracking-tight shadow-2xs flex items-center gap-1">
+                <i class="fa-solid fa-graduation-cap text-[9px]"></i> EXAM
+              </span>
+              <span class="text-xs font-bold text-amber-900">${eventData.code || eventData.title}</span>
+              <span class="text-[11px] text-slate-600 font-medium">• ${eventData.time || '09:30 AM'} • ${eventData.room || 'Exam Hall'}</span>
+            </div>
+            <div class="flex items-center gap-2 min-w-[210px]">
+              <span class="text-[8.5px] font-bold text-amber-700 flex-shrink-0">${metrics.startTime}</span>
+              <div class="flex-1 min-w-[70px] bg-amber-100 border border-amber-200 rounded-full h-2 overflow-hidden relative">
+                <div class="h-full rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 animate-timeline-fill timeline-shimmer shadow-xs" style="--fill-width: ${metrics.progress}%; width: ${metrics.progress}%;"></div>
+              </div>
+              <span class="text-[8.5px] font-bold text-amber-700 flex-shrink-0">${metrics.deadline}</span>
+              <span class="text-[7.5px] ${metrics.progress >= 100 ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-900'} font-extrabold px-1.5 py-0.5 rounded-full flex-shrink-0">${metrics.timeRemainingText} (${metrics.progress}%)</span>
+            </div>
+          `;
+        } else if (eventData.type === 'task') {
+          const metrics = getEventProgressMetrics(eventData);
+          eventContent.innerHTML = `
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="text-[10px] bg-purple-600 text-white px-2.5 py-0.5 rounded-full font-bold uppercase tracking-tight shadow-2xs flex items-center gap-1">
+                <i class="fa-solid fa-list-check text-[9px]"></i> TASK
+              </span>
+              <span class="text-xs font-black text-purple-950">${eventData.title}</span>
+              <span class="text-[10px] text-purple-700 font-bold bg-purple-100 px-2 py-0.5 rounded-md">• ${eventData.subject} (${eventData.batch.split('•')[0].trim()})</span>
+            </div>
+            <div class="flex items-center gap-2 min-w-[210px]">
+              <span class="text-[8.5px] font-bold text-purple-700 flex-shrink-0">${metrics.startTime}</span>
+              <div class="flex-1 min-w-[70px] bg-purple-100 border border-purple-200 rounded-full h-2 overflow-hidden relative">
+                <div class="h-full rounded-full bg-gradient-to-r from-purple-600 via-indigo-600 to-fuchsia-500 animate-timeline-fill timeline-shimmer shadow-xs" style="--fill-width: ${metrics.progress}%; width: ${metrics.progress}%;"></div>
+              </div>
+              <span class="text-[8.5px] font-bold text-purple-700 flex-shrink-0">${metrics.deadline}</span>
+              <span class="text-[7.5px] ${metrics.progress >= 100 ? 'bg-emerald-100 text-emerald-800' : 'bg-purple-200/80 text-purple-900'} font-extrabold px-1.5 py-0.5 rounded-full flex-shrink-0">${metrics.timeRemainingText} (${metrics.progress}%)</span>
+            </div>
+          `;
+        } else if (eventData.type === 'classes' && Array.isArray(eventData.items)) {
+          const isCompleted = eventData.status === 'completed';
+          const statusBadge = isCompleted 
+            ? `<span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full flex items-center gap-1"><i class="fa-solid fa-check text-[9px]"></i> Completed</span>`
+            : `<span class="text-[10px] bg-blue-100 text-blue-800 font-bold px-2 py-0.5 rounded-full flex items-center gap-1"><i class="fa-regular fa-clock text-[9px]"></i> Upcoming</span>`;
+
+          const classPills = eventData.items.map(cls => `
+            <a href="Class_recordings.html" onclick="event.stopPropagation();" class="bg-slate-50 hover:bg-blue-50 hover:border-blue-300 border border-slate-200 px-2 py-1 rounded-md text-[11px] flex items-center gap-1.5 transition text-inherit no-underline group cursor-pointer" title="Click to open Class Recordings for ${cls.code}">
+              <span class="font-bold text-slate-800 group-hover:text-blue-600 transition">${cls.code}</span>
+              <span class="text-slate-400 text-[10px] font-medium">(${cls.time})</span>
+              <i class="fa-solid fa-video text-[8.5px] text-blue-500 opacity-60 group-hover:opacity-100 transition"></i>
+            </a>
+          `).join('');
+
+          eventContent.innerHTML = `
+            <div class="flex flex-wrap items-center gap-2">
+              ${statusBadge}
+              <div class="flex flex-wrap items-center gap-1.5">
+                ${classPills}
+              </div>
+            </div>
+          `;
+        }
+        row.appendChild(eventContent);
+
+        // Click Handler
+        const currentDayNum = day;
+        row.addEventListener('click', () => {
+          selectedDay = currentDayNum;
+          renderMainView();
+        });
+
+        itemsWrapper.appendChild(row);
+      }
+
+      listGrid.appendChild(itemsWrapper);
+
+      // Auto-scroll vertically inside list container to center selected day
+      setTimeout(() => {
+        const selectedRow = itemsWrapper.querySelector('.is-selected-row');
+        if (selectedRow && itemsWrapper) {
+          const topPos = selectedRow.offsetTop - (itemsWrapper.clientHeight / 2) + (selectedRow.clientHeight / 2);
+          itemsWrapper.scrollTo({ top: Math.max(0, topPos), behavior: 'smooth' });
+        }
+      }, 50);
+    }
+
+    function renderRightPanel() {
+      if (!scheduleContainer || !selectedDateTitle) return;
+
+      const weekday = getDayOfWeekName(currentYear, currentMonth, selectedDay);
+      const monthLabel = monthNames[currentMonth];
+      selectedDateTitle.textContent = `${weekday}, ${selectedDay} ${monthLabel} ${currentYear}`;
+
+      scheduleContainer.innerHTML = '';
+      const eventData = getEventsForDate(currentYear, currentMonth, selectedDay);
+
+      if (!eventData) {
+        scheduleContainer.innerHTML = `
+          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-8 text-center shadow-xs flex flex-col items-center justify-center min-h-[240px]">
+            <div class="w-14 h-14 rounded-full bg-slate-200/80 text-slate-400 flex items-center justify-center mb-3">
+              <i class="fa-regular fa-calendar-xmark text-xl"></i>
+            </div>
+            <p class="text-sm font-black text-slate-800">No classes scheduled</p>
+            <p class="text-xs text-slate-500 mt-1 max-w-[240px]">Enjoy your study break or prepare upcoming assignments and tasks.</p>
+          </div>
+        `;
+        return;
+      }
+
+      if (eventData.type === 'holiday') {
+        scheduleContainer.innerHTML = `
+          <div class="bg-[#fef2f2] border border-red-200 rounded-2xl p-5 space-y-2">
+            <div class="flex items-center gap-2 text-red-600 font-extrabold text-xs uppercase tracking-wider">
+              <i class="fa-solid fa-umbrella-beach"></i>
+              <span>Official Holiday</span>
+            </div>
+            <h4 class="text-base font-black text-slate-900">${eventData.title}</h4>
+            <p class="text-xs text-slate-600 leading-relaxed">${eventData.note || 'College campus closed for students & staff.'}</p>
+          </div>
+        `;
+        return;
+      }
+
+      if (eventData.type === 'exam') {
+        const examMetrics = getEventProgressMetrics(eventData);
+        scheduleContainer.innerHTML = `
+          <div class="space-y-2.5">
+            <div class="bg-[#fffbeb] border border-amber-300 rounded-xl p-3.5 space-y-2.5 shadow-xs">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5 text-amber-800 font-black text-[11px] uppercase tracking-wider">
+                  <i class="fa-solid fa-graduation-cap text-amber-600 text-xs"></i>
+                  <span>EXAM SCHEDULE</span>
+                </div>
+                <span class="text-[10px] ${eventData.status === 'completed' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-500 text-white'} font-bold px-2 py-0.5 rounded-full">${eventData.status === 'completed' ? '✓ Completed' : 'Upcoming'}</span>
+              </div>
+              
+              <div>
+                <h4 class="text-sm font-black text-slate-900 leading-snug">${eventData.code || eventData.title}</h4>
+                <p class="text-[11px] text-amber-800 font-semibold mt-0.5">${eventData.title}</p>
+              </div>
+
+              <div class="bg-white border border-amber-200 rounded-lg p-2.5 space-y-1.5 shadow-2xs text-xs">
+                <div class="flex items-center gap-2 text-slate-700">
+                  <i class="fa-solid fa-building-columns text-amber-600 w-3.5 text-center text-xs"></i>
+                  <span class="text-[11px]"><strong class="text-slate-900 font-bold">Venue:</strong> ${eventData.room || 'Examination Hall'}</span>
+                </div>
+                <div class="flex items-center gap-2 text-slate-700 pt-1 border-t border-slate-100">
+                  <i class="fa-regular fa-clock text-amber-600 w-3.5 text-center text-xs"></i>
+                  <span class="text-[11px]"><strong class="text-slate-900 font-bold">Window:</strong> ${examMetrics.startTime} — ${examMetrics.deadline}</span>
+                </div>
+              </div>
+
+              <!-- Animated Dynamic Timeline Progress Bar -->
+              <div class="bg-white border border-amber-200 rounded-lg p-2.5 space-y-1.5 shadow-2xs">
+                <div class="flex items-center justify-between text-[11px] font-bold">
+                  <span class="text-slate-700 flex items-center gap-1.5"><i class="fa-solid fa-hourglass-half text-amber-600"></i> Exam Timeline</span>
+                  <span class="text-[10px] bg-amber-100 text-amber-900 font-black px-1.5 py-0.2 rounded">${examMetrics.progress}%</span>
+                </div>
+                <div class="w-full bg-slate-100 border border-amber-100 rounded-full h-2 overflow-hidden relative p-[1px]">
+                  <div class="h-full rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 animate-timeline-fill timeline-shimmer shadow-xs" style="--fill-width: ${examMetrics.progress}%; width: ${examMetrics.progress}%;"></div>
+                </div>
+                <div class="flex justify-between items-center text-[9px] text-slate-500 font-bold">
+                  <span>Start: ${examMetrics.startTime}</span>
+                  <span class="text-amber-800 font-black bg-amber-100/90 px-1.5 py-0.2 rounded-full shadow-2xs flex items-center gap-0.5">
+                    <i class="fa-solid fa-bolt text-amber-600 text-[8px]"></i> ${examMetrics.timeRemainingText}
+                  </span>
+                  <span>End: ${examMetrics.deadline}</span>
+                </div>
+              </div>
+
+              <a href="assessments.html" class="w-full py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs rounded-lg flex items-center justify-center gap-1.5 transition shadow-xs">
+                <i class="fa-solid fa-file-lines text-[11px]"></i> View Exam Guidelines
+              </a>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      if (eventData.type === 'task') {
+        const isCompleted = eventData.status === 'completed';
+        const taskMetrics = getEventProgressMetrics(eventData);
+        
+        let classesSectionHtml = '';
+        if (Array.isArray(eventData.items) && eventData.items.length > 0) {
+          const isDayCompleted = eventData.status === 'completed';
+          const classCards = eventData.items.map(cls => {
+            const leftBorder = isDayCompleted ? 'border-l-emerald-500 bg-emerald-50/15 border-emerald-200/60' : 'border-l-purple-500 bg-white border-slate-200';
+            const badgeClass = isDayCompleted ? 'text-emerald-800 bg-emerald-100 font-bold' : 'text-slate-600 bg-slate-100 font-bold';
+            const icon = isDayCompleted ? '<i class="fa-solid fa-check text-emerald-600 text-[8px] mr-1"></i>' : '<i class="fa-regular fa-clock text-slate-400 text-[8px] mr-1"></i>';
+            return `
+            <a href="Class_recordings.html" class="block bg-white border border-l-4 ${leftBorder} rounded-lg p-2 space-y-1 shadow-2xs hover:shadow-xs hover:border-slate-300 transition cursor-pointer group text-inherit no-underline" title="Click to view Class Recordings for ${cls.code}">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-black text-slate-900 group-hover:text-blue-600 transition flex items-center gap-1">
+                  ${cls.code}
+                  <i class="fa-solid fa-video text-[9px] text-blue-500 opacity-60 group-hover:opacity-100 transition"></i>
+                </span>
+                <span class="text-[10px] ${badgeClass} px-1.5 py-0.2 rounded flex items-center">
+                  ${icon}${cls.time}
+                </span>
+              </div>
+              <div class="text-[10px] text-slate-500 flex items-center justify-between pt-0.5 border-t border-slate-100">
+                <span><i class="fa-regular fa-user text-slate-400 mr-1"></i>${cls.instructor}</span>
+                <span class="font-bold text-slate-700"><i class="fa-solid fa-location-dot text-slate-400 mr-1"></i>${cls.room}</span>
+              </div>
+            </a>
+          `;
+          }).join('');
+
+          classesSectionHtml = `
+            <div class="pt-1.5 border-t border-slate-200 space-y-1.5">
+              <h5 class="text-[10.5px] font-black text-slate-700 uppercase tracking-wider">Scheduled Batch Classes</h5>
+              <div class="space-y-1.5 max-h-[140px] overflow-y-auto no-scrollbar">
+                ${classCards}
+              </div>
+            </div>
+          `;
+        }
+
+        scheduleContainer.innerHTML = `
+          <div class="space-y-2.5">
+            <!-- Task Header & Details Card -->
+            <div class="bg-purple-50/80 border border-purple-200 rounded-xl p-3.5 space-y-2.5 shadow-xs">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] bg-purple-600 text-white font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1 shadow-2xs">
+                  <i class="fa-solid fa-list-check text-[9px]"></i> TASK DUE
+                </span>
+                <span class="text-[10px] ${isCompleted ? 'bg-emerald-100 text-emerald-800' : 'bg-purple-100 text-purple-700 animate-pulse'} font-bold px-2 py-0.5 rounded-full">
+                  ${isCompleted ? '✓ Completed' : '● In Progress'}
+                </span>
+              </div>
+
+              <div>
+                <h4 class="text-sm font-black text-slate-900 leading-snug">${eventData.title}</h4>
+                <p class="text-[11px] text-purple-700 font-bold mt-0.5">${eventData.code}</p>
+              </div>
+
+              <!-- Subject & Batch Details -->
+              <div class="bg-white border border-purple-100 rounded-lg p-2.5 space-y-1.5 shadow-2xs text-xs">
+                <div class="flex items-center gap-2 text-slate-700">
+                  <i class="fa-solid fa-graduation-cap text-purple-600 w-3.5 text-center text-xs"></i>
+                  <div>
+                    <span class="text-[9px] font-bold uppercase text-slate-400 block leading-none">Subject / Batch</span>
+                    <span class="font-bold text-slate-900 text-[11px]">${eventData.subject} • ${eventData.batch}</span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2 text-slate-700 pt-1.5 border-t border-slate-100">
+                  <i class="fa-regular fa-clock text-purple-600 w-3.5 text-center text-xs"></i>
+                  <div>
+                    <span class="text-[9px] font-bold uppercase text-slate-400 block leading-none">Timings & Deadline</span>
+                    <span class="font-bold text-slate-900 text-[11px]">${taskMetrics.startTime} — ${taskMetrics.deadline}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Animated Horizontal Dynamic Timeline Progress Bar -->
+              <div class="bg-white border border-purple-100 rounded-lg p-2.5 space-y-1.5 shadow-2xs">
+                <div class="flex items-center justify-between text-[11px] font-bold">
+                  <span class="text-slate-700 flex items-center gap-1"><i class="fa-solid fa-hourglass-half text-purple-600"></i> Time Elapsed</span>
+                  <span class="text-[10px] bg-purple-100 text-purple-900 font-black px-1.5 py-0.2 rounded">${taskMetrics.progress}%</span>
+                </div>
+                <div class="w-full bg-slate-100 border border-purple-100 rounded-full h-2 overflow-hidden relative p-[1px]">
+                  <div class="h-full rounded-full bg-gradient-to-r from-purple-600 via-indigo-600 to-fuchsia-500 animate-timeline-fill timeline-shimmer shadow-xs" style="--fill-width: ${taskMetrics.progress}%; width: ${taskMetrics.progress}%;"></div>
+                </div>
+                <div class="flex justify-between items-center text-[9px] text-slate-500 font-bold">
+                  <span>Start: ${taskMetrics.startTime}</span>
+                  <span class="text-purple-800 font-black bg-purple-100/90 px-1.5 py-0.2 rounded-full shadow-2xs flex items-center gap-0.5">
+                    <i class="fa-solid fa-bolt text-purple-600 text-[8px]"></i> ${taskMetrics.timeRemainingText}
+                  </span>
+                  <span>Due: ${taskMetrics.deadline}</span>
+                </div>
+              </div>
+
+              ${eventData.note ? `
+                <div class="text-[11px] text-slate-700 bg-purple-100/60 border border-purple-200/80 rounded-lg p-2.5 font-medium leading-relaxed">
+                  <i class="fa-solid fa-circle-info text-purple-600 mr-1"></i> ${eventData.note}
+                </div>
+              ` : ''}
+
+              <a href="assessments.html" class="w-full py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-lg flex items-center justify-center gap-1.5 transition shadow-xs cursor-pointer">
+                <i class="fa-solid fa-arrow-up-right-from-square text-[11px]"></i> View in Assessments Portal
+              </a>
+            </div>
+
+            ${classesSectionHtml}
+          </div>
+        `;
+        return;
+      }
+
+      if (Array.isArray(eventData.items) && eventData.items.length > 0) {
+        const isToday = (currentYear === 2026 && currentMonth === 8 && selectedDay === 29);
+        const isCompletedDay = (eventData.status === 'completed');
+        const totalCount = eventData.items.length;
+        
+        const statusHeaderHtml = `
+          <div class="${isCompletedDay ? 'bg-emerald-50/80 border-emerald-200/70 text-emerald-800' : 'bg-blue-50/80 border-blue-200/70 text-blue-800'} border rounded-xl px-3 py-1.5 flex items-center justify-between text-xs font-bold">
+            <span class="flex items-center gap-1.5">
+              <i class="${isCompletedDay ? 'fa-solid fa-check-double text-emerald-600' : 'fa-regular fa-clock text-blue-600'} text-[11px]"></i>
+              ${isToday ? "Today's Schedule" : (isCompletedDay ? "Completed Classes" : "Upcoming Classes")}
+            </span>
+            <span class="${isCompletedDay ? 'bg-emerald-200/70 text-emerald-900' : 'bg-blue-200/70 text-blue-900'} text-[10px] px-2 py-0.5 rounded-full font-extrabold">${totalCount} classes</span>
+          </div>
+        `;
+
+        const classCardsHtml = eventData.items.map((cls, idx) => {
+          let leftBorder = 'border-l-indigo-600';
+          let timeBadge = `<span class="text-[11px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md flex items-center gap-1"><i class="fa-regular fa-clock text-slate-400 text-[10px]"></i> ${cls.time}</span>`;
+
+          if (isCompletedDay) {
+            // All classes on a completed day get a green border
+            leftBorder = 'border-l-emerald-500 bg-emerald-50/15 border-emerald-200/60';
+            timeBadge = `<span class="text-[11px] font-bold text-emerald-800 bg-emerald-100/80 px-2 py-0.5 rounded-md flex items-center gap-1"><i class="fa-solid fa-check text-emerald-600 text-[9px]"></i> ${cls.time}</span>`;
+          } else if (isToday) {
+            if (idx === 0) {
+              // 1st class completed today -> Green border
+              leftBorder = 'border-l-emerald-500 bg-emerald-50/15 border-emerald-200/60';
+              timeBadge = `<span class="text-[11px] font-bold text-emerald-800 bg-emerald-100/80 px-2 py-0.5 rounded-md flex items-center gap-1"><i class="fa-solid fa-check text-emerald-600 text-[9px]"></i> Completed</span>`;
+            } else if (idx === 1) {
+              // 2nd class active -> Blue border
+              leftBorder = 'border-l-blue-600 bg-blue-50/30 border-blue-300 ring-1 ring-blue-300';
+              timeBadge = `<span class="text-[11px] font-bold text-white bg-blue-600 px-2.5 py-0.5 rounded-md flex items-center gap-1 shadow-2xs"><i class="fa-solid fa-play text-[8px]"></i> Active</span>`;
+            } else {
+              // Upcoming class on Today -> Join class button pill
+              leftBorder = 'border-l-blue-600 bg-blue-50/15 border-blue-200/80';
+              timeBadge = `<span class="text-[11px] font-extrabold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 px-3 py-1 rounded-full flex items-center gap-1 shadow-xs transition hover:scale-105"><i class="fa-solid fa-video text-[8.5px]"></i> Join class</span>`;
+            }
+          } else {
+            leftBorder = cls.border || 'border-l-blue-500';
+          }
+
+          return `
+          <a href="Class_recordings.html" class="block bg-white border border-slate-200 hover:border-blue-400 border-l-[4px] ${leftBorder} rounded-xl p-3 space-y-1.5 shadow-2xs hover:shadow-md hover:-translate-y-0.5 transition cursor-pointer group text-inherit no-underline" title="Click to open Class Recordings for ${cls.code}">
+            <div class="flex items-center justify-between">
+              <h4 class="text-xs font-black text-slate-900 group-hover:text-blue-600 transition tracking-tight flex items-center gap-1.5">
+                ${cls.code}
+                <i class="fa-solid fa-video text-[10px] text-blue-500 opacity-60 group-hover:opacity-100 transition"></i>
+              </h4>
+              ${timeBadge}
+            </div>
+            ${cls.name ? `<p class="text-[11px] font-semibold text-slate-600">${cls.name}</p>` : ''}
+            <div class="flex items-center justify-between text-[11px] text-slate-500 pt-1 border-t border-slate-100">
+              <span class="flex items-center gap-1 font-medium"><i class="fa-regular fa-user text-slate-400 text-[10px]"></i> ${cls.instructor}</span>
+              <span class="font-bold text-slate-700 flex items-center gap-1"><i class="fa-solid fa-location-dot text-slate-400 text-[10px]"></i> ${cls.room}</span>
+            </div>
+          </a>
+        `;
+        }).join('');
+
+        scheduleContainer.innerHTML = `
+          <div class="space-y-2.5">
+            ${statusHeaderHtml}
+            ${classCardsHtml}
+          </div>
+        `;
+      } else {
+        scheduleContainer.innerHTML = `
+          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-8 text-center shadow-xs flex flex-col items-center justify-center min-h-[240px]">
+            <div class="w-14 h-14 rounded-full bg-slate-200/80 text-slate-400 flex items-center justify-center mb-3">
+              <i class="fa-regular fa-calendar-xmark text-xl"></i>
+            </div>
+            <p class="text-sm font-black text-slate-800">No classes scheduled</p>
+            <p class="text-xs text-slate-500 mt-1 max-w-[240px]">Enjoy your study break or prepare upcoming assignments and tasks.</p>
+          </div>
+        `;
+      }
+    }
+
+    if (monthSelect) {
+      monthSelect.addEventListener('change', (e) => {
+        setMonthAndYear(e.target.value, yearSelect ? yearSelect.value : 2026);
+      });
+    }
+
+    if (yearSelect) {
+      yearSelect.addEventListener('change', (e) => {
+        setMonthAndYear(monthSelect ? monthSelect.value : 8, e.target.value);
+      });
+    }
+
+    document.getElementById('prevMonthBtn')?.addEventListener('click', () => {
+      if (currentView === 'week') {
+        const prevWeekDate = new Date(currentYear, currentMonth, selectedDay - 7);
+        setMonthAndYear(prevWeekDate.getMonth(), prevWeekDate.getFullYear(), prevWeekDate.getDate());
+      } else {
+        if (currentMonth === 0) {
+          currentMonth = 11;
+          currentYear--;
+        } else {
+          currentMonth--;
+        }
+        setMonthAndYear(currentMonth, currentYear);
+      }
+    });
+
+    document.getElementById('nextMonthBtn')?.addEventListener('click', () => {
+      if (currentView === 'week') {
+        const nextWeekDate = new Date(currentYear, currentMonth, selectedDay + 7);
+        setMonthAndYear(nextWeekDate.getMonth(), nextWeekDate.getFullYear(), nextWeekDate.getDate());
+      } else {
+        if (currentMonth === 11) {
+          currentMonth = 0;
+          currentYear++;
+        } else {
+          currentMonth++;
+        }
+        setMonthAndYear(currentMonth, currentYear);
+      }
+    });
+
+    document.getElementById('prevDayBtn')?.addEventListener('click', () => {
+      if (selectedDay > 1) {
+        selectedDay--;
+        renderMainView();
+      } else {
+        if (currentMonth === 0) {
+          currentMonth = 11;
+          currentYear--;
+        } else {
+          currentMonth--;
+        }
+        const daysInPrev = new Date(currentYear, currentMonth + 1, 0).getDate();
+        selectedDay = daysInPrev;
+        setMonthAndYear(currentMonth, currentYear, selectedDay);
+      }
+    });
+
+    document.getElementById('nextDayBtn')?.addEventListener('click', () => {
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      if (selectedDay < daysInMonth) {
+        selectedDay++;
+        renderMainView();
+      } else {
+        if (currentMonth === 11) {
+          currentMonth = 0;
+          currentYear++;
+        } else {
+          currentMonth++;
+        }
+        selectedDay = 1;
+        setMonthAndYear(currentMonth, currentYear, selectedDay);
+      }
+    });
+
+    function goToToday() {
+      selectedDay = 29;
+      setMonthAndYear(8, 2026, 29);
+    }
+
+    document.getElementById('todayBtn')?.addEventListener('click', goToToday);
+
+    document.getElementById('calendarSearchInput')?.addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      if (!scheduleContainer) return;
+      const cards = scheduleContainer.querySelectorAll('.shadow-2xs');
+      cards.forEach(card => {
+        if (!q || card.textContent.toLowerCase().includes(q)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+
+    // Calendar Sync Dropdown Functions
+    function toggleSyncDropdown(e) {
+      if (e) e.stopPropagation();
+      const menu = document.getElementById('syncCalendarMenu');
+      if (menu) {
+        menu.classList.toggle('hidden');
+      }
+    }
+
+    document.addEventListener('click', (e) => {
+      const wrapper = document.getElementById('syncCalendarDropdownWrapper');
+      const menu = document.getElementById('syncCalendarMenu');
+      if (wrapper && menu && !wrapper.contains(e.target)) {
+        menu.classList.add('hidden');
+      }
+    });
+
+    function downloadICSFile() {
+      const monthLabel = monthNames[currentMonth];
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      
+      let icsContent = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//SETU Academic CampusOS//Timetable//EN',
+        'CALSCALE:GREGORIAN',
+        'METHOD:PUBLISH',
+        `X-WR-CALNAME:SETU Timetable ${monthLabel} ${currentYear}`
+      ];
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const eventData = getEventsForDate(currentYear, currentMonth, day);
+        if (!eventData) continue;
+
+        const mm = String(currentMonth + 1).padStart(2, '0');
+        const dd = String(day).padStart(2, '0');
+        const dateStr = `${currentYear}${mm}${dd}`;
+
+        if (eventData.type === 'holiday') {
+          icsContent.push('BEGIN:VEVENT');
+          icsContent.push(`UID:holiday-${dateStr}@setu.campus`);
+          icsContent.push(`DTSTART;VALUE=DATE:${dateStr}`);
+          icsContent.push(`SUMMARY:Holiday - ${eventData.title}`);
+          icsContent.push(`DESCRIPTION:${eventData.note || 'Campus Closed'}`);
+          icsContent.push('STATUS:CONFIRMED');
+          icsContent.push('END:VEVENT');
+        } else if (eventData.type === 'exam') {
+          icsContent.push('BEGIN:VEVENT');
+          icsContent.push(`UID:exam-${dateStr}@setu.campus`);
+          icsContent.push(`DTSTART:${dateStr}T040000Z`);
+          icsContent.push(`DTEND:${dateStr}T070000Z`);
+          icsContent.push(`SUMMARY:EXAM - ${eventData.code || eventData.title}`);
+          icsContent.push(`LOCATION:${eventData.room || 'Examination Hall'}`);
+          icsContent.push(`DESCRIPTION:Time: ${eventData.time || '09:30 AM'}`);
+          icsContent.push('STATUS:CONFIRMED');
+          icsContent.push('END:VEVENT');
+        } else if (eventData.type === 'classes' && Array.isArray(eventData.items)) {
+          eventData.items.forEach((cls, idx) => {
+            icsContent.push('BEGIN:VEVENT');
+            icsContent.push(`UID:cls-${dateStr}-${idx}@setu.campus`);
+            icsContent.push(`DTSTART:${dateStr}T050000Z`);
+            icsContent.push(`DTEND:${dateStr}T060000Z`);
+            icsContent.push(`SUMMARY:${cls.code} Class`);
+            icsContent.push(`LOCATION:${cls.room}`);
+            icsContent.push(`DESCRIPTION:Faculty: ${cls.instructor} | Timings: ${cls.time}`);
+            icsContent.push('STATUS:CONFIRMED');
+            icsContent.push('END:VEVENT');
+          });
+        }
+      }
+
+      icsContent.push('END:VCALENDAR');
+
+      const blob = new Blob([icsContent.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.setAttribute('download', `SETU_Timetable_${monthLabel}_${currentYear}.ics`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      toggleSyncDropdown();
+      alert(`✓ Downloaded SETU_Timetable_${monthLabel}_${currentYear}.ics! You can open this file to import into Apple Calendar or Outlook.`);
+    }
+
+    function exportToGoogleCalendar() {
+      const monthLabel = monthNames[currentMonth];
+      const title = encodeURIComponent(`SETU Classes - ${monthLabel} ${currentYear}`);
+      const details = encodeURIComponent(`Academic Schedule for Batch 2026.\nClasses: Excel, Statistics, Python, Power BI.`);
+      const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}`;
+      window.open(url, '_blank');
+      toggleSyncDropdown();
+    }
+
+    function exportToOutlookWeb() {
+      const monthLabel = monthNames[currentMonth];
+      const title = encodeURIComponent(`SETU Classes - ${monthLabel} ${currentYear}`);
+      const details = encodeURIComponent(`Academic Schedule for Batch 2026.\nClasses: Excel, Statistics, Python, Power BI.`);
+      const url = `https://outlook.live.com/calendar/0/deeplink/compose?subject=${title}&body=${details}`;
+      window.open(url, '_blank');
+      toggleSyncDropdown();
+    }
+
+    function copyCalendarSubscriptionURL() {
+      const webcalUrl = "webcal://setu.campusos.edu/api/timetable/feed.ics";
+      navigator.clipboard.writeText(webcalUrl).then(() => {
+        alert("✓ Copied WebCal Subscription URL to clipboard!\nPaste into Apple Calendar or Google Calendar subscriptions.");
+      }).catch(() => {
+        prompt("Copy WebCal Feed URL:", webcalUrl);
+      });
+      toggleSyncDropdown();
+    }
+
+    // Initial Execution
+    renderMainView();
+  </script>
+</body>
+</html>

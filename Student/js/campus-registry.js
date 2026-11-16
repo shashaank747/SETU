@@ -1,5 +1,5 @@
 /**
- * SETU AppTechno CampusOS - Central Identity & User Provisioning Registry
+ * SETU CampusOS - Central Identity & User Provisioning Registry
  * 
  * Hierarchy:
  * 1. Admin: Master authority. Has access to everything. ONLY Admin can provision/create basic student & trainer accounts.
@@ -13,7 +13,7 @@
   // Seed data representing initial institutional state
   const INITIAL_SEED_REGISTRY = {
     version: '2.0',
-    institution: 'AppTechno Institute of Technology & Sciences',
+    institution: 'SETU Institute of Technology & Sciences',
     updatedAt: new Date().toISOString(),
     
     // 1. Institutional Administrator (Master Authority)

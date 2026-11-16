@@ -1,5 +1,5 @@
 /**
- * AppTechno CampusOS - ZUNO AI Assistant & 3D Interactive Mascot
+ * SETU CampusOS - ZUNO AI Assistant & 3D Interactive Mascot
  * Features:
  * - 3D Mouse & Physics tracking for miniature mascot in the navbar
  * - Complete knowledge base of all CampusOS modules & features
@@ -368,7 +368,7 @@ document.addEventListener('DOMContentLoaded', () => {
       appendMessage(
         'bot',
         `<p>👥 <strong>Project Contributors</strong>:</p>
-         <p>Discover the talented developers, designers, and engineers behind AppTechno CampusOS!</p>`,
+         <p>Discover the talented developers, designers, and engineers behind SETU CampusOS!</p>`,
         [
           {
             label: '👥 View Contributors Page ➔',

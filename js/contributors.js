@@ -1,5 +1,5 @@
 /**
- * AppTechno CampusOS - Contributors Page Script
+ * SETU CampusOS - Contributors Page Script
  * Interactive filtering, real-time search, and testimonial slider
  */
 

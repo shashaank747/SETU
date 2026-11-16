@@ -1,7 +1,7 @@
-# 📋 Comprehensive Application Report: SETU (AppTechno CampusOS)
+# 📋 Comprehensive Application Report: SETU CampusOS
 **Document Version:** 1.0.0  
 **Author:** Shashaank Sajjanar  
-**Platform:** SETU / AppTechno CampusOS  
+**Platform:** SETU / SETU CampusOS  
 **Scope:** Architecture, Subsystems, Features, Mathematics, and User Flow  
 
 ---
@@ -31,7 +31,7 @@
 
 ## 1. Executive Summary & Product Vision
 
-Legacy campus ERP software is notoriously clunky, visually outdated, slow, and fragmented across disparate portals for attendance, lecture archives, fees, and placement drives. **SETU (AppTechno CampusOS)** is designed from the ground up as a **100% Student-Built**, modern Institute ERP and Learning Management System (LMS).
+Legacy campus ERP software is notoriously clunky, visually outdated, slow, and fragmented across disparate portals for attendance, lecture archives, fees, and placement drives. **SETU CampusOS** is designed from the ground up as a **100% Student-Built**, modern Institute ERP and Learning Management System (LMS).
 
 ### Core Goals:
 1. **Unified Campus Experience**: Integrate student attendance, geofenced perimeter verification, academic timetable, recorded lectures, assignments, and placement preparation into a cohesive environment.
@@ -254,4 +254,4 @@ SETU utilizes a reliable client-side state model:
 
 ---
 
-*Report prepared and generated for SETU (AppTechno CampusOS).*
+*Report prepared and generated for SETU CampusOS.*

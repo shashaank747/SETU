@@ -1,5 +1,5 @@
 /**
- * AppTechno CampusOS - Landing Page Interactivity
+ * SETU CampusOS - Landing Page Interactivity
  */
 
 document.addEventListener('DOMContentLoaded', () => {

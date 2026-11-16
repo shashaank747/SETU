@@ -409,18 +409,18 @@ const StudentProfileDB = {
   face3dKey: 'setu_permanent_3d_face_profile',
 
   defaults: {
-    fullName: 'Shashaank Sajjanar',
-    studentId: '2026-STU',
-    email: 'shashaank.s@campusos.edu',
+    fullName: 'Alex Johnson',
+    studentId: '202604STU00005',
+    email: 'alex.johnson@campusos.edu',
     phone: '+91 98765 43210',
     dob: '2003-08-14',
     gender: 'Male',
     bloodGroup: 'O+',
-    emergencyContact: 'S. Sajjanar (+91 98765 00000)',
+    emergencyContact: 'S. Johnson (+91 98765 00000)',
     department: 'School of Computer Science & Engineering',
-    program: 'B.Tech in Computer Science',
-    semester: '6th Semester B.Tech',
-    batch: 'Batch B-948 (2022 - 2026)',
+    program: 'Full Stack Java Web Dev',
+    semester: '6th Semester',
+    batch: 'Full Stack Java Web Dev',
     avatarUrl: 'images/user-shashaank.png',
     attendanceRate: '94.2% Prime',
     cgpa: '8.92 / 10.0',
@@ -646,7 +646,7 @@ function injectStudentProfileModal() {
           </div>
           <div>
             <h3 class="text-base font-bold text-slate-900 leading-none">Student Profile &amp; Biometrics</h3>
-            <p class="text-[11px] text-slate-500 mt-0.5">AppTechno CampusOS &bull; Institutional Record &amp; 3D Face Biometric Ground Truth</p>
+            <p class="text-[11px] text-slate-500 mt-0.5">SETU CampusOS &bull; Institutional Record &amp; 3D Face Biometric Ground Truth</p>
           </div>
         </div>
         <button type="button" onclick="closeStudentProfileModal()" class="profile-modal-close-btn" aria-label="Close Profile">

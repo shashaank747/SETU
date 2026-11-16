@@ -1,35 +1,37 @@
-# 🎓 SETU — AppTechno CampusOS
-### *Smarter Campuses, Brighter Futures &bull; 100% Student-Built Institute ERP & LMS*
+# 🎓 SETU — SETU CampusOS
 
-[![Status](https://img.shields.io/badge/Status-Active%20Production-00d2ff?style=for-the-badge)](https://github.com/shashaank747)
-[![Platform](https://img.shields.io/badge/Platform-Web%20%7C%20PWA%20Ready-6366f1?style=for-the-badge)](https://github.com/shashaank747)
-[![Tech](https://img.shields.io/badge/Stack-HTML5%20%7C%20Vanilla%20CSS3%20%7C%20ES6%2B%20JS-10b981?style=for-the-badge)](https://github.com/shashaank747)
-[![Styling](https://img.shields.io/badge/UI-Custom%20Glassmorphism%20%2B%20Tailwind%20CSS-f59e0b?style=for-the-badge)](https://github.com/shashaank747)
+### *Smarter Campuses, Brighter Futures &bull; Student-Built Institute ERP & LMS*
+
+[![Status](<https://img.shields.io/badge/Status-Active%20Production-00d2ff?style=for-the-badge>)](https://github.com/shashaank747)
+[![Platform](<https://img.shields.io/badge/Platform-Web%20%7C%20PWA%20Ready-6366f1?style=for-the-badge>)](https://github.com/shashaank747)
+[![Tech](<https://img.shields.io/badge/Stack-HTML5%20%7C%20Vanilla%20CSS3%20%7C%20ES6%2B%20JS-10b981?style=for-the-badge>)](https://github.com/shashaank747)
+[![Styling](<https://img.shields.io/badge/UI-Custom%20Glassmorphism%20%2B%20Tailwind%20CSS-f59e0b?style=for-the-badge>)](https://github.com/shashaank747)
 
 ---
 
 ## 📌 Table of Contents
+
 - [About the Project](#-about-the-project)
-- [Key Highlights & Visual Wow Factors](#-key-highlights--visual-wow-factors)
-- [Application Pages & Modules](#-application-pages--modules)
+- [Key Highlights &amp; Visual Wow Factors](#-key-highlights--visual-wow-factors)
+- [Application Pages &amp; Modules](#-application-pages--modules)
   - [1. Landing Portal (`index.html`)](#1-landing-portal-indexhtml)
   - [2. Interactive Cyber Mascot Login (`login.html`)](#2-interactive-cyber-mascot-login-loginhtml)
   - [3. Modern Campus ERP Dashboard (`dashboard.html`)](#3-modern-campus-erp-dashboard-dashboardhtml)
-  - [4. Classroom & Class Recordings Hub (`Class_recordings.html`)](#4-classroom--class-recordings-hub-class_recordingshtml)
-  - [5. Contributors & Alumni Wall (`contributors.html`)](#5-contributors--alumni-wall-contributorshtml)
+  - [4. Classroom &amp; Class Recordings Hub (`Class_recordings.html`)](#4-classroom--class-recordings-hub-class_recordingshtml)
+  - [5. Contributors &amp; Alumni Wall (`contributors.html`)](#5-contributors--alumni-wall-contributorshtml)
   - [6. ZUNO AI Campus Assistant (`cyberbot.js`)](#6-zuno-ai-campus-assistant-cyberbotjs)
-- [Project Architecture & File Tree](#-project-architecture--file-tree)
+- [Project Architecture &amp; File Tree](#-project-architecture--file-tree)
 - [Technology Stack](#-technology-stack)
-- [Getting Started & Local Setup](#-getting-started--local-setup)
-- [Keyboard Shortcuts & Interactivity](#-keyboard-shortcuts--interactivity)
+- [Getting Started &amp; Local Setup](#-getting-started--local-setup)
+- [Keyboard Shortcuts &amp; Interactivity](#-keyboard-shortcuts--interactivity)
 - [Comprehensive Technical Report](#-comprehensive-technical-report)
-- [Author & Acknowledgements](#-author--acknowledgements)
+- [Author &amp; Acknowledgements](#-author--acknowledgements)
 
 ---
 
 ## 🌟 About the Project
 
-**SETU (AppTechno CampusOS)** is an AI-powered, student-built next-generation Campus Enterprise Resource Planning (ERP) and Learning Management System (LMS). Built to empower 700+ learners and educational institutions across India, SETU replaces clunky, obsolete administrative portals with a sleek, ultra-responsive, cyber-themed interface.
+**SETU CampusOS** is an AI-powered, student-built next-generation Campus Enterprise Resource Planning (ERP) and Learning Management System (LMS). Built to empower 700+ learners and educational institutions across India, SETU replaces clunky, obsolete administrative portals with a sleek, ultra-responsive, cyber-themed interface.
 
 From geofenced biometric punch-in attendance tracking and high-definition classroom recordings to an interactive 3D robot mascot and intelligent AI campus assistant, SETU bridges the gap between academic administration and modern digital student life.
 
@@ -56,7 +58,9 @@ From geofenced biometric punch-in attendance tracking and high-definition classr
 ## 📱 Application Pages & Modules
 
 ### 1. Landing Portal (`index.html`)
+
 The public-facing gateway to SETU:
+
 - **Live Announcement Header**: Displays real-time learner counters, direct helpline, and social links.
 - **Glassmorphic Navigation Bar**: Quick anchors to features, live curriculum, contributors, and authentication.
 - **Hero Showcase**: Dynamic gradient typography, interactive CTA buttons, and feature highlight badges.
@@ -66,7 +70,9 @@ The public-facing gateway to SETU:
 - **Testimonials Carousel**: Feedback from verified students and institutional directors.
 
 ### 2. Interactive Cyber Mascot Login (`login.html`)
+
 A secure, playful authentication gateway:
+
 - **3D Robot Mascot Assembly**: Features antenna plasma core, illuminated ears, dual glowing eyes, and knuckle gauntlets.
 - **Eye-Tracking & Password Masking**:
   - Focus email: Robot tracks input field coordinates.
@@ -76,7 +82,9 @@ A secure, playful authentication gateway:
 - **Role Switching**: Allows instant switching between *Student*, *Trainer*, and *Admin* profiles.
 
 ### 3. Modern Campus ERP Dashboard (`dashboard.html`)
+
 The daily command center for students and faculties:
+
 - **Campus Radar Panel**:
   - **Action Button**: Toggle Punch-In / Punch-Out with instant status badge updates.
   - **Session Elapsed Timer**: Live digital clock ticking every second since user check-in.
@@ -91,7 +99,9 @@ The daily command center for students and faculties:
 - **Notification Dropdown**: Real-time campus alerts with unread counter badges and "Mark all as read" capability.
 
 ### 4. Classroom & Class Recordings Hub (`Class_recordings.html`)
+
 A centralized academic video archive built with Tailwind CSS & custom styling:
+
 - **Watch Progress Overview**: Donut progress ring tracking completed vs in-progress lectures.
 - **Multi-Factor Filter Bar**: Instant filtering by Batches, Subjects, Trainers, and custom Date Ranges (`From` / `To`).
 - **All Recordings Matrix**:
@@ -100,13 +110,17 @@ A centralized academic video archive built with Tailwind CSS & custom styling:
 - **Video Player Modal**: High-performance playback window with resolution and speed controls.
 
 ### 5. Contributors & Alumni Wall (`contributors.html`)
+
 Honoring the talent behind the platform:
+
 - **Hall of Fame**: Student developers, UI/UX designers, trainers, and project mentors.
 - **Social Connect**: Clickable GitHub, LinkedIn, and portfolio links for every contributor.
 - **Contribution Badges**: Code committers, architecture leads, and core maintainers.
 
 ### 6. ZUNO AI Campus Assistant (`cyberbot.js`)
+
 An intelligent campus assistant docked at the bottom right:
+
 - Instant sliding drawer UI with conversation history.
 - Pre-built smart prompt chips: *"Check my attendance"*, *"Next lecture?"*, *"Open Class Recordings"*, *"Punch Out"*.
 - Natural language intent parsing with direct actions on the dashboard.
@@ -146,7 +160,7 @@ SETU/
 └── 📁 images/ / root assets
     ├── 🖼 setu.png                   # Official SETU brand emblem
     ├── 🖼 setu_app_logo.png          # App icon variation
-    ├── 🖼 apptechno-campusos-footer.png # Official brand footer seal
+    ├── 🖼 setu.png # Official brand footer seal
     ├── 🖼 contri.png                 # Contributors page hero graphic
     └── 🖼 images/user-shashaank.png  # User profile avatar
 ```
@@ -155,13 +169,13 @@ SETU/
 
 ## 💻 Technology Stack
 
-| Layer | Technologies Used |
-|---|---|
-| **Structure** | Semantic HTML5, SVG Vectors |
-| **Styling** | Vanilla CSS3 (Custom Properties, Flexbox, CSS Grid, 3D Transforms), Tailwind CSS CDN |
-| **Interactivity** | Vanilla JavaScript (ES6+), HTML5 Canvas API |
-| **Storage & State** | Browser `localStorage`, URLSearchParams |
-| **Fonts & Icons** | Plus Jakarta Sans, Inter, Custom SVG Vector Icons |
+| Layer                     | Technologies Used                                                                    |
+| ------------------------- | ------------------------------------------------------------------------------------ |
+| **Structure**       | Semantic HTML5, SVG Vectors                                                          |
+| **Styling**         | Vanilla CSS3 (Custom Properties, Flexbox, CSS Grid, 3D Transforms), Tailwind CSS CDN |
+| **Interactivity**   | Vanilla JavaScript (ES6+), HTML5 Canvas API                                          |
+| **Storage & State** | Browser `localStorage`, URLSearchParams                                            |
+| **Fonts & Icons**   | Plus Jakarta Sans, Inter, Custom SVG Vector Icons                                    |
 
 ---
 
@@ -170,6 +184,7 @@ SETU/
 No heavy bundlers or package installs required! SETU runs directly in any modern web browser.
 
 ### Option 1: Using VS Code Live Server (Recommended)
+
 1. Clone this repository to your local machine:
    ```bash
    git clone https://github.com/shashaank747/SETU.git
@@ -183,18 +198,19 @@ No heavy bundlers or package installs required! SETU runs directly in any modern
 5. Your browser will launch the app at `http://127.0.0.1:5500/index.html`.
 
 ### Option 2: Direct File Launch
+
 Simply double-click `index.html` or `login.html` in your file explorer to run locally in Chrome, Edge, Brave, Firefox, or Safari.
 
 ---
 
 ## ⌨️ Keyboard Shortcuts & Interactivity
 
-| Shortcut | Action | Scope |
-|---|---|---|
-| <kbd>Ctrl</kbd> + <kbd>K</kbd> or <kbd>Cmd</kbd> + <kbd>K</kbd> | Open ZUNO AI Assistant Drawer | Dashboard & Class Recordings |
-| <kbd>Esc</kbd> | Close any open Mega-Menu, QR Scanner, or ZUNO AI Drawer | All Pages |
-| **Click Avatar** | Open profile actions & role sign-out | Dashboard |
-| **Click Bell** | Toggle Campus Alerts & Notifications | Dashboard |
+| Shortcut                                                        | Action                                                  | Scope                        |
+| --------------------------------------------------------------- | ------------------------------------------------------- | ---------------------------- |
+| <kbd>Ctrl</kbd> + <kbd>K</kbd> or <kbd>Cmd</kbd> + <kbd>K</kbd> | Open ZUNO AI Assistant Drawer                           | Dashboard & Class Recordings |
+| <kbd>Esc</kbd>                                                  | Close any open Mega-Menu, QR Scanner, or ZUNO AI Drawer | All Pages                    |
+| **Click Avatar**                                          | Open profile actions & role sign-out                    | Dashboard                    |
+| **Click Bell**                                            | Toggle Campus Alerts & Notifications                    | Dashboard                    |
 
 ---
 
@@ -208,8 +224,9 @@ For a complete breakdown of every algorithm, state flow, mathematics behind the 
 ## 👨‍💻 Author & Acknowledgements
 
 - **Lead Architect & Developer**: **Shashaank Sajjanar** ([@shashaank747](https://github.com/shashaank747))
-- **Platform**: AppTechno CampusOS / SETU
+- **Platform**: SETU CampusOS / SETU
 - **Mission**: Designed and developed 100% by students to redefine educational management systems across campuses.
 
 ---
+
 *Crafted with passion, modern web standards, and cyber aesthetics for higher education.*

@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Mobile Proctor - SETU</title>
+  <link rel="icon" type="image/png" href="setu.png">
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- PeerJS for direct WebRTC P2P streaming -->
+  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      touch-action: manipulation;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    @keyframes pulseRadar {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.05); opacity: 0.4; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+    .radar-pulse {
+      animation: pulseRadar 2s infinite ease-in-out;
+    }
+    @keyframes sweepGlow {
+      0% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+      50% { box-shadow: 0 0 35px rgba(16, 185, 129, 0.9); }
+      100% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+    }
+    .sweep-active-glow {
+      animation: sweepGlow 1.5s infinite ease-in-out;
+    }
+    .level-bubble {
+      transition: transform 0.08s ease-out;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between overflow-x-hidden select-none">
+
+  <!-- Top Header Bar -->
+  <header class="px-4 py-3 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 flex items-center justify-between sticky top-0 z-50">
+    <div class="flex items-center gap-2.5">
+      <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-500 flex items-center justify-center shadow-md shadow-purple-500/30">
+        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-xs font-black tracking-wide text-white uppercase flex items-center gap-1.5">
+          <span>SETU 360° Proctor</span>
+          <span class="px-1.5 py-0.2 text-[9px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded font-mono">v2.4</span>
+        </h1>
+        <p class="text-[10px] text-slate-400 font-mono" id="session-display">Session: Connecting...</p>
+      </div>
+    </div>
+
+    <!-- Battery & Connection Indicator -->
+    <div class="flex items-center gap-2">
+      <div id="conn-badge" class="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 font-mono">
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+        <span id="conn-text">Pairing</span>
+      </div>
+      <div id="battery-indicator" class="text-[10px] text-slate-400 font-mono hidden items-center gap-1 bg-slate-800/80 px-2 py-0.5 rounded-full">
+        <span>🔋</span>
+        <span id="battery-level">--%</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- STEP CONTAINER 1: WELCOME & PERMISSIONS -->
+  <!-- ========================================================================= -->
+  <section id="pane-welcome" class="p-4 flex-1 flex flex-col justify-center items-center text-center max-w-md mx-auto space-y-5">
+    <div class="relative">
+      <div class="w-20 h-20 rounded-3xl bg-purple-600/20 border border-purple-500/40 flex items-center justify-center text-purple-400 shadow-xl shadow-purple-500/10">
+        <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+          <path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+        </svg>
+      </div>
+      <span class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 text-slate-950 font-black text-[11px] flex items-center justify-center">✓</span>
+    </div>
+
+    <div class="space-y-1.5">
+      <h2 class="text-xl font-bold text-white tracking-tight">Secondary Room Camera</h2>
+      <p class="text-xs text-slate-400 leading-relaxed px-2">
+        This mobile stream acts as your 360° secondary proctor to monitor the desk, hands, and room environment during your SETU assessment.
+      </p>
+    </div>
+
+    <!-- Requirements Card -->
+    <div class="w-full bg-slate-900/90 border border-slate-800 rounded-2xl p-4 text-left space-y-3">
+      <div class="flex items-center gap-2.5 text-xs text-slate-300">
+        <span class="w-5 h-5 rounded-full bg-purple-500/20 text-purple-400 font-bold flex items-center justify-center text-[10px]">1</span>
+        <span>Grant camera & motion sensor permissions.</span>
+      </div>
+      <div class="flex items-center gap-2.5 text-xs text-slate-300">
+        <span class="w-5 h-5 rounded-full bg-purple-500/20 text-purple-400 font-bold flex items-center justify-center text-[10px]">2</span>
+        <span>Perform a guided <strong class="text-white">360° Landscape Room Sweep</strong>.</span>
+      </div>
+      <div class="flex items-center gap-2.5 text-xs text-slate-300">
+        <span class="w-5 h-5 rounded-full bg-purple-500/20 text-purple-400 font-bold flex items-center justify-center text-[10px]">3</span>
+        <span>Place phone on side stand at a 45° angle.</span>
+      </div>
+    </div>
+
+    <div class="w-full space-y-2">
+      <button type="button" id="btn-start-perms" onclick="requestPermissionsAndStart()" class="w-full py-3.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 active:scale-[0.98] text-white font-bold text-sm rounded-2xl shadow-lg shadow-purple-500/25 transition flex items-center justify-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+        <span>Authorize Camera & Sensors</span>
+      </button>
+
+      <!-- Interactive Camera Permission Guide Accordion -->
+      <details id="camera-help-details" class="w-full bg-slate-900/60 border border-slate-800/80 rounded-2xl text-left text-xs overflow-hidden transition">
+        <summary class="p-3 font-semibold text-slate-300 hover:text-purple-300 cursor-pointer flex items-center justify-between select-none">
+          <span class="flex items-center gap-1.5 text-[11px]">
+            <span>⚙️</span>
+            <span>Camera blocked? How to enable "Sites can ask"</span>
+          </span>
+          <span class="text-[10px] text-purple-400">View Steps ▾</span>
+        </summary>
+        <div class="p-3.5 pt-1 space-y-2.5 text-[11px] text-slate-400 border-t border-slate-800/60 bg-slate-950/40 leading-relaxed">
+          <div class="space-y-1">
+            <strong class="text-white block text-[11px]">Option 1: Allow in Chrome Settings</strong>
+            <p>1. Open Chrome menu (<strong>⋮</strong> three dots) ➔ <strong>Settings</strong>.</p>
+            <p>2. Tap <strong>Site settings</strong> ➔ <strong>Camera</strong>.</p>
+            <p>3. Turn ON <strong>"Sites can ask to use your camera"</strong>.</p>
+          </div>
+          <div class="space-y-1 pt-1 border-t border-slate-800">
+            <strong class="text-white block text-[11px]">Option 2: Unblock Address Bar</strong>
+            <p>Tap the tune/lock icon 🔒 to the left of the URL bar ➔ <strong>Permissions</strong> ➔ <strong>Camera: Allow</strong>.</p>
+          </div>
+          <div class="space-y-1 pt-1 border-t border-slate-800">
+            <strong class="text-white block text-[11px]">Option 3: For Local Wi-Fi HTTP (Chrome Android)</strong>
+            <p>Open <code class="bg-slate-800 text-purple-300 px-1 rounded">chrome://flags/#unsafely-treat-insecure-origin-as-secure</code></p>
+            <p>Add <code class="bg-slate-800 text-purple-300 px-1 rounded" id="help-lan-url">http://192.168.1.11:5500</code> ➔ <strong>Enabled</strong> ➔ <strong>Relaunch</strong>.</p>
+          </div>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- STEP CONTAINER 2: 360° GYROSCOPE RADAR SWEEP WITH HORIZON LEVEL -->
+  <!-- ========================================================================= -->
+  <section id="pane-sweep" class="hidden p-3 flex-1 flex flex-col justify-between max-w-md mx-auto w-full space-y-2">
+    
+    <!-- Top Instructions & Status Banner -->
+    <div class="text-center space-y-1">
+      <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[11px] font-bold bg-purple-950 border border-purple-800/80 text-purple-300">
+        <span class="w-2 h-2 rounded-full bg-purple-400 animate-ping"></span>
+        <span>Step 1 of 2: 360° Room Sweep</span>
+      </div>
+      <h3 class="text-sm sm:text-base font-bold text-white" id="sweep-guide-title">Hold Phone Horizontally & Upright</h3>
+      <p class="text-[11px] text-slate-400" id="sweep-guide-sub">Slowly rotate your body in a full circle around your room.</p>
+    </div>
+
+    <!-- Live Video Viewport with Radar Overlay (Compact 230px height) -->
+    <div class="relative w-full aspect-[4/3] max-h-[240px] bg-black rounded-3xl overflow-hidden border-2 border-slate-800 shadow-2xl flex items-center justify-center">
+      <video id="mobile-cam-preview" autoplay playsinline muted class="w-full h-full object-cover"></video>
+
+      <!-- Artificial Horizon / Gimbal Leveling Guide -->
+      <div id="level-overlay" class="absolute inset-0 pointer-events-none flex flex-col items-center justify-center">
+        <!-- Target Ring -->
+        <div class="w-20 h-20 rounded-full border-2 border-dashed border-white/30 flex items-center justify-center relative">
+          <!-- Crosshair -->
+          <div class="absolute w-full h-[1px] bg-white/20"></div>
+          <div class="absolute h-full w-[1px] bg-white/20"></div>
+          
+          <!-- Moving Level Bubble -->
+          <div id="level-bubble" class="level-bubble w-5 h-5 rounded-full bg-amber-500/80 border-2 border-white shadow-lg flex items-center justify-center transform translate-x-0 translate-y-0">
+            <span class="w-1 h-1 rounded-full bg-white"></span>
+          </div>
+        </div>
+        <div id="level-text" class="mt-1.5 text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-slate-900/80 text-amber-300 border border-amber-500/30">
+          Tilt Level: Adjusting
+        </div>
+      </div>
+
+      <!-- 8-Sector Gyro Radar Ring Overlay -->
+      <div class="absolute inset-0 pointer-events-none flex items-center justify-center">
+        <svg class="w-52 h-52 opacity-85" viewBox="0 0 100 100">
+          <!-- Background circle -->
+          <circle cx="50" cy="50" r="44" fill="none" stroke="#1e293b" stroke-width="4"></circle>
+          <!-- 8 Arc Segments (S1 - S8) -->
+          <circle id="arc-1" cx="50" cy="50" r="44" fill="none" stroke="#475569" stroke-width="4" stroke-dasharray="32 245" stroke-dashoffset="0"></circle>
+          <circle id="arc-2" cx="50" cy="50" r="44" fill="none" stroke="#475569" stroke-width="4" stroke-dasharray="32 245" stroke-dashoffset="-35"></circle>
+          <circle id="arc-3" cx="50" cy="50" r="44" fill="none" stroke="#475569" stroke-width="4" stroke-dasharray="32 245" stroke-dashoffset="-70"></circle>
+          <circle id="arc-4" cx="50" cy="50" r="44" fill="none" stroke="#475569" stroke-width="4" stroke-dasharray="32 245" stroke-dashoffset="-105"></circle>
+          <circle id="arc-5" cx="50" cy="50" r="44" fill="none" stroke="#475569" stroke-width="4" stroke-dasharray="32 245" stroke-dashoffset="-140"></circle>
+          <circle id="arc-6" cx="50" cy="50" r="44" fill="none" stroke="#475569" stroke-width="4" stroke-dasharray="32 245" stroke-dashoffset="-175"></circle>
+          <circle id="arc-7" cx="50" cy="50" r="44" fill="none" stroke="#475569" stroke-width="4" stroke-dasharray="32 245" stroke-dashoffset="-210"></circle>
+          <circle id="arc-8" cx="50" cy="50" r="44" fill="none" stroke="#475569" stroke-width="4" stroke-dasharray="32 245" stroke-dashoffset="-245"></circle>
+        </svg>
+      </div>
+
+      <!-- Live Center Degree Counter -->
+      <div class="absolute bottom-2 left-2 bg-slate-950/85 backdrop-blur px-2 py-0.5 rounded-lg border border-slate-700/80 font-mono text-[10px] text-purple-300">
+        Rotation: <strong id="sweep-degrees" class="text-white">0°</strong> / 360°
+      </div>
+
+      <!-- Progress Badge -->
+      <div class="absolute bottom-2 right-2 bg-slate-950/85 backdrop-blur px-2 py-0.5 rounded-lg border border-slate-700/80 font-mono text-[10px] text-emerald-400">
+        Coverage: <strong id="sweep-pct" class="text-emerald-300">0%</strong>
+      </div>
+
+      <!-- Success Overlay Popover (Revealed on Completion) -->
+      <div id="sweep-success-overlay" class="hidden absolute inset-0 bg-slate-950/90 backdrop-blur-sm flex flex-col items-center justify-center p-4 text-center space-y-2 z-20">
+        <div class="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center text-xl animate-bounce">
+          ✓
+        </div>
+        <h4 class="text-sm font-bold text-white">360° Sweep Verified!</h4>
+        <p class="text-[11px] text-emerald-300" id="auto-advance-label">Advancing to Stand Placement in 2s...</p>
+        <button type="button" onclick="proceedToStandPlacement()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-emerald-600/30 flex items-center gap-1.5 transition">
+          <span>Proceed Now ➔</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Progress Bar & Actions -->
+    <div class="space-y-2">
+      <div class="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden border border-slate-700">
+        <div id="sweep-progress-bar" class="bg-gradient-to-r from-purple-500 to-emerald-400 h-2.5 rounded-full transition-all duration-150" style="width: 0%"></div>
+      </div>
+
+      <div class="flex items-center justify-between text-[11px] text-slate-400">
+        <span id="sweep-tolerance-note">💡 Smooth gyro delta active</span>
+        <button type="button" id="btn-quick-complete" onclick="markSweepCompleted()" class="hidden text-emerald-400 font-bold underline hover:text-emerald-300 transition">
+          ✓ Complete Sweep Now
+        </button>
+        <button type="button" id="btn-fallback-timer" onclick="enableManualSweepFallback()" class="text-purple-400 underline hover:text-purple-300 transition">
+          Use 10s Timed Sweep
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- STEP CONTAINER 3: DESK STAND POSITIONING & TAMPER GUARD -->
+  <!-- ========================================================================= -->
+  <section id="pane-stand" class="hidden p-4 flex-1 flex flex-col justify-between max-w-md mx-auto w-full space-y-4">
+    
+    <div class="text-center space-y-1">
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-950 border border-emerald-800/80 text-emerald-300">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>Step 2 of 2: Stand Placement</span>
+      </div>
+      <h3 class="text-base font-bold text-white">Place Phone on Side Stand</h3>
+      <p class="text-xs text-slate-400">Position 3–4 feet away showing your hands, desk, and laptop screen.</p>
+    </div>
+
+    <!-- Diagram / Placement Guide Card -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
+      <div class="flex items-center justify-center p-3 bg-slate-950 rounded-xl border border-slate-800/80">
+        <div class="flex items-center gap-4 text-xs font-mono text-slate-300">
+          <div class="text-center">
+            <span class="text-2xl">📱</span>
+            <p class="text-[10px] text-purple-400">Mobile (45°)</p>
+          </div>
+          <span class="text-slate-500 text-lg">─── 3 ft ───►</span>
+          <div class="text-center">
+            <span class="text-2xl">🧑‍💻</span>
+            <p class="text-[10px] text-emerald-400">Desk & Laptop</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Motion Detector Status -->
+      <div class="p-3 bg-slate-950/60 rounded-xl border border-slate-800 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="text-xs text-slate-300">Accelerometer Anti-Tamper:</span>
+        </div>
+        <span id="tamper-status" class="text-xs font-mono font-bold text-emerald-400">ARMED</span>
+      </div>
+    </div>
+
+    <button type="button" onclick="lockPlacementAndBeginExam()" class="w-full py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:scale-[0.98] text-white font-bold text-sm rounded-2xl shadow-lg shadow-emerald-500/25 transition flex items-center justify-center gap-2">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+      <span>Lock Position & Arm Live Proctor</span>
+    </button>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- STEP CONTAINER 4: LIVE EXAM STREAMING HUD (MINIMAL BATTERY DRAIN) -->
+  <!-- ========================================================================= -->
+  <section id="pane-live" class="hidden p-4 flex-1 flex flex-col justify-between max-w-md mx-auto w-full text-center">
+    
+    <!-- Top Live Badge -->
+    <div class="flex items-center justify-between bg-slate-900/90 border border-slate-800 rounded-2xl px-4 py-2.5">
+      <div class="flex items-center gap-2">
+        <span class="w-3 h-3 rounded-full bg-rose-500 animate-ping"></span>
+        <span class="text-xs font-bold text-rose-400 font-mono tracking-wider">LIVE PROCTORING</span>
+      </div>
+      <div class="text-[11px] font-mono text-slate-400" id="live-timer">00:00:00</div>
+    </div>
+
+    <!-- Active Stream Preview (Compact) -->
+    <div class="relative w-full aspect-video bg-black rounded-3xl overflow-hidden border-2 border-emerald-500/50 shadow-2xl my-4">
+      <video id="mobile-cam-live" autoplay playsinline muted class="w-full h-full object-cover"></video>
+      <div class="absolute top-2 left-2 px-2 py-0.5 rounded bg-slate-950/80 text-[10px] font-mono text-emerald-400">
+        ROOM CAM • ACTIVE
+      </div>
+      <div class="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-slate-950/80 text-[10px] font-mono text-slate-300 flex items-center gap-1">
+        <span>🔒 Anti-Tamper Armed</span>
+      </div>
+    </div>
+
+    <!-- Motion Violation Warning Toast (Appears if picked up) -->
+    <div id="tamper-alert" class="hidden p-3 bg-rose-950/90 border border-rose-600 text-rose-200 rounded-2xl text-xs font-semibold animate-pulse">
+      ⚠️ Motion Alert: Phone movement detected! Keep phone on stand.
+    </div>
+
+    <!-- Do Not Touch Banner -->
+    <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-3 text-xs text-slate-400 leading-relaxed">
+      🔒 <strong>Screen Locked:</strong> Screen Wake Lock is active. Please leave your phone on the stand until your desktop assessment is submitted.
+    </div>
+
+    <div class="text-[10px] text-slate-500 font-mono">
+      SETU CampusOS Biometric & 360° Telemetry Stream
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT LOGIC FOR GYRO SWEEP, ACCELEROMETER, & WEBRTC -->
+  <!-- ========================================================================= -->
+  <script>
+    // Extract Session Token from Query Params
+    const urlParams = new URLSearchParams(window.location.search);
+    const sessionId = urlParams.get('session') || ('SETU-' + Math.random().toString(36).substring(2, 9).toUpperCase());
+    
+    // State Tracking
+    const mobileState = {
+      sessionId: sessionId,
+      stream: null,
+      peer: null,
+      peerConn: null,
+      wakeLock: null,
+      isSweepComplete: false,
+      sweepCoverage: new Set(), // 8 sectors (0 to 7)
+      startHeading: null,
+      cumulativeRotation: 0,
+      lastAlpha: null,
+      isOrientationValid: false,
+      isExamArmed: false,
+      lastAcc: { x: 0, y: 0, z: 0 },
+      tamperViolations: 0,
+      startTime: null,
+      timerInterval: null
+    };
+
+    document.getElementById('session-display').innerText = `Session: ${sessionId}`;
+
+    // Battery API
+    if ('getBattery' in navigator) {
+      navigator.getBattery().then(battery => {
+        const bEl = document.getElementById('battery-indicator');
+        const bLvl = document.getElementById('battery-level');
+        if (bEl && bLvl) {
+          bEl.classList.remove('hidden');
+          bEl.classList.add('flex');
+          bLvl.innerText = `${Math.round(battery.level * 100)}%`;
+          battery.addEventListener('levelchange', () => {
+            bLvl.innerText = `${Math.round(battery.level * 100)}%`;
+          });
+        }
+      });
+    }
+
+    // Step 1: Request Permissions (Camera + Motion Sensors)
+    async function requestPermissionsAndStart() {
+      const btn = document.getElementById('btn-start-perms');
+      btn.innerHTML = `<span>Requesting Hardware Access...</span>`;
+      btn.disabled = true;
+
+      try {
+        // 1. Camera Stream (Rear/Environment Camera for wide view)
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: { ideal: 'environment' },
+            width: { ideal: 1280, max: 1920 },
+            height: { ideal: 720, max: 1080 },
+            frameRate: { ideal: 24, max: 30 }
+          },
+          audio: false
+        });
+        mobileState.stream = stream;
+
+        // Preview video
+        const videoEl = document.getElementById('mobile-cam-preview');
+        if (videoEl) {
+          videoEl.srcObject = stream;
+          await videoEl.play();
+        }
+
+        // 2. Request Motion Sensors (iOS 13+ requires explicit permission)
+        if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+          try {
+            const perm = await DeviceOrientationEvent.requestPermission();
+            if (perm === 'granted') {
+              initSensors();
+            } else {
+              console.warn('Orientation permission denied, falling back');
+              initSensors();
+            }
+          } catch(e) {
+            initSensors();
+          }
+        } else {
+          initSensors();
+        }
+
+        // 3. Request Screen Wake Lock (Keep screen on)
+        requestScreenWakeLock();
+
+        // 4. Start Live Frame Streaming to Desktop
+        startLiveFrameStream();
+
+        // 5. Initialize WebRTC Signaling
+        initWebRTC();
+
+        // Switch UI to Step 2 (360° Sweep)
+        document.getElementById('pane-welcome').classList.add('hidden');
+        document.getElementById('pane-sweep').classList.remove('hidden');
+
+      } catch (err) {
+        console.error('Permission error:', err);
+        const detailsEl = document.getElementById('camera-help-details');
+        if (detailsEl) detailsEl.open = true;
+
+        btn.innerHTML = `<span>⚠️ Camera Blocked - Tap to Retry</span>`;
+        btn.disabled = false;
+        btn.className = 'w-full py-3.5 bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm rounded-2xl shadow-lg transition flex items-center justify-center gap-2 animate-pulse';
+      }
+    }
+
+    // Request Screen Wake Lock API
+    async function requestScreenWakeLock() {
+      if ('wakeLock' in navigator) {
+        try {
+          mobileState.wakeLock = await navigator.wakeLock.request('screen');
+          console.log('Screen Wake Lock active');
+        } catch (e) {
+          console.warn('Wake Lock error:', e);
+        }
+      }
+    }
+
+    // Initialize Orientation & Motion Listeners
+    function initSensors() {
+      // 1. Orientation Listener (Gyroscope / Artificial Horizon)
+      window.addEventListener('deviceorientation', handleDeviceOrientation, true);
+
+      // 2. Motion Listener (Accelerometer Anti-Tamper)
+      window.addEventListener('devicemotion', handleDeviceMotion, true);
+    }
+
+    // Handle Gyroscope & Horizon Leveling with Tolerances
+    function handleDeviceOrientation(event) {
+      if (mobileState.isSweepComplete) return;
+
+      const alpha = event.alpha; // 0 to 360 (compass/yaw)
+      const beta = event.beta;   // -180 to 180 (pitch tilt)
+      const gamma = event.gamma; // -90 to 90 (roll tilt)
+
+      if (alpha === null && beta === null) return;
+
+      // Generous tilt tolerance for landscape & upright holding
+      const isLandscapeUpright = (Math.abs(beta) >= 30 && Math.abs(beta) <= 140) || (Math.abs(gamma) >= 30 && Math.abs(gamma) <= 140);
+      
+      const levelBubble = document.getElementById('level-bubble');
+      const levelText = document.getElementById('level-text');
+      const guideTitle = document.getElementById('sweep-guide-title');
+
+      // Update Gimbal Bubble Position
+      const bubbleX = Math.max(-25, Math.min(25, (gamma || 0) * 0.7));
+      const bubbleY = Math.max(-25, Math.min(25, ((beta || 90) - 80) * 0.7));
+
+      if (levelBubble) {
+        levelBubble.style.transform = `translate(${bubbleX}px, ${bubbleY}px)`;
+      }
+
+      // Inside green tolerance zone
+      mobileState.isOrientationValid = isLandscapeUpright;
+
+      if (isLandscapeUpright) {
+        if (levelBubble) levelBubble.className = 'level-bubble w-5 h-5 rounded-full bg-emerald-500 border-2 border-white shadow-lg flex items-center justify-center';
+        if (levelText) {
+          levelText.className = 'mt-1.5 text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-500/40';
+          levelText.innerText = '✓ Level & Upright';
+        }
+        if (guideTitle) guideTitle.innerText = 'Rotating 360°... Keep Turning';
+        
+        // Track 360° Rotation Sweep
+        if (alpha !== null) {
+          trackSweepSector(alpha);
+        }
+      } else {
+        if (levelBubble) levelBubble.className = 'level-bubble w-5 h-5 rounded-full bg-amber-500/80 border-2 border-white shadow-lg flex items-center justify-center';
+        if (levelText) {
+          levelText.className = 'mt-1.5 text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-slate-900/80 text-amber-300 border border-amber-500/30';
+          levelText.innerText = 'Hold Phone Level & Upright';
+        }
+      }
+    }
+
+    // Bin rotation into 8 sectors with relative delta accumulation
+    function trackSweepSector(alpha) {
+      if (mobileState.lastAlpha !== null) {
+        let diff = Math.abs(alpha - mobileState.lastAlpha);
+        if (diff > 180) diff = 360 - diff;
+        if (diff < 60) { // Filter out random sensor jump glitches
+          mobileState.cumulativeRotation += diff;
+        }
+      }
+      mobileState.lastAlpha = alpha;
+
+      // Determine sector (0 to 7)
+      const sector = Math.floor(((alpha % 360) + 360) % 360 / 45);
+      mobileState.sweepCoverage.add(sector);
+
+      // Light up arc in SVG radar
+      const arc = document.getElementById(`arc-${sector + 1}`);
+      if (arc) {
+        arc.setAttribute('stroke', '#10b981'); // Emerald green
+        arc.setAttribute('stroke-width', '6');
+      }
+
+      // Calculate progress from sectors + cumulative rotation
+      const sectorPct = (mobileState.sweepCoverage.size / 8) * 100;
+      const cumPct = (mobileState.cumulativeRotation / 300) * 100;
+      const pct = Math.min(100, Math.round(Math.max(sectorPct, cumPct)));
+
+      const degEl = document.getElementById('sweep-degrees');
+      const pctEl = document.getElementById('sweep-pct');
+      const barEl = document.getElementById('sweep-progress-bar');
+      const quickBtn = document.getElementById('btn-quick-complete');
+
+      const displayDegrees = Math.min(360, Math.round((pct / 100) * 360));
+      if (degEl) degEl.innerText = `${displayDegrees}°`;
+      if (pctEl) pctEl.innerText = `${pct}%`;
+      if (barEl) barEl.style.width = `${pct}%`;
+
+      // Show manual quick-complete shortcut once over 50%
+      if (pct >= 50 && quickBtn) {
+        quickBtn.classList.remove('hidden');
+      }
+
+      // Forgiving completion threshold (>= 6 sectors or >= 270 degrees)
+      if ((mobileState.sweepCoverage.size >= 6 || pct >= 80) && !mobileState.isSweepComplete) {
+        markSweepCompleted();
+      }
+    }
+
+    // Complete Sweep & Auto-Advance to Stand Placement
+    function markSweepCompleted() {
+      if (mobileState.isSweepComplete) return;
+      mobileState.isSweepComplete = true;
+
+      // Light up all 8 sectors in green
+      for (let i = 1; i <= 8; i++) {
+        const arc = document.getElementById(`arc-${i}`);
+        if (arc) {
+          arc.setAttribute('stroke', '#10b981');
+          arc.setAttribute('stroke-width', '6');
+        }
+      }
+
+      const degEl = document.getElementById('sweep-degrees');
+      const pctEl = document.getElementById('sweep-pct');
+      const barEl = document.getElementById('sweep-progress-bar');
+      if (degEl) degEl.innerText = `360°`;
+      if (pctEl) pctEl.innerText = `100%`;
+      if (barEl) barEl.style.width = `100%`;
+
+      // Show celebratory overlay modal
+      const overlay = document.getElementById('sweep-success-overlay');
+      if (overlay) overlay.classList.remove('hidden');
+
+      // Send telemetry to desktop session
+      sendSignalToDesktop({
+        type: 'SWEEP_COMPLETE',
+        sessionId: mobileState.sessionId,
+        coverage: 100
+      });
+
+      // Haptic Vibration if supported
+      if ('vibrate' in navigator) {
+        navigator.vibrate([100, 60, 250]);
+      }
+
+      // Auto-advance to Stand Placement in 2 seconds
+      let countdown = 2;
+      const advLabel = document.getElementById('auto-advance-label');
+      const countInterval = setInterval(() => {
+        countdown--;
+        if (advLabel) advLabel.innerText = `Advancing to Stand Placement in ${countdown}s...`;
+        if (countdown <= 0) {
+          clearInterval(countInterval);
+          proceedToStandPlacement();
+        }
+      }, 1000);
+    }
+
+    // Manual Timed Sweep Fallback for older phones without gyro
+    function enableManualSweepFallback() {
+      let seconds = 10;
+      const guideTitle = document.getElementById('sweep-guide-title');
+      const barEl = document.getElementById('sweep-progress-bar');
+      const pctEl = document.getElementById('sweep-pct');
+      const degEl = document.getElementById('sweep-degrees');
+
+      const interval = setInterval(() => {
+        seconds--;
+        const pct = Math.round(((10 - seconds) / 10) * 100);
+        if (guideTitle) guideTitle.innerText = `Slowly Pan 360° Around Room (${seconds}s)`;
+        if (barEl) barEl.style.width = `${pct}%`;
+        if (pctEl) pctEl.innerText = `${pct}%`;
+        if (degEl) degEl.innerText = `${Math.round((pct / 100) * 360)}°`;
+
+        // Light up arcs sequentially
+        const secIndex = Math.min(8, Math.ceil((pct / 100) * 8));
+        for (let i = 1; i <= secIndex; i++) {
+          const arc = document.getElementById(`arc-${i}`);
+          if (arc) arc.setAttribute('stroke', '#10b981');
+        }
+
+        if (seconds <= 0) {
+          clearInterval(interval);
+          markSweepCompleted();
+        }
+      }, 1000);
+    }
+
+    // Step 3: Proceed to Stand Placement
+    function proceedToStandPlacement() {
+      document.getElementById('pane-sweep').classList.add('hidden');
+      document.getElementById('pane-stand').classList.remove('hidden');
+    }
+
+    // Step 4: Lock Placement & Arm Live Proctor
+    function lockPlacementAndBeginExam() {
+      mobileState.isExamArmed = true;
+
+      // Switch to Live HUD
+      document.getElementById('pane-stand').classList.add('hidden');
+      const livePane = document.getElementById('pane-live');
+      livePane.classList.remove('hidden');
+
+      const liveVideo = document.getElementById('mobile-cam-live');
+      if (liveVideo && mobileState.stream) {
+        liveVideo.srcObject = mobileState.stream;
+        liveVideo.play();
+      }
+
+      // Start Live Timer
+      mobileState.startTime = Date.now();
+      mobileState.timerInterval = setInterval(() => {
+        const diff = Math.floor((Date.now() - mobileState.startTime) / 1000);
+        const h = String(Math.floor(diff / 3600)).padStart(2, '0');
+        const m = String(Math.floor((diff % 3600) / 60)).padStart(2, '0');
+        const s = String(diff % 60).padStart(2, '0');
+        document.getElementById('live-timer').innerText = `${h}:${m}:${s}`;
+      }, 1000);
+
+      // Send ARMED status to Desktop
+      sendSignalToDesktop({
+        type: 'PHONE_ARMED',
+        sessionId: mobileState.sessionId,
+        status: 'READY'
+      });
+
+      // Update Connection Badge
+      const connBadge = document.getElementById('conn-badge');
+      const connText = document.getElementById('conn-text');
+      if (connBadge && connText) {
+        connBadge.className = 'flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono';
+        connText.innerText = 'Live Stream';
+      }
+    }
+
+    // Handle Accelerometer Anti-Tamper Detection
+    function handleDeviceMotion(event) {
+      if (!mobileState.isExamArmed) return;
+
+      const acc = event.acceleration;
+      if (!acc) return;
+
+      // Calculate motion magnitude
+      const mag = Math.sqrt((acc.x || 0)**2 + (acc.y || 0)**2 + (acc.z || 0)**2);
+
+      // Threshold: 2.2 m/s² (filters light table vibrations, detects pickup/touch)
+      if (mag > 2.2) {
+        mobileState.tamperViolations++;
+        
+        // Show local warning toast
+        const alertEl = document.getElementById('tamper-alert');
+        if (alertEl) {
+          alertEl.classList.remove('hidden');
+          setTimeout(() => alertEl.classList.add('hidden'), 3500);
+        }
+
+        // Send instant violation to Desktop Proctor HUD
+        sendSignalToDesktop({
+          type: 'TAMPER_VIOLATION',
+          sessionId: mobileState.sessionId,
+          magnitude: mag.toFixed(2),
+          time: new Date().toLocaleTimeString()
+        });
+      }
+    }
+
+    // Live Camera Frame Streaming Engine (Dual-channel: BroadcastChannel + HTTP Fast POST)
+    function startLiveFrameStream() {
+      if (mobileState.frameInterval) clearInterval(mobileState.frameInterval);
+      const canvas = document.createElement('canvas');
+      canvas.width = 400;
+      canvas.height = 225;
+      const ctx = canvas.getContext('2d');
+      const videoEl = document.getElementById('mobile-cam-preview');
+      const liveVideoEl = document.getElementById('mobile-cam-live');
+
+      let isSending = false;
+
+      mobileState.frameInterval = setInterval(async () => {
+        const activeVideo = (liveVideoEl && !liveVideoEl.paused && liveVideoEl.videoWidth) ? liveVideoEl : videoEl;
+        if (!activeVideo || activeVideo.paused || activeVideo.ended || !activeVideo.videoWidth) return;
+
+        try {
+          ctx.drawImage(activeVideo, 0, 0, canvas.width, canvas.height);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.5);
+
+          // 1. Instant local broadcast channel
+          try {
+            const bc = new BroadcastChannel(`setu_proctor_${mobileState.sessionId}`);
+            bc.postMessage({ type: 'MOBILE_FRAME', sessionId: mobileState.sessionId, frame: dataUrl });
+          } catch (e) {}
+
+          // 2. High-speed HTTP stream to server
+          if (!isSending) {
+            isSending = true;
+            fetch('/api/proctor/frame', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ sessionId: mobileState.sessionId, frame: dataUrl })
+            }).catch(()=>{}).finally(() => {
+              isSending = false;
+            });
+          }
+        } catch(err){}
+      }, 100); // 10 fps ultra-low latency smooth live feed
+    }
+
+    // =========================================================================
+    // WEBRTC PEER-TO-PEER & BACKEND SIGNALING
+    // =========================================================================
+    function initWebRTC() {
+      // Connect to PeerJS cloud or local signaling
+      try {
+        const mobilePeerId = `setu-mobile-${mobileState.sessionId}`;
+        mobileState.peer = new Peer(mobilePeerId, {
+          debug: 1,
+          config: {
+            iceServers: [
+              { urls: 'stun:stun.l.google.com:19302' },
+              { urls: 'stun:global.stun.twilio.com:3478' }
+            ]
+          }
+        });
+
+        mobileState.peer.on('open', (id) => {
+          console.log('Mobile PeerJS ID:', id);
+          // Broadcast presence to desktop
+          sendSignalToDesktop({
+            type: 'MOBILE_CONNECTED',
+            sessionId: mobileState.sessionId,
+            peerId: id
+          });
+        });
+
+        mobileState.peer.on('call', (call) => {
+          // Answer incoming call with mobile camera stream
+          call.answer(mobileState.stream);
+        });
+
+      } catch (e) {
+        console.warn('PeerJS init fallback:', e);
+      }
+    }
+
+    // Send Signal to Desktop (supports BroadcastChannel + REST signaling)
+    function sendSignalToDesktop(payload) {
+      // 1. BroadcastChannel (works seamlessly if opened on same browser/network)
+      try {
+        const bc = new BroadcastChannel(`setu_proctor_${mobileState.sessionId}`);
+        bc.postMessage(payload);
+      } catch (e) {}
+
+      // 2. HTTP Server Signaling API
+      try {
+        fetch('/api/proctor/signal', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        }).catch(() => {});
+      } catch (e) {}
+    }
+  </script>
+</body>
+</html>

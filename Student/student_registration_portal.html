@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Registration Portal</title>
+  <title>Student Registration - SETU</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -88,10 +88,763 @@
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
-</head>
-<body class="text-slate-800 antialiased p-3 sm:p-5 flex justify-center pb-24">
 
-  <div class="w-full max-w-[1020px] space-y-4">
+  <!-- SETU Unified Navbar Dropdown Styles -->
+  <style>
+    .nav-dropdown-content {
+      display: none !important;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.15s ease, transform 0.15s ease;
+      pointer-events: none;
+    }
+    .nav-dropdown.open > .nav-dropdown-content,
+    .user-profile-menu.open > .nav-dropdown-content,
+    .nav-bell-menu.open > .nav-dropdown-content {
+      display: block !important;
+      opacity: 1 !important;
+      transform: translateY(0) !important;
+      pointer-events: auto !important;
+    }
+    .nav-dropdown.open .nav-dropdown-toggle {
+      background-color: #1E60E8 !important;
+      color: #FFFFFF !important;
+      box-shadow: 0 4px 12px -2px rgba(30, 96, 232, 0.35);
+    }
+    .nav-dropdown.open .nav-dropdown-toggle svg,
+    .user-profile-menu.open > #user-profile-trigger svg {
+      transform: rotate(180deg);
+    }
+  </style>
+
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col bg-[#F8FAFC]">
+
+  <header class="dashboard-navbar sticky top-0 z-50 bg-white border-b border-slate-200/90 shadow-sm px-4 lg:px-7 py-2.5" id="main-dashboard-navbar">
+    <div class="max-w-[1400px] mx-auto flex items-center justify-between gap-4">
+
+      <!-- Brand Logo + Left Navigation Menu -->
+      <div class="flex items-center gap-6">
+        <!-- SETU Logo (Replaced CareerSuite with SETU) -->
+        <a href="dashboard.html" class="flex items-center gap-2.5 group shrink-0" title="SETU Home">
+          <div
+            class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-700 via-indigo-600 to-cyan-400 flex items-center justify-center text-white shadow-md shadow-blue-500/25 group-hover:scale-105 transition">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+            </svg>
+          </div>
+          <span class="text-xl font-extrabold text-slate-900 tracking-tight">SETU</span>
+        </a>
+
+        <!-- Main Nav Pills & Dropdowns -->
+        <nav class="flex items-center gap-1 text-xs font-semibold text-slate-600">
+
+          <!-- 1. Dashboard (Active Primary Blue Pill) -->
+          <a href="dashboard.html"
+            class="bg-[#1E60E8] text-white px-3.5 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm shadow-blue-500/25 font-bold transition">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+            </svg>
+            <span>Dashboard</span>
+          </a>
+
+          <!-- 2. Learning Dropdown (Image 1) -->
+          <div class="relative nav-dropdown" id="nav-dropdown-learning">
+            <button type="button"
+              class="nav-dropdown-toggle px-3 py-1.5 rounded-full hover:bg-slate-100 flex items-center gap-1 transition cursor-pointer">
+              <span>Learning</span>
+              <svg class="w-3 h-3 text-slate-400 transition-transform duration-200" viewBox="0 0 20 20"
+                fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clip-rule="evenodd" />
+              </svg>
+            </button>
+            <div
+              class="nav-dropdown-content absolute left-0 top-full mt-2.5 w-[510px] bg-white rounded-2xl shadow-2xl border border-slate-200/90 p-4 z-50">
+              <div class="absolute -top-1.5 left-7 w-3 h-3 bg-[#1E60E8] rotate-45"></div>
+              <!-- Card Header -->
+              <div class="flex items-center gap-2 pb-2.5 border-b border-slate-100 mb-2">
+                <span class="text-[11px] font-black text-[#1E60E8] uppercase tracking-wider">LEARNING</span>
+                <span class="w-4 h-1 rounded-full bg-[#EAB308]"></span>
+              </div>
+              <!-- 2-Column Grid -->
+              <div class="grid grid-cols-2 gap-x-2 gap-y-1">
+                <!-- Col 1 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    📘</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      My Courses</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Active courses
+                      &amp; batches</div>
+                  </div>
+                </a>
+                <!-- Col 2 -->
+                <a href="timetable.html"
+                  class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    📅</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Timetable</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Daily learning
+                      schedule</div>
+                  </div>
+                </a>
+                <!-- Col 1 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    📢</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Bulletins</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Important updates
+                    </div>
+                  </div>
+                </a>
+                <!-- Col 2 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    📣</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Notifications</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Personal alerts
+                    </div>
+                  </div>
+                </a>
+                <!-- Col 1 -->
+                <a href="Class_recordings.html"
+                  class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    🎬</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Class Recordings</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Revisit sessions
+                    </div>
+                  </div>
+                </a>
+                <!-- Col 2 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    📓</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Trainer Notes</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Notes from your
+                      trainer</div>
+                  </div>
+                </a>
+                <!-- Col 1 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    ⌨️</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Live Typing Lab</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Touch typing,
+                      speed &amp; computer terms</div>
+                  </div>
+                </a>
+                <!-- Col 2 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    💻</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      SETU CodeStudio</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Python, MySQL, JS
+                      In-Browser IDE</div>
+                  </div>
+                </a>
+                <!-- Col 1 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    🗣️</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      AI Language Tutor</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Practice English
+                      with AI</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Assessments Dropdown (Image 2) -->
+          <div class="relative nav-dropdown" id="nav-dropdown-assessments">
+            <button type="button"
+              class="nav-dropdown-toggle px-3 py-1.5 rounded-full hover:bg-slate-100 flex items-center gap-1 transition cursor-pointer">
+              <span>Assessments</span>
+              <svg class="w-3 h-3 text-slate-400 transition-transform duration-200" viewBox="0 0 20 20"
+                fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clip-rule="evenodd" />
+              </svg>
+            </button>
+            <div
+              class="nav-dropdown-content absolute left-0 top-full mt-2.5 w-[280px] bg-white rounded-2xl shadow-2xl border border-slate-200/90 p-4 z-50">
+              <div class="absolute -top-1.5 left-8 w-3 h-3 bg-[#1E60E8] rotate-45"></div>
+              <!-- Card Header -->
+              <div class="flex items-center gap-2 pb-2.5 border-b border-slate-100 mb-2">
+                <span class="text-[11px] font-black text-[#1E60E8] uppercase tracking-wider">ASSESSMENTS</span>
+                <span class="w-4 h-1 rounded-full bg-[#EAB308]"></span>
+              </div>
+              <!-- 1-Column List -->
+              <div class="flex flex-col gap-1">
+                <a href="assignments.html"
+                  class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    📝</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      My Assessments</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Take quizzes &amp;
+                      skill tests</div>
+                  </div>
+                </a>
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    🧠</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      My Skill Profile</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Strengths, weak
+                      topics &amp; AI practice</div>
+                  </div>
+                </a>
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    🏅</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      My Badges</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Skill-mastery
+                      badges &amp; certificates</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Tasks Dropdown (Image 3) -->
+          <div class="relative nav-dropdown" id="nav-dropdown-tasks">
+            <button type="button"
+              class="nav-dropdown-toggle px-3 py-1.5 rounded-full hover:bg-slate-100 flex items-center gap-1 transition cursor-pointer">
+              <span>Tasks</span>
+              <svg class="w-3 h-3 text-slate-400 transition-transform duration-200" viewBox="0 0 20 20"
+                fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clip-rule="evenodd" />
+              </svg>
+            </button>
+            <div
+              class="nav-dropdown-content absolute left-0 top-full mt-2.5 w-[280px] bg-white rounded-2xl shadow-2xl border border-slate-200/90 p-4 z-50">
+              <div class="absolute -top-1.5 left-6 w-3 h-3 bg-[#1E60E8] rotate-45"></div>
+              <!-- Card Header -->
+              <div class="flex items-center gap-2 pb-2.5 border-b border-slate-100 mb-2">
+                <span class="text-[11px] font-black text-[#1E60E8] uppercase tracking-wider">TASKS</span>
+                <span class="w-4 h-1 rounded-full bg-[#EAB308]"></span>
+              </div>
+              <!-- 1-Column List -->
+              <div class="flex flex-col gap-1">
+                <a href="assignments.html"
+                  class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    💻</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      My Tasks</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Coding tasks &amp;
+                      challenges</div>
+                  </div>
+                </a>
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    📈</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      My Scores</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Score history
+                    </div>
+                  </div>
+                </a>
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    👥</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Peer Reviews</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Review peers &amp;
+                      get feedback</div>
+                  </div>
+                </a>
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    🎮</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Achievements</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">XP, badges &amp;
+                      rewards</div>
+                  </div>
+                </a>
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    🏆</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Leaderboard</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Batch &amp; global
+                      rankings</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. Career Dropdown (Image 4) -->
+          <div class="relative nav-dropdown" id="nav-dropdown-career">
+            <button type="button"
+              class="nav-dropdown-toggle px-3 py-1.5 rounded-full hover:bg-slate-100 flex items-center gap-1 transition cursor-pointer">
+              <span>Career</span>
+              <svg class="w-3 h-3 text-slate-400 transition-transform duration-200" viewBox="0 0 20 20"
+                fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clip-rule="evenodd" />
+              </svg>
+            </button>
+            <div
+              class="nav-dropdown-content absolute left-0 lg:-left-20 top-full mt-2.5 w-[520px] bg-white rounded-2xl shadow-2xl border border-slate-200/90 p-4 z-50">
+              <div class="absolute -top-1.5 left-6 lg:left-24 w-3 h-3 bg-[#1E60E8] rotate-45"></div>
+              <!-- Card Header -->
+              <div class="flex items-center gap-2 pb-2.5 border-b border-slate-100 mb-2">
+                <span class="text-[11px] font-black text-[#1E60E8] uppercase tracking-wider">CAREER</span>
+                <span class="w-4 h-1 rounded-full bg-[#EAB308]"></span>
+              </div>
+              <!-- 2-Column Grid -->
+              <div class="grid grid-cols-2 gap-x-2 gap-y-1">
+                <!-- Col 1 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    📄</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Resume Builder</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">AI-powered resume
+                      &amp; ATS score</div>
+                  </div>
+                </a>
+                <!-- Col 2 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    🎙️</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      AI Mock Interview</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Practice real
+                      company interviews with AI</div>
+                  </div>
+                </a>
+                <!-- Col 1 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    🎖️</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Certificates</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Download earned
+                      certs</div>
+                  </div>
+                </a>
+                <!-- Col 2 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    📊</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      My Analytics</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Student
+                      performance report</div>
+                  </div>
+                </a>
+                <!-- Col 1 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    💼</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Jobs</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Browse &amp; apply
+                      to jobs</div>
+                  </div>
+                </a>
+                <!-- Col 2 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    💻</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Internships</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Browse &amp; apply
+                      to internships</div>
+                  </div>
+                </a>
+                <!-- Col 1 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    🚀</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      My Applications</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Track your
+                      applications</div>
+                  </div>
+                </a>
+                <!-- Col 2 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    👤</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Career Profile</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Resumes &amp;
+                      preferences</div>
+                  </div>
+                </a>
+                <!-- Col 1 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    📜</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Offer Letter</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">View your training
+                      offer</div>
+                  </div>
+                </a>
+                <!-- Col 2 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    🎁</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Refer &amp; Earn</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Earn rewards by
+                      referring</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 6. Account & Support Dropdown (Image 5) -->
+          <div class="relative nav-dropdown" id="nav-dropdown-support">
+            <button type="button"
+              class="nav-dropdown-toggle px-3 py-1.5 rounded-full hover:bg-slate-100 flex items-center gap-1 transition cursor-pointer">
+              <span>Account &amp; Support</span>
+              <svg class="w-3 h-3 text-slate-400 transition-transform duration-200" viewBox="0 0 20 20"
+                fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clip-rule="evenodd" />
+              </svg>
+            </button>
+            <div
+              class="nav-dropdown-content absolute right-0 lg:-right-12 top-full mt-2.5 w-[500px] bg-white rounded-2xl shadow-2xl border border-slate-200/90 p-4 z-50">
+              <div class="absolute -top-1.5 right-20 lg:right-32 w-3 h-3 bg-[#1E60E8] rotate-45"></div>
+              <!-- Card Header -->
+              <div class="flex items-center gap-2 pb-2.5 border-b border-slate-100 mb-2">
+                <span class="text-[11px] font-black text-[#1E60E8] uppercase tracking-wider">ACCOUNT &amp;
+                  SUPPORT</span>
+                <span class="w-4 h-1 rounded-full bg-[#EAB308]"></span>
+              </div>
+              <!-- 2-Column Grid -->
+              <div class="grid grid-cols-2 gap-x-2 gap-y-1">
+                <!-- Col 1 -->
+                <a href="#campus-radar"
+                  class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    ⏱️</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Attendance Log</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Historical
+                      presence</div>
+                  </div>
+                </a>
+                <!-- Col 2 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    🏛️</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Institute Hours</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Track hours at
+                      institute</div>
+                  </div>
+                </a>
+                <!-- Col 1 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    💳</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      My Fee</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Pay course fee
+                      &amp; receipts</div>
+                  </div>
+                </a>
+                <!-- Col 2 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    📅</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      My Leaves</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Request leave
+                    </div>
+                  </div>
+                </a>
+                <!-- Col 1 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    ❤️</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Wellness</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Connect with
+                      counselors</div>
+                  </div>
+                </a>
+                <!-- Col 2 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    ⚖️</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Disputes</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Attendance/grade
+                      disputes</div>
+                  </div>
+                </a>
+                <!-- Col 1 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    ⚠️</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      My Violations</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Violation records
+                    </div>
+                  </div>
+                </a>
+                <!-- Col 2 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    💻</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Laptops</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Available laptops
+                    </div>
+                  </div>
+                </a>
+                <!-- Col 1 -->
+                <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                  <div
+                    class="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-sm shrink-0 group-hover:scale-105 transition">
+                    💡</div>
+                  <div class="min-w-0">
+                    <div
+                      class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] transition leading-tight truncate">
+                      Suggestion Box</div>
+                    <div class="text-[10px] text-slate-400 font-normal leading-tight mt-0.5 truncate">Share feedback
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
+
+      <!-- Right Side: Bell Icon & User Profile Pill -->
+      <div class="flex items-center gap-2.5 shrink-0">
+
+        <!-- Bell Notification Button & Dropdown -->
+        <div class="relative nav-bell-menu" id="nav-bell-menu">
+          <button type="button" id="nav-bell-btn"
+            class="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center relative transition cursor-pointer border border-slate-200/60 shadow-xs"
+            title="Notifications">
+            <svg class="w-4 h-4 text-slate-700" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" />
+            </svg>
+            <span class="absolute top-0.5 right-0.5 w-2.5 h-2.5 rounded-full bg-rose-500 ring-2 ring-white"></span>
+          </button>
+
+          <!-- Notifications Dropdown -->
+          <div class="nav-dropdown-content absolute right-0 top-full mt-2.5 w-[300px] bg-white rounded-2xl shadow-2xl border border-slate-200/90 p-3.5 z-50" id="nav-notifications-box">
+            <div class="absolute -top-1.5 right-4 w-3 h-3 bg-[#1E60E8] rotate-45"></div>
+            <div class="flex items-center justify-between pb-2 border-b border-slate-100 mb-2">
+              <span class="text-xs font-extrabold text-slate-900">Notifications</span>
+              <span class="text-[10px] text-[#1E60E8] font-bold cursor-pointer hover:underline">Mark all read</span>
+            </div>
+            <div class="flex flex-col gap-2 py-1">
+              <a href="assignments.html" class="flex items-start gap-2.5 p-2 rounded-xl bg-blue-50/50 border border-blue-100/80 hover:bg-blue-50 transition group">
+                <span class="text-base shrink-0">⚡</span>
+                <div class="min-w-0">
+                  <p class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] leading-tight">3 Pending Assessments</p>
+                  <p class="text-[10px] text-slate-500 mt-0.5">Coding and theory tests are now live.</p>
+                </div>
+              </a>
+              <a href="timetable.html" class="flex items-start gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                <span class="text-base shrink-0">📅</span>
+                <div class="min-w-0">
+                  <p class="text-xs font-bold text-slate-900 group-hover:text-[#1E60E8] leading-tight">Class at 10:00 AM</p>
+                  <p class="text-[10px] text-slate-500 mt-0.5">Python Full Stack batch session.</p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- User Profile Pill & Dropdown (Image 9 & Image 5) -->
+        <div class="relative user-profile-menu" id="user-profile-menu">
+          <button type="button" id="user-profile-trigger" onclick="toggleUserProfileMenu(event)"
+            class="flex items-center gap-1.5 bg-[#EEF5FF] hover:bg-[#E2EEFF] border border-[#D1E2FB] rounded-full pl-1 pr-2.5 py-1 transition cursor-pointer shadow-xs">
+            <!-- Vibrant Royal Blue Avatar Circle -->
+            <div class="w-7 h-7 rounded-full bg-[#1351D8] text-white font-black text-xs flex items-center justify-center shadow-xs shrink-0">
+              <span id="user-avatar-letter">A</span>
+            </div>
+            <!-- Down Chevron Icon -->
+            <svg class="w-3.5 h-3.5 text-slate-600 transition-transform duration-200 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </button>
+
+          <!-- Profile Dropdown Box -->
+          <div class="nav-dropdown-content absolute right-0 top-full mt-2.5 w-[230px] bg-white rounded-2xl shadow-2xl border border-slate-200/90 p-3.5 z-50" id="user-dropdown-box">
+            <div class="absolute -top-1.5 right-4 w-3 h-3 bg-[#1E60E8] rotate-45"></div>
+            <!-- User Header -->
+            <div class="flex items-center gap-3 pb-2.5 border-b border-slate-100">
+              <div class="w-10 h-10 rounded-xl bg-[#1E60E8] text-white font-extrabold text-base flex items-center justify-center shadow-md shrink-0">
+                <span>A</span>
+              </div>
+              <div class="min-w-0">
+                <h4 class="text-xs font-extrabold text-slate-900 leading-tight truncate" id="dropdown-user-name">Alex Johnson</h4>
+                <span class="text-[10px] text-slate-400 font-medium leading-tight block mt-0.5" id="dropdown-user-role">Student Portal • Active</span>
+              </div>
+            </div>
+
+            <!-- Profile Links List -->
+            <div class="flex flex-col gap-0.5 py-1.5">
+              <a href="student_registration_portal.html" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                <div class="text-sm shrink-0">👤</div>
+                <span class="text-xs font-bold text-slate-800 group-hover:text-[#1E60E8] transition">Profile</span>
+              </a>
+              <a href="assignments.html" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition group">
+                <div class="text-sm shrink-0">📈</div>
+                <span class="text-xs font-bold text-slate-800 group-hover:text-[#1E60E8] transition">My Assessments</span>
+              </a>
+              <a href="#" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-amber-50/60 transition group">
+                <div class="text-sm shrink-0 text-amber-500">⭐</div>
+                <span class="text-xs font-bold text-amber-600 transition">App Review</span>
+              </a>
+            </div>
+
+            <div class="border-t border-slate-100 my-1"></div>
+
+            <!-- Logout Button -->
+            <a href="login.html" id="btn-signout" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-rose-50 transition group">
+              <div class="text-sm shrink-0 text-rose-600">🚪</div>
+              <span class="text-xs font-extrabold text-rose-600 transition">Logout</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+</header>
+
+  <div class="w-full max-w-[1020px] mx-auto p-3 sm:p-5 pb-24 space-y-4">
 
     <!-- TOP HEADER -->
     <header class="saas-card p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 border-t-2 border-t-blue-600">
@@ -1662,5 +2415,6 @@
   <!-- 3D Face Biometric Three.js & Studio Engine -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="js/face3d-studio.js?v=3"></script>
+  <script src="js/dashboard-nav.js?v=7"></script>
 </body>
 </html>

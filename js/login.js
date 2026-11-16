@@ -1,5 +1,5 @@
 /**
- * AppTechno CampusOS - Login Page Form & Role Logic
+ * SETU CampusOS - Login Page Form & Role Logic
  */
 
 document.addEventListener('DOMContentLoaded', () => {

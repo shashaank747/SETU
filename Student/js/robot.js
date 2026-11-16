@@ -1,5 +1,5 @@
 /**
- * AppTechno CampusOS - Dynamic Robot Mascot Physics & Interactivity
+ * SETU CampusOS - Dynamic Robot Mascot Physics & Interactivity
  * Features:
  * - 3D Mouse Tracking for Head, Visor, and Pupils
  * - Interactive Hover: Friendly 3D wiggle shake, hand wave, and "Hi! 👋" speech bubble

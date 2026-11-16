@@ -624,18 +624,18 @@ const StudentProfileDB = {
   face3dKey: 'setu_permanent_3d_face_profile',
 
   defaults: {
-    fullName: 'Shashaank Sajjanar',
-    studentId: '2026-STU',
-    email: 'shashaank.s@campusos.edu',
+    fullName: 'Alex Johnson',
+    studentId: '202604STU00005',
+    email: 'alex.johnson@campusos.edu',
     phone: '+91 98765 43210',
     dob: '2003-08-14',
     gender: 'Male',
     bloodGroup: 'O+',
-    emergencyContact: 'S. Sajjanar (+91 98765 00000)',
+    emergencyContact: 'S. Johnson (+91 98765 00000)',
     department: 'School of Computer Science & Engineering',
-    program: 'B.Tech in Computer Science',
-    semester: '6th Semester B.Tech',
-    batch: 'Batch B-948 (2022 - 2026)',
+    program: 'Full Stack Java Web Dev',
+    semester: '6th Semester',
+    batch: 'Full Stack Java Web Dev',
     avatarUrl: 'images/user-shashaank.png',
     attendanceRate: '94.2% Prime',
     cgpa: '8.92 / 10.0',
@@ -663,7 +663,7 @@ const StudentProfileDB = {
       console.warn('Error reading student profile record:', e);
     }
 
-    if (!profile) {
+    if (!profile || profile.fullName === 'Shashaank Sajjanar') {
       profile = JSON.parse(JSON.stringify(this.defaults));
     } else {
       profile = Object.assign({}, this.defaults, profile);

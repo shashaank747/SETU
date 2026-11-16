@@ -146,7 +146,7 @@ SETU/
 └── 📁 images/ / root assets
     ├── 🖼 setu.png                   # Official SETU brand emblem
     ├── 🖼 setu_app_logo.png          # App icon variation
-    ├── 🖼 apptechno-campusos-footer.png # Official brand footer seal
+    ├── 🖼 setu.png # Official brand footer seal
     ├── 🖼 contri.png                 # Contributors page hero graphic
     └── 🖼 images/user-shashaank.png  # User profile avatar
 ```

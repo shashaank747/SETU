@@ -1,5 +1,5 @@
 /* ==========================================================================
-   AppTechno CampusOS - Dashboard Styles
+   SETU CampusOS - Dashboard Styles
    ========================================================================== */
 
 :root {
@@ -979,7 +979,6 @@ body.dashboard-body {
 }
 
 /* Open on both hover and click (.open class) */
-.user-profile-menu:hover .user-dropdown-menu,
 .user-profile-menu.open .user-dropdown-menu {
   opacity: 1;
   visibility: visible;
@@ -2929,4 +2928,53 @@ body:has(#live-exam-container:not(.hidden)) .dashboard-navbar {
   background: linear-gradient(135deg, #1d4ed8, #1e40af);
   transform: translateY(-1px);
   box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+}
+
+/* ==========================================================================
+   Universal Mega Dropdown & Profile Navigation Rules (SETU Unified Navbar)
+   ========================================================================== */
+.nav-dropdown-content {
+  display: none;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  pointer-events: none;
+}
+
+.nav-dropdown.open > .nav-dropdown-content,
+.user-profile-menu.open > .nav-dropdown-content {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.nav-dropdown.open > .nav-dropdown-toggle svg,
+.user-profile-menu.open > #user-profile-trigger svg {
+  transform: rotate(180deg);
+}
+
+/* ==========================================================================
+   Universal Mega Dropdown & Profile Navigation Rules (SETU Unified Navbar)
+   ========================================================================== */
+.nav-dropdown-content {
+  display: none !important;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  pointer-events: none;
+}
+
+.nav-dropdown.open > .nav-dropdown-content,
+.user-profile-menu.open > .nav-dropdown-content,
+.nav-bell-menu.open > .nav-dropdown-content {
+  display: block !important;
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  pointer-events: auto !important;
+}
+
+.nav-dropdown.open > .nav-dropdown-toggle svg,
+.user-profile-menu.open > #user-profile-trigger svg {
+  transform: rotate(180deg);
 }

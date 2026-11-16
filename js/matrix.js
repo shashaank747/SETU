@@ -1,5 +1,5 @@
 /**
- * AppTechno CampusOS - Matrix Digital Rain Canvas Animation
+ * SETU CampusOS - Matrix Digital Rain Canvas Animation
  */
 
 (function () {
